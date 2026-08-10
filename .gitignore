@@ -77,6 +77,15 @@ mono_crash.*
 *.unitypackage.meta
 *.app
 
+# Keep the competition APK while excluding generated Android backup/debug data.
+!/pdf/dd.apk
+/pdf/dd.zip
+/pdf/dd_BackUpThisFolder_ButDontShipItWithYourGame/
+/pdf/Trace Strike_BurstDebugInformation_DoNotShip/
+
+# Duplicate local template name; the canonical file is .gitignore.
+/gitignore
+
 # Crashlytics generated file
 crashlytics-build.properties
 
