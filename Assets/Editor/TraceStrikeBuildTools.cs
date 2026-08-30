@@ -57,6 +57,48 @@ namespace NHN.TraceStrike.Editor
 
             Debug.Log("APK created at: " + options.locationPathName);
         }
+
+        [MenuItem("Trace Strike/Configure Desktop Project")]
+        public static void ConfigureDesktopProject()
+        {
+            PlayerSettings.companyName = "NHN Challenge Team";
+            PlayerSettings.productName = "Trace Strike";
+            PlayerSettings.bundleVersion = "1.0.0";
+            PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
+            PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            PlayerSettings.defaultScreenWidth = 1600;
+            PlayerSettings.defaultScreenHeight = 900;
+            PlayerSettings.defaultIsNativeResolution = false;
+            PlayerSettings.resizableWindow = false;
+            PlayerSettings.runInBackground = false;
+            PlayerSettings.use32BitDisplayBuffer = true;
+            AssetDatabase.SaveAssets();
+            Debug.Log("Trace Strike desktop 16:9 project settings configured.");
+        }
+
+        [MenuItem("Trace Strike/Build Windows 16:9")]
+        public static void BuildWindows16By9()
+        {
+            ConfigureDesktopProject();
+            string outputDirectory = Path.GetFullPath(Path.Combine(Application.dataPath, "../Builds/Windows"));
+            Directory.CreateDirectory(outputDirectory);
+
+            var options = new BuildPlayerOptions
+            {
+                scenes = new[] { "Assets/Scenes/SampleScene.unity" },
+                locationPathName = Path.Combine(outputDirectory, "TraceStrike.exe"),
+                target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.None
+            };
+
+            BuildReport report = BuildPipeline.BuildPlayer(options);
+            if (report.summary.result != BuildResult.Succeeded)
+            {
+                throw new BuildFailedException("Windows 16:9 build failed: " + report.summary.result);
+            }
+
+            Debug.Log("Windows 16:9 build created at: " + options.locationPathName);
+        }
     }
 }
 #endif

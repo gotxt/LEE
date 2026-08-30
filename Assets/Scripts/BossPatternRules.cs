@@ -27,7 +27,7 @@ namespace NHN.TraceStrike
 
         public static int PhaseMaxHealth(bool phaseTwo)
         {
-            return phaseTwo ? 1500 : 500;
+            return 150;
         }
 
         public static HashSet<Vector2Int> CreateCrossGlyph(

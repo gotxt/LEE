@@ -13,17 +13,31 @@ namespace NHN.TraceStrike
     {
         private const float ReferenceWidth = 1080f;
         private const float ReferenceHeight = 1920f;
+        private const float DesktopReferenceWidth = 1920f;
+        private const float DesktopReferenceHeight = 1080f;
+        private const int LegacyFieldSize = 11;
+        private const float LegacyDesktopGridSize = 820f;
+        private const float LegacyMobileGridSize = 900f;
         private const float SwipeThreshold = 55f;
-        private const int StandaloneWidth = 540;
-        private const int StandaloneHeight = 960;
+        private const int StandaloneWidth = 1600;
+        private const int StandaloneHeight = 900;
         private const float PortraitAspect = 9f / 16f;
+        private const float LandscapeAspect = 16f / 9f;
         private const float TutorialCellSize = 180f;
         private const float TutorialPlayerSizeRatio = 0.68f;
         private const float BattlePlayerSizeRatio = 0.58f;
         private const float TargetedWarningSeconds = 0.65f;
+        private const float TitleInitialRadius = 0.115f;
+        private const float TitleRevealSeconds = 1.35f;
         private const string BestClearTimeKey = "TraceStrike.BestClearTime";
 
         private static readonly Color Background = Hex("101525");
+        private static readonly Color ArenaVoid = Hex("020306");
+        private static readonly Color ArenaTile = Hex("090B10");
+        private static readonly Color ArenaTileLift = Hex("17131A");
+        private static readonly Color ArenaTileTextureTint = Hex("CDD0C7");
+        private static readonly Color CenterDamageTileTint = Hex("E58A45");
+        private static readonly Color ArenaBorderGlow = Hex("FF7138");
         private static readonly Color Panel = Hex("182038");
         private static readonly Color PanelLight = Hex("222D4B");
         private static readonly Color Floor = Hex("263653");
@@ -35,10 +49,35 @@ namespace NHN.TraceStrike
         private static readonly Color Danger = Hex("FF4B69");
         private static readonly Color White = Hex("F4F8FF");
         private static readonly Color Muted = Hex("9EACC7");
+        private static readonly string[] HubCharacterNames =
+        {
+            "아이리스 · 트레이스 워리어",
+            "세라프 · 펄스 러너",
+            "녹스 · 바이러스 헌터",
+            "브론 · 크리스털 브레이커"
+        };
+        private static readonly string[] HubCharacterDescriptions =
+        {
+            "균형형 추적 전투원 · 기본 경로 공격",
+            "청록 기동형 전투원 · 빠른 경로 제어",
+            "보라 분석형 전투원 · 바이러스 표식 강화",
+            "황금 돌파형 전투원 · 수정 파괴 특화"
+        };
+        private static readonly Color[] HubCharacterTints =
+        {
+            White,
+            Hex("70F3E4"),
+            Hex("CF86FF"),
+            Hex("FFD36A")
+        };
 
         private readonly TrailFieldModel model = new TrailFieldModel();
+        private readonly HubWorldModel hubModel = new HubWorldModel();
+        private readonly Image[,] arenaGroundTiles = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
         private readonly Image[,] mainTiles = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
+        private readonly Outline[,] mainTileOutlines = new Outline[TrailFieldModel.Size, TrailFieldModel.Size];
         private readonly Text[,] tileLabels = new Text[TrailFieldModel.Size, TrailFieldModel.Size];
+        private readonly Image[,] minimapTiles = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
         private readonly RectTransform[,] attackWarningVisuals = new RectTransform[TrailFieldModel.Size, TrailFieldModel.Size];
         private readonly Image[,] attackWarningFillImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
         private readonly Image[,] endpointMarkerImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
@@ -46,6 +85,10 @@ namespace NHN.TraceStrike
         private readonly Image[,] specialItemImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
         private readonly Image[,] specialItemIconImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
         private readonly Text[,] specialItemLabels = new Text[TrailFieldModel.Size, TrailFieldModel.Size];
+        private readonly RectTransform[,] hubObjectVisuals = new RectTransform[HubWorldModel.Size, HubWorldModel.Size];
+        private readonly Image[,] hubObjectImages = new Image[HubWorldModel.Size, HubWorldModel.Size];
+        private readonly Image[,] hubObjectIconImages = new Image[HubWorldModel.Size, HubWorldModel.Size];
+        private readonly Text[,] hubObjectLabels = new Text[HubWorldModel.Size, HubWorldModel.Size];
         private readonly HashSet<Vector2Int> warnedCells = new HashSet<Vector2Int>();
         private readonly HashSet<Vector2Int> targetedCells = new HashSet<Vector2Int>();
         private readonly Dictionary<Vector2Int, SpecialTileType> specialTiles = new Dictionary<Vector2Int, SpecialTileType>();
@@ -58,15 +101,38 @@ namespace NHN.TraceStrike
         private readonly float[] crystalAttackTimers = new float[CrystalRules.CrystalCount];
         private readonly HashSet<Vector2Int> tutorialTrail = new HashSet<Vector2Int>();
         private readonly List<Vector2Int> tutorialTrailOrder = new List<Vector2Int>();
+        private readonly List<RectTransform> ambientParticles = new List<RectTransform>();
+        private readonly List<Image> ambientParticleImages = new List<Image>();
+        private readonly int[,] floorTileVariantIndices =
+            new int[TrailFieldModel.Size, TrailFieldModel.Size];
+        private readonly System.Random floorTileRandom = new System.Random();
 
         private Font gameFont;
         private RectTransform mainGrid;
+        private RectTransform minimapGrid;
         private RectTransform mainPlayer;
         private RectTransform effectsLayer;
         private RectTransform directionPadArea;
         private RectTransform attackSlash;
+        private RectTransform arenaBossCore;
+        private RectTransform arenaBossHealthRoot;
+        private RectTransform phaseOverlayRoot;
+        private RectTransform phasePageLeft;
+        private RectTransform phasePageRight;
+        private RectTransform hubCampZone;
+        private RectTransform hubStageLane;
         private RectTransform bossHud;
+        private RectTransform interactionPanelRoot;
         private RectTransform titleScreen;
+        private Image titleBlindImage;
+        private Material titleBlindMaterial;
+        private CanvasGroup titleForegroundGroup;
+        private Text titleInputHint;
+        private Image interactionRingImage;
+        private Image interactionIconImage;
+        private Text interactionTitleText;
+        private Text interactionBodyText;
+        private Sprite bossPortraitSprite;
         private Image mainPlayerImage;
         private Image bossHealthFill;
         private Image fieldFrame;
@@ -87,6 +153,8 @@ namespace NHN.TraceStrike
         private CanvasGroup attackSlashGroup;
         private CanvasGroup phaseBannerGroup;
         private AudioSource audioSource;
+        private AudioSource musicSource;
+        private AudioClip templeMusic;
         private Camera uiCamera;
         private AudioClip moveSfx;
         private AudioClip startSfx;
@@ -107,6 +175,10 @@ namespace NHN.TraceStrike
         private Sprite amplifyIconSprite;
         private Sprite mudIconSprite;
         private Sprite curseIconSprite;
+        private Sprite campfireSprite;
+        private Sprite playerCharacterSprite;
+        private Sprite floorTileSprite;
+        private Sprite[] floorTileSprites;
 
         private Vector2 pressPosition;
         private bool pointerDown;
@@ -121,6 +193,9 @@ namespace NHN.TraceStrike
         private bool tutorialActive;
         private bool tutorialTransitioning;
         private bool titleActive;
+        private bool titleRevealing;
+        private bool hubActive;
+        private bool desktopLayout;
         private bool stageTimerRunning;
         private bool bossPhaseSkipped;
         private int bossAttackCount;
@@ -141,8 +216,11 @@ namespace NHN.TraceStrike
         private float stageStartRealtime;
         private float hazardTelegraphProgress;
         private float targetedTelegraphProgress;
+        private Color activeCharacterTint = White;
         private Vector2Int tutorialPlayer;
+        private Vector2Int playerFacing = Vector2Int.up;
         private float mainCellSize;
+        private float ActiveTutorialCellSize => desktopLayout ? 132f : TutorialCellSize;
         private int appliedScreenWidth = -1;
         private int appliedScreenHeight = -1;
 
@@ -161,7 +239,11 @@ namespace NHN.TraceStrike
         private void Awake()
         {
             Application.targetFrameRate = 60;
-            Screen.orientation = ScreenOrientation.Portrait;
+            desktopLayout = !Application.isMobilePlatform;
+            if (!desktopLayout)
+            {
+                Screen.orientation = ScreenOrientation.Portrait;
+            }
 #if UNITY_STANDALONE && !UNITY_EDITOR
             Screen.SetResolution(StandaloneWidth, StandaloneHeight, FullScreenMode.Windowed, 60);
 #endif
@@ -170,8 +252,18 @@ namespace NHN.TraceStrike
 
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
-            audioSource.volume = 0.5f;
+            audioSource.volume = 0.72f;
+            audioSource.spatialBlend = 0f;
+            audioSource.priority = 32;
+            musicSource = gameObject.AddComponent<AudioSource>();
+            musicSource.playOnAwake = false;
+            musicSource.loop = true;
+            musicSource.volume = 0.2f;
+            musicSource.spatialBlend = 0f;
+            musicSource.priority = 96;
             BuildSoundBank();
+            musicSource.clip = templeMusic;
+            musicSource.Play();
 
             BuildInterface();
             RefreshFixedAspect();
@@ -179,9 +271,14 @@ namespace NHN.TraceStrike
             bool captureMode = System.Array.IndexOf(launchArguments, "-capturePath") >= 0;
             bool captureTutorial = System.Array.IndexOf(launchArguments, "-captureTutorial") >= 0;
             bool captureTitle = System.Array.IndexOf(launchArguments, "-captureTitle") >= 0;
+            bool captureHub = System.Array.IndexOf(launchArguments, "-captureHub") >= 0;
             if (captureMode && captureTitle)
             {
-                ShowTitleScreen();
+                PrepareTitleScreen();
+            }
+            else if (captureMode && captureHub)
+            {
+                StartHub();
             }
             else if (captureMode && captureTutorial)
             {
@@ -193,11 +290,19 @@ namespace NHN.TraceStrike
             }
             else
             {
-                ShowTitleScreen();
+                PrepareTitleScreen();
             }
             StartCoroutine(BossPatternLoop());
             StartCoroutine(CrystalPatternLoop());
             StartCoroutine(CaptureOnCommandLine());
+        }
+
+        private void OnDestroy()
+        {
+            if (titleBlindMaterial != null)
+            {
+                Destroy(titleBlindMaterial);
+            }
         }
 
         private void Update()
@@ -207,6 +312,15 @@ namespace NHN.TraceStrike
             if (titleActive)
             {
                 HandleTitleInput();
+                return;
+            }
+            if (hubActive)
+            {
+                if (!inputLocked && !movementFrozen)
+                {
+                    ReadKeyboard();
+                    ReadPointer();
+                }
                 return;
             }
             if (HandleSkipInput())
@@ -243,14 +357,15 @@ namespace NHN.TraceStrike
             {
                 return viewport;
             }
-            if (screenAspect > PortraitAspect)
+            float targetAspect = fillScreen ? screenAspect : LandscapeAspect;
+            if (screenAspect > targetAspect)
             {
-                viewport.width = PortraitAspect / screenAspect;
+                viewport.width = targetAspect / screenAspect;
                 viewport.x = (1f - viewport.width) * 0.5f;
             }
-            else if (screenAspect < PortraitAspect)
+            else if (screenAspect < targetAspect)
             {
-                viewport.height = screenAspect / PortraitAspect;
+                viewport.height = screenAspect / targetAspect;
                 viewport.y = (1f - viewport.height) * 0.5f;
             }
             return viewport;
@@ -321,6 +436,15 @@ namespace NHN.TraceStrike
 
         private void Move(Vector2Int direction)
         {
+            if (direction != Vector2Int.zero)
+            {
+                playerFacing = direction;
+            }
+            if (hubActive)
+            {
+                HubMove(direction);
+                return;
+            }
             if (tutorialActive)
             {
                 TutorialMove(direction);
@@ -377,9 +501,238 @@ namespace NHN.TraceStrike
             RefreshBoard();
         }
 
+        private void HubMove(Vector2Int direction)
+        {
+            HubMoveResult result = hubModel.TryMove(direction, out HubObjectData interactedObject);
+            switch (result)
+            {
+                case HubMoveResult.Blocked:
+                    StartCoroutine(PunchPlayer(true));
+                    PlaySfx(blockedSfx);
+                    break;
+                case HubMoveResult.Moved:
+                    SpawnBurst(hubModel.Player, activeCharacterTint, 5);
+                    StartCoroutine(PunchPlayer(false));
+                    PlaySfx(moveSfx, 0.9f);
+                    break;
+                case HubMoveResult.Previewed:
+                    PlaySfx(targetLockSfx, 1.1f, 0.65f);
+                    break;
+                case HubMoveResult.CharacterChanged:
+                    activeCharacterTint = HubCharacterTints[hubModel.CurrentCharacter];
+                    mainPlayerImage.color = activeCharacterTint;
+                    SpawnBurst(hubModel.Player, activeCharacterTint, 24);
+                    StartCoroutine(PunchPlayer(false));
+                    PlaySfx(phaseTwoSfx, 1.3f, 0.75f);
+                    break;
+                case HubMoveResult.StageSelected:
+                    hubActive = false;
+                    HideHubInteractionPanel();
+                    PlaySfx(startSfx, 0.88f, 1f);
+                    StartStage(interactedObject.Index);
+                    return;
+                case HubMoveResult.StageLocked:
+                    PlaySfx(blockedSfx, 0.72f, 0.85f);
+                    break;
+            }
+
+            RefreshHubBoard();
+        }
+
+        private void StartHub()
+        {
+            hubActive = true;
+            tutorialActive = false;
+            tutorialTransitioning = false;
+            phaseTwoActive = false;
+            gameCleared = false;
+            playerDead = false;
+            inputLocked = false;
+            movementFrozen = false;
+            stageTimerRunning = false;
+            warnedCells.Clear();
+            targetedCells.Clear();
+            crystalCells.Clear();
+            crystalWarningCounts.Clear();
+            crystalFiringCounts.Clear();
+            specialTiles.Clear();
+            hubModel.Reset(hubModel.CurrentCharacter);
+            RestoreMainGridLayout();
+            activeCharacterTint = HubCharacterTints[hubModel.CurrentCharacter];
+            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * BattlePlayerSizeRatio);
+            mainPlayer.localScale = Vector3.one;
+            mainPlayerImage.color = activeCharacterTint;
+            SetWorldBossVisible(false);
+            RefreshCrystalVisuals();
+            HideHubInteractionPanel();
+            RefreshHubBoard();
+        }
+
+        private void RefreshHubBoard()
+        {
+            if (!hubActive)
+            {
+                return;
+            }
+
+            if (hubCampZone != null) hubCampZone.gameObject.SetActive(true);
+            if (hubStageLane != null) hubStageLane.gameObject.SetActive(true);
+
+            for (int y = 0; y < HubWorldModel.Size; y++)
+            {
+                for (int x = 0; x < HubWorldModel.Size; x++)
+                {
+                    Image tile = mainTiles[x, y];
+                    arenaGroundTiles[x, y].gameObject.SetActive(true);
+                    tile.gameObject.SetActive(true);
+                    Color color = Color.Lerp(ArenaTile, ArenaTileLift, (x + y) % 2 == 0 ? 0.28f : 0.08f);
+                    color.a = 0.68f;
+                    tile.color = color;
+                    Outline tileOutline = mainTileOutlines[x, y];
+                    if (tileOutline != null)
+                    {
+                        bool edge = x == 0 || y == 0 || x == HubWorldModel.Size - 1 || y == HubWorldModel.Size - 1;
+                        tileOutline.effectColor = edge ? Hex("5B3021") : Hex("25202A");
+                        tileOutline.effectDistance = edge ? new Vector2(2f, -2f) : new Vector2(1f, -1f);
+                    }
+
+                    specialItemVisuals[x, y].gameObject.SetActive(false);
+                    endpointMarkerImages[x, y].gameObject.SetActive(false);
+                    tileLabels[x, y].text = string.Empty;
+                    attackWarningVisuals[x, y].gameObject.SetActive(false);
+                    hubObjectVisuals[x, y].gameObject.SetActive(false);
+                }
+            }
+
+            foreach (KeyValuePair<Vector2Int, HubObjectData> entry in hubModel.Objects)
+            {
+                Vector2Int cell = entry.Key;
+                HubObjectData data = entry.Value;
+                RectTransform visual = hubObjectVisuals[cell.x, cell.y];
+                Image back = hubObjectImages[cell.x, cell.y];
+                Image icon = hubObjectIconImages[cell.x, cell.y];
+                Text label = hubObjectLabels[cell.x, cell.y];
+                Outline outline = visual.GetComponent<Outline>();
+                visual.gameObject.SetActive(true);
+                visual.anchoredPosition = GridPosition(cell.x, cell.y, mainCellSize);
+                label.text = string.Empty;
+
+                switch (data.Type)
+                {
+                    case HubObjectType.Campfire:
+                        back.color = Hex("24140E");
+                        outline.effectColor = Hex("FF8A32");
+                        icon.sprite = campfireSprite;
+                        icon.color = White;
+                        break;
+                    case HubObjectType.Character:
+                        Color tint = HubCharacterTints[data.Index];
+                        back.color = new Color(tint.r * 0.16f, tint.g * 0.16f, tint.b * 0.16f, 0.94f);
+                        outline.effectColor = tint;
+                        icon.sprite = playerCharacterSprite;
+                        icon.color = tint;
+                        break;
+                    default:
+                        bool available = data.Index == 0;
+                        back.color = available ? Hex("260B12") : Hex("111117");
+                        outline.effectColor = available ? Danger : Hex("5D5968");
+                        icon.sprite = bossPortraitSprite != null
+                            ? bossPortraitSprite
+                            : LoadPixelSprite("Art/red_attack_crystal", 64f);
+                        icon.color = available ? White : Hex("625E68");
+                        label.text = available ? "I" : "LOCK";
+                        label.color = available ? Danger : Muted;
+                        break;
+                }
+            }
+
+            for (int i = 0; i < crystalVisuals.Length; i++)
+            {
+                if (crystalVisuals[i] != null)
+                {
+                    crystalVisuals[i].gameObject.SetActive(false);
+                }
+            }
+
+            mainPlayer.anchoredPosition = GridPosition(hubModel.Player.x, hubModel.Player.y, mainCellSize);
+            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * BattlePlayerSizeRatio);
+            mainPlayerImage.color = activeCharacterTint;
+            mainPlayer.SetAsLastSibling();
+            RefreshHubInteractionPanel();
+        }
+
+        private void RefreshHubInteractionPanel()
+        {
+            if (interactionPanelRoot == null || titleActive ||
+                !hubModel.TryGetFocusedObject(out _, out HubObjectData data))
+            {
+                HideHubInteractionPanel();
+                return;
+            }
+
+            interactionPanelRoot.gameObject.SetActive(true);
+            interactionPanelRoot.SetAsLastSibling();
+            switch (data.Type)
+            {
+                case HubObjectType.Campfire:
+                    interactionTitleText.text = "원탁의 모닥불";
+                    interactionBodyText.text = "메인 허브의 중심 · 주변 캐릭터와 스테이지 장치를 확인하세요";
+                    interactionIconImage.sprite = campfireSprite;
+                    interactionIconImage.color = White;
+                    interactionRingImage.color = Hex("FF8A32");
+                    break;
+                case HubObjectType.Character:
+                    interactionTitleText.text = "캐릭터 변경 · " + HubCharacterNames[data.Index];
+                    interactionBodyText.text = HubCharacterDescriptions[data.Index] +
+                        " · 한 번 더 충돌하면 교체";
+                    interactionIconImage.sprite = playerCharacterSprite;
+                    interactionIconImage.color = HubCharacterTints[data.Index];
+                    interactionRingImage.color = HubCharacterTints[data.Index];
+                    break;
+                default:
+                    bool available = data.Index == 0;
+                    interactionTitleText.text = available
+                        ? "STAGE 01 · 크림슨 골렘"
+                        : "STAGE " + (data.Index + 1).ToString("00") + " · 잠김";
+                    interactionBodyText.text = available
+                        ? "광물 증식형 바이러스 · 레이저와 수정 격자 공격 · 한 번 더 충돌하면 입장"
+                        : "후속 바이러스 데이터가 아직 해제되지 않았습니다";
+                    interactionIconImage.sprite = bossPortraitSprite != null
+                        ? bossPortraitSprite
+                        : LoadPixelSprite("Art/red_attack_crystal", 64f);
+                    interactionIconImage.color = available ? White : Muted;
+                    interactionRingImage.color = available ? Danger : Muted;
+                    break;
+            }
+        }
+
+        private void HideHubInteractionPanel()
+        {
+            if (interactionPanelRoot != null)
+            {
+                interactionPanelRoot.gameObject.SetActive(false);
+            }
+        }
+
+        private void PrepareTitleScreen()
+        {
+            StartStage(0);
+            var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+            model.TryPlacePlayer(center);
+            GenerateSpecialTiles();
+            specialTiles.Remove(center);
+            specialTiles.Remove(center + Vector2Int.up);
+            specialTiles.Remove(center + Vector2Int.right);
+            specialTiles.Remove(center + Vector2Int.down);
+            specialTiles.Remove(center + Vector2Int.left);
+            RefreshBoard();
+            ShowTitleScreen();
+        }
+
         private void ShowTitleScreen()
         {
             titleActive = true;
+            titleRevealing = false;
             inputLocked = true;
             movementFrozen = false;
             stageTimerRunning = false;
@@ -388,32 +741,150 @@ namespace NHN.TraceStrike
                 titleScreen.gameObject.SetActive(true);
                 titleScreen.SetAsLastSibling();
             }
-            UpdateTitleRecord();
+            if (titleForegroundGroup != null)
+            {
+                titleForegroundGroup.alpha = 1f;
+            }
+            SetTitleBlindRadius(TitleInitialRadius);
+            Canvas.ForceUpdateCanvases();
+            UpdateTitleBlindFocus();
         }
 
         private void HandleTitleInput()
         {
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard != null &&
-                (keyboard.enterKey.wasPressedThisFrame || keyboard.spaceKey.wasPressedThisFrame))
-            {
-                BeginChallenge();
-            }
-        }
-
-        private void BeginChallenge()
-        {
-            if (!titleActive)
+            if (titleRevealing)
             {
                 return;
             }
 
+            UpdateTitleBlindFocus();
+            if (titleInputHint != null)
+            {
+                Color hintColor = titleInputHint.color;
+                hintColor.a = 0.72f + (Mathf.Sin(Time.unscaledTime * 4f) + 1f) * 0.14f;
+                titleInputHint.color = hintColor;
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
+            {
+                return;
+            }
+
+            Vector2Int direction = Vector2Int.zero;
+            if (keyboard.wKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame)
+                direction = Vector2Int.up;
+            else if (keyboard.dKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame)
+                direction = Vector2Int.right;
+            else if (keyboard.sKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame)
+                direction = Vector2Int.down;
+            else if (keyboard.aKey.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame)
+                direction = Vector2Int.left;
+
+            if (direction != Vector2Int.zero)
+            {
+                StartCoroutine(RevealTitleScreen(direction));
+            }
+        }
+
+        private IEnumerator RevealTitleScreen(Vector2Int firstDirection)
+        {
+            if (!titleActive || titleRevealing)
+            {
+                yield break;
+            }
+
+            titleRevealing = true;
+            Move(firstDirection);
+            PlaySfx(startSfx, 1.08f, 0.9f);
+            UpdateTitleBlindFocus();
+
+            Vector2 center = GetTitleBlindCenter();
+            float targetRadius = CalculateTitleRevealRadius(center, GetTitleScreenAspect());
+            float elapsed = 0f;
+            while (elapsed < TitleRevealSeconds)
+            {
+                elapsed = Mathf.Min(TitleRevealSeconds, elapsed + Time.unscaledDeltaTime);
+                float normalized = elapsed / TitleRevealSeconds;
+                float eased = 1f - Mathf.Pow(1f - normalized, 3f);
+                SetTitleBlindRadius(Mathf.Lerp(TitleInitialRadius, targetRadius, eased));
+                UpdateTitleBlindFocus();
+                if (titleForegroundGroup != null)
+                {
+                    titleForegroundGroup.alpha = 1f - Mathf.SmoothStep(0f, 1f,
+                        Mathf.Clamp01(normalized / 0.55f));
+                }
+                yield return null;
+            }
+
             titleActive = false;
+            titleRevealing = false;
             if (titleScreen != null)
             {
                 titleScreen.gameObject.SetActive(false);
             }
-            StartTutorial();
+            inputLocked = false;
+            stageTimerRunning = true;
+            stageStartRealtime = Time.realtimeSinceStartup;
+            statusText.text = "START 타일을 찾아 경로 공격을 시작하세요";
+        }
+
+        private void UpdateTitleBlindFocus()
+        {
+            if (titleBlindMaterial == null || mainPlayer == null || uiCamera == null)
+            {
+                return;
+            }
+
+            Vector2 center = GetTitleBlindCenter();
+            titleBlindMaterial.SetVector("_Center", new Vector4(center.x, center.y, 0f, 0f));
+            titleBlindMaterial.SetFloat("_Aspect", GetTitleScreenAspect());
+        }
+
+        private Vector2 GetTitleBlindCenter()
+        {
+            if (mainPlayer == null || uiCamera == null || Screen.width <= 0 || Screen.height <= 0)
+            {
+                return new Vector2(0.5f, 0.36f);
+            }
+
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(uiCamera, mainPlayer.position);
+            return new Vector2(
+                Mathf.Clamp01(screenPoint.x / Screen.width),
+                Mathf.Clamp01(screenPoint.y / Screen.height));
+        }
+
+        private float GetTitleScreenAspect()
+        {
+            return Screen.height > 0 ? (float)Screen.width / Screen.height : LandscapeAspect;
+        }
+
+        private void SetTitleBlindRadius(float radius)
+        {
+            if (titleBlindMaterial != null)
+            {
+                titleBlindMaterial.SetFloat("_Radius", radius);
+            }
+        }
+
+        public static float CalculateTitleRevealRadius(Vector2 center, float aspect)
+        {
+            aspect = Mathf.Max(0.01f, aspect);
+            float radius = 0f;
+            Vector2[] corners =
+            {
+                Vector2.zero,
+                Vector2.right,
+                Vector2.up,
+                Vector2.one
+            };
+            foreach (Vector2 corner in corners)
+            {
+                Vector2 delta = corner - center;
+                delta.x *= aspect;
+                radius = Mathf.Max(radius, delta.magnitude);
+            }
+            return radius + 0.08f;
         }
 
         private void UpdateTitleRecord()
@@ -508,11 +979,12 @@ namespace NHN.TraceStrike
             movementFrozen = false;
             playerDead = false;
             phaseTwoActive = false;
-            mainPlayer.sizeDelta = Vector2.one * (TutorialCellSize * TutorialPlayerSizeRatio);
+            mainPlayer.sizeDelta = Vector2.one * (ActiveTutorialCellSize * TutorialPlayerSizeRatio);
             mainPlayer.localScale = Vector3.one;
             crystalCells.Clear();
             specialTiles.Clear();
             RefreshCrystalVisuals();
+            SetWorldBossVisible(false);
 
             stageText.text = "TUTORIAL";
             bossNameText.text = "전투 훈련";
@@ -822,12 +1294,14 @@ namespace NHN.TraceStrike
 
         private void RefreshTutorialBoard()
         {
+            HideHubWorldVisuals();
             int activeSpecialStep = tutorialStep - 1;
             for (int y = 0; y < TrailFieldModel.Size; y++)
             {
                 for (int x = 0; x < TrailFieldModel.Size; x++)
                 {
                     bool active = x < TutorialRules.Size && y < TutorialRules.Size;
+                    arenaGroundTiles[x, y].gameObject.SetActive(active);
                     mainTiles[x, y].gameObject.SetActive(active);
                     if (!active)
                     {
@@ -835,8 +1309,11 @@ namespace NHN.TraceStrike
                     }
 
                     var cell = new Vector2Int(x, y);
+                    RectTransform ground = arenaGroundTiles[x, y].rectTransform;
+                    ground.sizeDelta = Vector2.one * (ActiveTutorialCellSize + (desktopLayout ? 18f : 14f));
+                    ground.anchoredPosition = TutorialGridPosition(cell);
                     RectTransform tile = mainTiles[x, y].rectTransform;
-                    tile.sizeDelta = Vector2.one * (TutorialCellSize - 7f);
+                    tile.sizeDelta = Vector2.one * (ActiveTutorialCellSize - 7f);
                     tile.anchoredPosition = TutorialGridPosition(cell);
                     Color color = GetFloorColor(x, y);
                     string marker = string.Empty;
@@ -866,25 +1343,27 @@ namespace NHN.TraceStrike
                     {
                         tileLabels[x, y].color = Background;
                     }
-                    color.a = 0.5f;
+                    color.a = tutorialStep == 0 && tutorialTrail.Contains(cell) ? 1f : 0.5f;
                     mainTiles[x, y].color = color;
-                    SetSpecialItemVisual(x, y, showSpecialItem, shownSpecialType, TutorialCellSize * 0.34f);
+                    SetSpecialItemVisual(x, y, showSpecialItem, shownSpecialType, ActiveTutorialCellSize * 0.34f);
                     SetEndpointMarkerVisual(x, y,
                         tutorialStep == 0 && cell == TutorialRules.Start,
                         tutorialStep == 0 && cell == TutorialRules.End,
-                        TutorialCellSize * 0.64f);
+                        ActiveTutorialCellSize * 0.64f);
                     tileLabels[x, y].fontSize = 24;
                     tileLabels[x, y].text = marker;
                 }
             }
             mainPlayer.anchoredPosition = TutorialGridPosition(tutorialPlayer);
             mainPlayer.SetAsLastSibling();
+            RefreshMinimap();
         }
 
-        private static Vector2 TutorialGridPosition(Vector2Int cell)
+        private Vector2 TutorialGridPosition(Vector2Int cell)
         {
             float center = (TutorialRules.Size - 1) * 0.5f;
-            return new Vector2((cell.x - center) * TutorialCellSize, (cell.y - center) * TutorialCellSize);
+            return new Vector2((cell.x - center) * ActiveTutorialCellSize,
+                (cell.y - center) * ActiveTutorialCellSize);
         }
 
         private IEnumerator AnimateTutorialSlash()
@@ -894,7 +1373,7 @@ namespace NHN.TraceStrike
             Vector2 to = TutorialGridPosition(TutorialRules.End);
             Vector2 delta = to - from;
             attackSlash.anchoredPosition = (from + to) * 0.5f;
-            attackSlash.sizeDelta = new Vector2(delta.magnitude + TutorialCellSize, 26f);
+            attackSlash.sizeDelta = new Vector2(delta.magnitude + ActiveTutorialCellSize, 26f);
             attackSlash.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
             attackSlash.SetAsLastSibling();
             for (float t = 0f; t < 1f && tutorialActive && version == tutorialVersion; t += Time.deltaTime * 7f)
@@ -988,6 +1467,11 @@ namespace NHN.TraceStrike
                 powerText.text = "특수 아이템  + 피해+25  ◆ ×1.35  |  ≈ 정지  ▼ 약화";
                 powerText.color = EndColor;
             }
+
+            // Battle items are disabled, so the persistent HUD explains the
+            // position-based trail damage instead of obsolete pickup effects.
+            powerText.text = "타일 피해  외곽 1  ·  중앙 3×3 구역 2";
+            powerText.color = CenterDamageTileTint;
         }
 
         private static Color GetSpecialTileColor(SpecialTileType type)
@@ -1019,8 +1503,7 @@ namespace NHN.TraceStrike
         private IEnumerator ExecuteAttack()
         {
             inputLocked = true;
-            int baseDamage = CalculateDamage(model.Trail.Count);
-            int damage = SpecialTileRules.ApplyDamageModifiers(baseDamage, nextAttackFlatBonus, nextAttackMultiplier);
+            int damage = CalculateDamage(model.Trail);
             nextAttackFlatBonus = 0;
             nextAttackMultiplier = 1f;
             UpdatePowerRuleText();
@@ -1096,6 +1579,8 @@ namespace NHN.TraceStrike
         private void StartStage(int nextStage, bool preservePlayer = false)
         {
             titleActive = false;
+            hubActive = false;
+            HideHubInteractionPanel();
             if (titleScreen != null)
             {
                 titleScreen.gameObject.SetActive(false);
@@ -1117,6 +1602,7 @@ namespace NHN.TraceStrike
             stageStartRealtime = Time.realtimeSinceStartup;
             inputLocked = false;
             movementFrozen = false;
+            playerFacing = Vector2Int.up;
             movementFreezeVersion++;
             nextAttackFlatBonus = 0;
             nextAttackMultiplier = 1f;
@@ -1134,23 +1620,26 @@ namespace NHN.TraceStrike
             hazardTelegraphProgress = 0f;
             targetedTelegraphProgress = 0f;
             RestoreMainGridLayout();
+            RandomizeFloorTileLayout();
+            ApplyFloorTileLayout();
             model.CreateField(0);
             model.SetBlockedCells(crystalCells);
             model.BeginRound(round);
             GenerateSpecialTiles();
             RefreshCrystalVisuals();
+            SetWorldBossVisible(true);
 
             bossNameText.text = "크림슨 골렘";
             stageText.text = "STAGE 01";
             playerHealthText.text = "♥  HP 1";
             playerHealthText.color = StartColor;
-            fieldTitleText.text = "CRYSTAL CAVERN";
+            fieldTitleText.text = "IVY TEMPLE";
             bossHealthFill.color = Danger;
             phaseBanner.color = Danger;
             mainPlayer.localRotation = Quaternion.identity;
             mainPlayer.sizeDelta = Vector2.one * (mainCellSize * BattlePlayerSizeRatio);
             mainPlayer.localScale = Vector3.one;
-            mainPlayerImage.color = White;
+            mainPlayerImage.color = activeCharacterTint;
             if (phaseBannerGroup != null)
             {
                 phaseBannerGroup.alpha = 0f;
@@ -1163,14 +1652,29 @@ namespace NHN.TraceStrike
             RefreshBoard();
         }
 
+        private void SetWorldBossVisible(bool visible)
+        {
+            if (arenaBossCore != null)
+            {
+                arenaBossCore.gameObject.SetActive(visible);
+            }
+            if (arenaBossHealthRoot != null)
+            {
+                arenaBossHealthRoot.gameObject.SetActive(visible);
+            }
+        }
+
         private void RestoreMainGridLayout()
         {
             for (int y = 0; y < TrailFieldModel.Size; y++)
             {
                 for (int x = 0; x < TrailFieldModel.Size; x++)
                 {
+                    RectTransform ground = arenaGroundTiles[x, y].rectTransform;
+                    ground.sizeDelta = Vector2.one * (mainCellSize + (desktopLayout ? 18f : 14f));
+                    ground.anchoredPosition = GridPosition(x, y, mainCellSize);
                     RectTransform tile = mainTiles[x, y].rectTransform;
-                    tile.sizeDelta = Vector2.one * (mainCellSize - 5f);
+                    tile.sizeDelta = Vector2.one * (mainCellSize - (desktopLayout ? 7f : 5f));
                     tile.anchoredPosition = GridPosition(x, y, mainCellSize);
                     tileLabels[x, y].fontSize = 24;
                 }
@@ -1179,23 +1683,9 @@ namespace NHN.TraceStrike
 
         private void GenerateSpecialTiles()
         {
-            var excluded = new HashSet<Vector2Int>
-            {
-                model.Player,
-                model.Start,
-                model.End
-            };
-            foreach (Vector2Int crystal in crystalCells)
-            {
-                excluded.Add(crystal);
-            }
+            // Battle items were removed. An empty collection disables their
+            // visuals, pickup effects, and interaction descriptions.
             specialTiles.Clear();
-            int seed = stage * 1000 + round * 37 + (phaseTwoActive ? 503 : 0);
-            foreach (KeyValuePair<Vector2Int, SpecialTileType> tile in
-                     SpecialTileRules.Generate(model.Traversable, excluded, seed))
-            {
-                specialTiles[tile.Key] = tile.Value;
-            }
         }
 
         private void UpdatePhaseLabel()
@@ -1353,7 +1843,8 @@ namespace NHN.TraceStrike
 
             AnimateAttackWarnings();
             AddCellCounts(crystalFiringCounts, blast);
-            bool playerHit = blast.Contains(model.Player);
+            var impactCells = new HashSet<Vector2Int>(blast);
+            Vector2Int playerAtImpact = model.Player;
             int burstIndex = 0;
             foreach (Vector2Int cell in blast)
             {
@@ -1366,13 +1857,14 @@ namespace NHN.TraceStrike
             PlaySfx(explosionSfx, 1.18f, 0.82f);
             StartCoroutine(ShakeField(12f, 0.18f));
             RefreshBoard();
-            yield return new WaitForSeconds(0.14f);
+            yield return new WaitForSeconds(CombatBalanceRules.ExplosionCoyoteSeconds);
 
             RemoveCellCounts(crystalFiringCounts, blast);
             RemoveCellCounts(crystalWarningCounts, blast);
             RemoveCrystalTelegraphProgress(blast, telegraphId);
             RefreshBoard();
-            if (playerHit && !playerDead)
+            if (!playerDead && CombatBalanceRules.ShouldApplyExplosionDamage(
+                    impactCells, playerAtImpact, model.Player))
             {
                 yield return StartCoroutine(KillPlayer("수정 격자 폭발"));
             }
@@ -1494,7 +1986,7 @@ namespace NHN.TraceStrike
 
         private IEnumerator BossPatternLoop()
         {
-            while (titleActive || tutorialActive)
+            while (titleActive || tutorialActive || hubActive)
             {
                 yield return null;
             }
@@ -1515,6 +2007,26 @@ namespace NHN.TraceStrike
 
         private IEnumerator EnterPhaseTwo()
         {
+            phaseBanner.text = "PHASE 2\nENRAGED";
+            phaseBannerGroup.alpha = 1f;
+            phaseOverlayRoot.SetAsLastSibling();
+            phasePageLeft.localScale = new Vector3(0f, 1f, 1f);
+            phasePageRight.localScale = new Vector3(0f, 1f, 1f);
+            phaseBanner.rectTransform.localScale = Vector3.one * 0.72f;
+            phaseBanner.color = new Color(Danger.r, Danger.g, Danger.b, 0f);
+            PlaySfx(phaseTwoSfx);
+
+            const float closeSeconds = 0.42f;
+            for (float elapsed = 0f; elapsed < closeSeconds; elapsed += Time.unscaledDeltaTime)
+            {
+                float progress = Mathf.SmoothStep(0f, 1f, elapsed / closeSeconds);
+                phasePageLeft.localScale = new Vector3(progress, 1f, 1f);
+                phasePageRight.localScale = new Vector3(progress, 1f, 1f);
+                yield return null;
+            }
+            phasePageLeft.localScale = Vector3.one;
+            phasePageRight.localScale = Vector3.one;
+
             phaseTwoActive = true;
             SetupFixedCrystals();
             patternVersion++;
@@ -1533,23 +2045,37 @@ namespace NHN.TraceStrike
             UpdatePhaseLabel();
             RefreshBoard();
 
-            phaseBanner.text = "PHASE 2\nENRAGED";
-            phaseBannerGroup.alpha = 1f;
-            phaseBanner.rectTransform.localScale = Vector3.one * 0.45f;
             statusText.text = "PHASE 2 — 공격 수정 4개와 격자 문양이 활성화됩니다";
-            PlaySfx(phaseTwoSfx);
             StartCoroutine(ShakeHud());
             StartCoroutine(FlashFrame(Danger));
 
-            for (float t = 0f; t < 1.2f; t += Time.deltaTime)
+            const float revealSeconds = 0.48f;
+            for (float elapsed = 0f; elapsed < revealSeconds; elapsed += Time.unscaledDeltaTime)
             {
-                float normalized = t / 1.2f;
-                phaseBanner.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.45f, 1f, Mathf.SmoothStep(0f, 1f, normalized * 2f));
-                phaseBannerGroup.alpha = normalized < 0.72f ? 1f : 1f - (normalized - 0.72f) / 0.28f;
+                float progress = Mathf.SmoothStep(0f, 1f, elapsed / revealSeconds);
+                phaseBanner.color = new Color(Danger.r, Danger.g, Danger.b, progress);
+                phaseBanner.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.72f, 1f, progress);
+                yield return null;
+            }
+            phaseBanner.color = Danger;
+            phaseBanner.rectTransform.localScale = Vector3.one;
+            yield return new WaitForSecondsRealtime(0.32f);
+
+            const float openSeconds = 0.50f;
+            for (float elapsed = 0f; elapsed < openSeconds; elapsed += Time.unscaledDeltaTime)
+            {
+                float progress = Mathf.SmoothStep(0f, 1f, elapsed / openSeconds);
+                float pageScale = 1f - progress;
+                phasePageLeft.localScale = new Vector3(pageScale, 1f, 1f);
+                phasePageRight.localScale = new Vector3(pageScale, 1f, 1f);
+                phaseBanner.color = new Color(Danger.r, Danger.g, Danger.b, 1f - progress);
                 yield return null;
             }
 
             phaseBannerGroup.alpha = 0f;
+            phasePageLeft.localScale = new Vector3(0f, 1f, 1f);
+            phasePageRight.localScale = new Vector3(0f, 1f, 1f);
+            phaseBanner.color = Danger;
             phaseBanner.rectTransform.localScale = Vector3.one;
         }
 
@@ -1668,7 +2194,8 @@ namespace NHN.TraceStrike
             hazardTelegraphProgress = 1f;
             AnimateAttackWarnings();
             hazardFiring = true;
-            bool playerHit = warnedCells.Contains(model.Player);
+            var impactCells = new HashSet<Vector2Int>(warnedCells);
+            Vector2Int playerAtImpact = model.Player;
             var impactCenter = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
             foreach (Vector2Int cell in warnedCells)
             {
@@ -1679,14 +2206,16 @@ namespace NHN.TraceStrike
             PlaySfx(laserSfx, phaseTwoActive ? 1.15f : 0.92f);
             RefreshBoard();
             yield return StartCoroutine(FlashFrame(Danger));
-            yield return new WaitForSeconds(0.07f);
+            yield return new WaitForSeconds(Mathf.Max(0f,
+                CombatBalanceRules.ExplosionCoyoteSeconds - 0.12f));
 
             hazardFiring = false;
             warnedCells.Clear();
             hazardTelegraphProgress = 0f;
             RefreshBoard();
 
-            if (playerHit)
+            if (CombatBalanceRules.ShouldApplyExplosionDamage(
+                    impactCells, playerAtImpact, model.Player))
             {
                 yield return StartCoroutine(KillPlayer(patternName));
             }
@@ -1707,7 +2236,8 @@ namespace NHN.TraceStrike
             targetedTelegraphProgress = 1f;
             AnimateAttackWarnings();
             targetedFiring = true;
-            bool playerHit = targetedCells.Contains(model.Player);
+            var impactCells = new HashSet<Vector2Int>(targetedCells);
+            Vector2Int playerAtImpact = model.Player;
             Color targetColor = Hex("B44CFF");
             foreach (Vector2Int cell in targetedCells)
             {
@@ -1718,13 +2248,16 @@ namespace NHN.TraceStrike
             PlaySfx(explosionSfx, 1.3f, 0.75f);
             RefreshBoard();
             yield return StartCoroutine(FlashFrame(targetColor));
+            yield return new WaitForSeconds(Mathf.Max(0f,
+                CombatBalanceRules.ExplosionCoyoteSeconds - 0.12f));
 
             targetedFiring = false;
             targetedCells.Clear();
             targetedTelegraphProgress = 0f;
             RefreshBoard();
 
-            if (playerHit)
+            if (CombatBalanceRules.ShouldApplyExplosionDamage(
+                    impactCells, playerAtImpact, model.Player))
             {
                 yield return StartCoroutine(KillPlayer("위치 추적 폭발"));
             }
@@ -1787,10 +2320,9 @@ namespace NHN.TraceStrike
             }
         }
 
-        private int CalculateDamage(int trailLength)
+        private int CalculateDamage(IReadOnlyCollection<Vector2Int> trailCells)
         {
-            int steps = Mathf.Max(1, trailLength - 1);
-            return 8 + steps * 5 + Mathf.Max(0, steps - 8) * 2;
+            return CombatBalanceRules.CalculateTrailDamage(trailCells, TrailFieldModel.Size);
         }
 
         private void BuildInterface()
@@ -1801,12 +2333,13 @@ namespace NHN.TraceStrike
                 camera.gameObject.SetActive(false);
             }
 
-            GameObject canvasObject = new GameObject("Portrait UI", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            GameObject canvasObject = new GameObject(desktopLayout ? "Desktop UI" : "Portrait UI",
+                typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             GameObject cameraObject = new GameObject("UI Camera", typeof(Camera));
             cameraObject.transform.SetParent(transform, false);
             uiCamera = cameraObject.GetComponent<Camera>();
             uiCamera.clearFlags = CameraClearFlags.SolidColor;
-            uiCamera.backgroundColor = Background;
+            uiCamera.backgroundColor = desktopLayout ? ArenaVoid : Background;
             uiCamera.orthographic = true;
             uiCamera.nearClipPlane = 0.1f;
             uiCamera.farClipPlane = 100f;
@@ -1817,7 +2350,9 @@ namespace NHN.TraceStrike
             canvas.planeDistance = 10f;
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(ReferenceWidth, ReferenceHeight);
+            scaler.referenceResolution = desktopLayout
+                ? new Vector2(DesktopReferenceWidth, DesktopReferenceHeight)
+                : new Vector2(ReferenceWidth, ReferenceHeight);
             scaler.matchWidthOrHeight = 0.5f;
 
             if (FindAnyObjectByType<EventSystem>() == null)
@@ -1832,113 +2367,77 @@ namespace NHN.TraceStrike
             root.offsetMin = Vector2.zero;
             root.offsetMax = Vector2.zero;
             ApplySafeArea(root);
-            CreateImage("Background", root, Background, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            CreateImage("Background", root, desktopLayout ? ArenaVoid : Background,
+                Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
 
             BuildHeader(root);
             BuildMainField(root);
             BuildFooterV2(root);
+            if (desktopLayout)
+            {
+                BuildDesktopMinimap(root);
+            }
             BuildPhaseOverlay(root);
             BuildTitleScreen(root);
         }
 
         private void BuildTitleScreen(RectTransform root)
         {
-            titleScreen = CreatePanel("Title Screen", root, Background, Vector2.zero, Vector2.one);
+            titleScreen = CreateRect("Title Screen", root);
+            titleScreen.anchorMin = Vector2.zero;
+            titleScreen.anchorMax = Vector2.one;
+            titleScreen.offsetMin = Vector2.zero;
+            titleScreen.offsetMax = Vector2.zero;
 
-            Texture2D caveTexture = Resources.Load<Texture2D>("Art/cave_arena_background");
-            if (caveTexture != null)
+            RectTransform blind = CreateImage("Circular Blind", titleScreen, White,
+                Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            titleBlindImage = blind.GetComponent<Image>();
+            titleBlindImage.raycastTarget = false;
+            Shader blindShader = Resources.Load<Shader>("Shaders/TraceStrikeTitleBlind");
+            if (blindShader == null)
             {
-                RectTransform backdrop = CreateImage("Title Cave Backdrop", titleScreen, White,
-                    Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-                Image backdropImage = backdrop.GetComponent<Image>();
-                backdropImage.sprite = Sprite.Create(caveTexture,
-                    new Rect(0f, 0f, caveTexture.width, caveTexture.height),
-                    new Vector2(0.5f, 0.5f), 100f);
-                backdropImage.preserveAspect = false;
-                backdropImage.color = new Color(0.55f, 0.72f, 0.82f, 0.34f);
-                backdropImage.raycastTarget = false;
+                blindShader = Shader.Find("UI/TraceStrikeTitleBlind");
+            }
+            if (blindShader != null)
+            {
+                titleBlindMaterial = new Material(blindShader);
+                titleBlindMaterial.SetColor("_Color", Color.black);
+                titleBlindMaterial.SetColor("_RingColor", new Color(Trail.r, Trail.g, Trail.b, 0.92f));
+                titleBlindMaterial.SetFloat("_Radius", TitleInitialRadius);
+                titleBlindMaterial.SetFloat("_Feather", 0.006f);
+                titleBlindMaterial.SetFloat("_RingWidth", 0.008f);
+                titleBlindImage.material = titleBlindMaterial;
+            }
+            else
+            {
+                titleBlindImage.color = new Color(0f, 0f, 0f, 0.94f);
+                Debug.LogError("Trace Strike title blind shader could not be loaded.");
             }
 
-            CreatePanel("Title Veil", titleScreen,
-                new Color(Background.r, Background.g, Background.b, 0.82f), Vector2.zero, Vector2.one);
-            CreateImage("Top Cyan Line", titleScreen, Trail,
-                new Vector2(0f, 0.975f), Vector2.one, Vector2.zero, Vector2.zero);
+            RectTransform foreground = CreateRect("Title Foreground", titleScreen);
+            foreground.anchorMin = Vector2.zero;
+            foreground.anchorMax = Vector2.one;
+            foreground.offsetMin = Vector2.zero;
+            foreground.offsetMax = Vector2.zero;
+            titleForegroundGroup = foreground.gameObject.AddComponent<CanvasGroup>();
+            titleForegroundGroup.blocksRaycasts = false;
+            titleForegroundGroup.interactable = false;
 
-            CreateText("Title Kicker", titleScreen, "CRYSTAL CAVERN · BOSS RUSH", 23,
-                FontStyle.Bold, Trail, new Vector2(0.08f, 0.91f), new Vector2(0.92f, 0.955f),
+            CreateText("Game Title", foreground, "TRACE STRIKE", desktopLayout ? 78 : 66,
+                FontStyle.Bold, White, new Vector2(0.10f, 0.815f), new Vector2(0.90f, 0.955f),
                 TextAnchor.MiddleCenter);
-            CreateText("Game Title", titleScreen, "TRACE STRIKE", 72,
-                FontStyle.Bold, White, new Vector2(0.07f, 0.815f), new Vector2(0.93f, 0.92f),
-                TextAnchor.MiddleCenter);
-            CreateText("Title Copy", titleScreen, "한 칸의 선택이 공격 경로가 된다", 24,
-                FontStyle.Normal, Muted, new Vector2(0.08f, 0.785f), new Vector2(0.92f, 0.825f),
-                TextAnchor.MiddleCenter);
+            CreateImage("Title Accent", foreground, Trail,
+                new Vector2(0.39f, 0.81f), new Vector2(0.61f, 0.814f), Vector2.zero, Vector2.zero);
 
-            RectTransform recordPanel = CreatePanel("Best Record", titleScreen,
-                new Color(Panel.r, Panel.g, Panel.b, 0.97f),
-                new Vector2(0.10f, 0.625f), new Vector2(0.90f, 0.775f));
-            Outline recordOutline = recordPanel.gameObject.AddComponent<Outline>();
-            recordOutline.effectColor = Trail;
-            recordOutline.effectDistance = new Vector2(3f, -3f);
-            AddAccent(recordPanel, Vector2.zero, new Vector2(0.018f, 1f), Trail);
-            CreateText("Record Label", recordPanel, "최고 기록 · 크림슨 골렘", 24,
-                FontStyle.Bold, Muted, new Vector2(0.05f, 0.68f), new Vector2(0.64f, 0.95f),
-                TextAnchor.MiddleLeft);
-            bestRecordText = CreateText("Best Time", recordPanel, "기록 없음", 50,
-                FontStyle.Bold, White, new Vector2(0.05f, 0.10f), new Vector2(0.66f, 0.70f),
-                TextAnchor.MiddleLeft);
-            RectTransform rankBadge = CreatePanel("Rank Badge", recordPanel, Hex("0D1628"),
-                new Vector2(0.68f, 0.16f), new Vector2(0.95f, 0.72f));
-            bestRatingText = CreateText("Best Rank", rankBadge, "RANK  —", 29,
-                FontStyle.Bold, Muted, Vector2.zero, Vector2.one, TextAnchor.MiddleCenter);
-
-            RectTransform guidePanel = CreatePanel("Game Guide", titleScreen,
-                new Color(Panel.r, Panel.g, Panel.b, 0.97f),
-                new Vector2(0.06f, 0.255f), new Vector2(0.94f, 0.595f));
-            Outline guideOutline = guidePanel.gameObject.AddComponent<Outline>();
-            guideOutline.effectColor = new Color(Trail.r, Trail.g, Trail.b, 0.72f);
-            guideOutline.effectDistance = new Vector2(3f, -3f);
-            AddAccent(guidePanel, Vector2.zero, new Vector2(0.014f, 1f), EndColor);
-            CreateText("Guide Header", guidePanel, "게임 안내", 31,
-                FontStyle.Bold, White, new Vector2(0.045f, 0.87f), new Vector2(0.40f, 0.98f),
-                TextAnchor.MiddleLeft);
-            CreateText("Attack Guide", guidePanel,
-                "검 시작 타일 → 중복 없이 경로 연결 → 깃발 종료 타일 도착 시 공격\n경로가 길수록 피해 증가 · 붉은 공격 예고 중에도 이동 가능",
-                21, FontStyle.Normal, White,
-                new Vector2(0.045f, 0.68f), new Vector2(0.96f, 0.88f), TextAnchor.MiddleLeft);
-
-            BuildTitleSpecialGuide(guidePanel, "Power Guide", SpecialTileType.Power,
-                "더하기", "다음 공격 +25", new Vector2(0.04f, 0.37f), new Vector2(0.49f, 0.65f));
-            BuildTitleSpecialGuide(guidePanel, "Amplify Guide", SpecialTileType.Amplify,
-                "곱셈", "다음 공격 ×1.35", new Vector2(0.51f, 0.37f), new Vector2(0.96f, 0.65f));
-            BuildTitleSpecialGuide(guidePanel, "Pause Guide", SpecialTileType.Mud,
-                "정지", "이동 1초 정지", new Vector2(0.04f, 0.06f), new Vector2(0.49f, 0.34f));
-            BuildTitleSpecialGuide(guidePanel, "Down Guide", SpecialTileType.Curse,
-                "다운", "다음 공격 ×0.65", new Vector2(0.51f, 0.06f), new Vector2(0.96f, 0.34f));
-
-            RectTransform challenge = CreatePanel("Challenge Button", titleScreen, StartColor,
-                new Vector2(0.18f, 0.085f), new Vector2(0.82f, 0.205f));
-            Outline buttonOutline = challenge.gameObject.AddComponent<Outline>();
-            buttonOutline.effectColor = White;
-            buttonOutline.effectDistance = new Vector2(4f, -4f);
-            Button button = challenge.gameObject.AddComponent<Button>();
-            button.targetGraphic = challenge.GetComponent<Image>();
-            ColorBlock colors = button.colors;
-            colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(1f, 1f, 0.78f, 1f);
-            colors.pressedColor = new Color(0.65f, 0.88f, 0.78f, 1f);
-            colors.selectedColor = Color.white;
-            button.colors = colors;
-            button.onClick.AddListener(BeginChallenge);
-            CreateText("Challenge Label", challenge, "도전하기", 39,
-                FontStyle.Bold, Background, new Vector2(0f, 0.30f), Vector2.one,
-                TextAnchor.MiddleCenter);
-            CreateText("Challenge Hint", challenge, "TAP  /  ENTER", 18,
-                FontStyle.Bold, Hex("183B37"), Vector2.zero, new Vector2(1f, 0.36f),
-                TextAnchor.MiddleCenter);
-            CreateText("Title Footer", titleScreen, "최단 시간은 정상 플레이 완료 시 자동 저장됩니다",
-                19, FontStyle.Normal, Muted, new Vector2(0.08f, 0.025f), new Vector2(0.92f, 0.07f),
-                TextAnchor.MiddleCenter);
+            RectTransform hintPanel = CreatePanel("Start Input Guide", foreground,
+                new Color(Panel.r, Panel.g, Panel.b, 0.88f),
+                new Vector2(0.355f, 0.045f), new Vector2(0.645f, 0.135f));
+            Outline hintOutline = hintPanel.gameObject.AddComponent<Outline>();
+            hintOutline.effectColor = Trail;
+            hintOutline.effectDistance = new Vector2(2f, -2f);
+            titleInputHint = CreateText("WASD Start Hint", hintPanel, "W / A / S / D   TO PLAY",
+                desktopLayout ? 25 : 21, FontStyle.Bold, White,
+                Vector2.zero, Vector2.one, TextAnchor.MiddleCenter);
 
             titleScreen.gameObject.SetActive(false);
         }
@@ -1981,20 +2480,42 @@ namespace NHN.TraceStrike
 
         private void BuildPhaseOverlay(RectTransform root)
         {
-            RectTransform overlay = CreatePanel("Phase Transition", root, new Color(Background.r, Background.g, Background.b, 0.94f),
-                new Vector2(0.12f, 0.40f), new Vector2(0.88f, 0.61f));
-            Outline outline = overlay.gameObject.AddComponent<Outline>();
-            outline.effectColor = Danger;
-            outline.effectDistance = new Vector2(4f, -4f);
+            RectTransform overlay = CreatePanel("Phase Page Transition", root, Color.clear,
+                Vector2.zero, Vector2.one);
+            phaseOverlayRoot = overlay;
+
+            phasePageLeft = CreatePanel("Phase Page Left", overlay, Hex("171611"),
+                Vector2.zero, new Vector2(0.5f, 1f));
+            phasePageLeft.pivot = new Vector2(0f, 0.5f);
+            phasePageRight = CreatePanel("Phase Page Right", overlay, Hex("171611"),
+                new Vector2(0.5f, 0f), Vector2.one);
+            phasePageRight.pivot = new Vector2(1f, 0.5f);
+            AddAccent(phasePageLeft, new Vector2(0.982f, 0f), Vector2.one, Danger);
+            AddAccent(phasePageRight, Vector2.zero, new Vector2(0.018f, 1f), Danger);
+            CreateText("Phase Page Left Mark", phasePageLeft, "01", 54, FontStyle.Bold,
+                new Color(Danger.r, Danger.g, Danger.b, 0.28f),
+                new Vector2(0.08f, 0.08f), new Vector2(0.40f, 0.30f), TextAnchor.MiddleLeft);
+            CreateText("Phase Page Right Mark", phasePageRight, "02", 54, FontStyle.Bold,
+                new Color(Danger.r, Danger.g, Danger.b, 0.28f),
+                new Vector2(0.60f, 0.70f), new Vector2(0.92f, 0.92f), TextAnchor.MiddleRight);
+
             phaseBanner = CreateText("Phase Banner Text", overlay, "PHASE 2\nENRAGED", 58, FontStyle.Bold, Danger,
-                new Vector2(0.04f, 0.08f), new Vector2(0.96f, 0.92f), TextAnchor.MiddleCenter);
+                new Vector2(0.22f, 0.34f), new Vector2(0.78f, 0.66f), TextAnchor.MiddleCenter);
             phaseBannerGroup = overlay.gameObject.AddComponent<CanvasGroup>();
             phaseBannerGroup.alpha = 0f;
             phaseBannerGroup.blocksRaycasts = false;
+            phasePageLeft.localScale = new Vector3(0f, 1f, 1f);
+            phasePageRight.localScale = new Vector3(0f, 1f, 1f);
         }
 
         private void BuildHeader(RectTransform root)
         {
+            if (desktopLayout)
+            {
+                BuildDesktopHeader(root);
+                return;
+            }
+
             RectTransform header = CreatePanel("Boss HUD", root, Panel, new Vector2(0.035f, 0.855f), new Vector2(0.965f, 0.985f));
             bossHud = header;
             AddAccent(header, new Vector2(0f, 0f), new Vector2(0.018f, 1f), Trail);
@@ -2021,71 +2542,203 @@ namespace NHN.TraceStrike
             bossHealthFill.fillMethod = Image.FillMethod.Horizontal;
             bossHealthFill.fillOrigin = 0;
 
-            bossHealthText = CreateText("Health Text", healthBack, "260 / 260", 24, FontStyle.Bold, White,
+            bossHealthText = CreateText("Health Text", healthBack, "50 / 50", 24, FontStyle.Bold, White,
                 Vector2.zero, Vector2.one, TextAnchor.MiddleCenter);
 
             damagePopup = CreateText("Damage Popup", header, "-0", 64, FontStyle.Bold, TrailHot,
                 new Vector2(0.66f, 0.28f), new Vector2(0.96f, 0.75f), TextAnchor.MiddleRight);
             damagePopupGroup = damagePopup.gameObject.AddComponent<CanvasGroup>();
             damagePopupGroup.alpha = 0f;
+
+        }
+
+        private void BuildDesktopHeader(RectTransform root)
+        {
+            RectTransform header = CreatePanel("Boss HUD", root, Panel,
+                new Vector2(0.30f, 0.94f), new Vector2(0.70f, 0.993f));
+            bossHud = header;
+            Outline headerOutline = header.gameObject.AddComponent<Outline>();
+            headerOutline.effectColor = Danger;
+            headerOutline.effectDistance = new Vector2(3f, -3f);
+            AddAccent(header, Vector2.zero, new Vector2(1f, 0.07f), Danger);
+
+            stageText = CreateText("Stage", header, "STAGE 01", 16, FontStyle.Bold, White,
+                new Vector2(0.025f, 0.53f), new Vector2(0.22f, 0.96f), TextAnchor.MiddleLeft);
+            bossNameText = CreateText("Boss Name", header, "크림슨 골렘", 24, FontStyle.Bold, White,
+                new Vector2(0.20f, 0.50f), new Vector2(0.74f, 0.98f), TextAnchor.MiddleCenter);
+            shapeText = CreateText("Shape", header, "PHASE 1", 15, FontStyle.Bold, Muted,
+                new Vector2(0.72f, 0.53f), new Vector2(0.975f, 0.96f), TextAnchor.MiddleRight);
+
+            RectTransform healthBack = CreatePanel("Boss Health Back", header, Hex("0A0F1C"),
+                new Vector2(0.025f, 0.10f), new Vector2(0.975f, 0.45f));
+            RectTransform fillRect = CreateRect("Boss Health", healthBack);
+            fillRect.anchorMin = new Vector2(0.008f, 0.12f);
+            fillRect.anchorMax = new Vector2(0.992f, 0.88f);
+            fillRect.offsetMin = Vector2.zero;
+            fillRect.offsetMax = Vector2.zero;
+            bossHealthFill = fillRect.gameObject.AddComponent<Image>();
+            bossHealthFill.color = Danger;
+            bossHealthFill.type = Image.Type.Filled;
+            bossHealthFill.fillMethod = Image.FillMethod.Horizontal;
+            bossHealthFill.fillOrigin = 0;
+            bossHealthText = CreateText("Health Text", healthBack, "50 / 50", 15, FontStyle.Bold, White,
+                Vector2.zero, Vector2.one, TextAnchor.MiddleCenter);
+
+            RectTransform interactionPanel = CreatePanel("Interaction Information", root, Hex("211A1B"),
+                new Vector2(0.29f, 0.705f), new Vector2(0.72f, 0.925f));
+            interactionPanelRoot = interactionPanel;
+            Outline interactionOutline = interactionPanel.gameObject.AddComponent<Outline>();
+            interactionOutline.effectColor = Hex("B97A56");
+            interactionOutline.effectDistance = new Vector2(4f, -4f);
+            AddAccent(interactionPanel, new Vector2(0f, 0.965f), Vector2.one, Hex("D09468"));
+            CreateText("Interaction Label", interactionPanel, "FRONT OBJECT · INTERACTION SCAN", 16,
+                FontStyle.Bold, Hex("E2A77E"), new Vector2(0.04f, 0.86f), new Vector2(0.96f, 0.97f),
+                TextAnchor.MiddleCenter);
+
+            RectTransform portrait = CreateRect("Interaction Portrait", interactionPanel);
+            portrait.anchorMin = portrait.anchorMax = new Vector2(0.5f, 0.61f);
+            portrait.pivot = new Vector2(0.5f, 0.5f);
+            portrait.sizeDelta = new Vector2(112f, 112f);
+            portrait.anchoredPosition = Vector2.zero;
+
+            Sprite circleSprite = CreateCircleSprite(96);
+            RectTransform ring = CreateRect("Interaction Portrait Ring", portrait);
+            ring.anchorMin = Vector2.zero;
+            ring.anchorMax = Vector2.one;
+            ring.offsetMin = Vector2.zero;
+            ring.offsetMax = Vector2.zero;
+            interactionRingImage = ring.gameObject.AddComponent<Image>();
+            interactionRingImage.sprite = circleSprite;
+            interactionRingImage.color = Danger;
+            interactionRingImage.raycastTarget = false;
+
+            RectTransform inner = CreateRect("Interaction Portrait Inner", portrait);
+            inner.anchorMin = Vector2.zero;
+            inner.anchorMax = Vector2.one;
+            inner.offsetMin = new Vector2(7f, 7f);
+            inner.offsetMax = new Vector2(-7f, -7f);
+            Image innerImage = inner.gameObject.AddComponent<Image>();
+            innerImage.sprite = circleSprite;
+            innerImage.color = Hex("241523");
+            innerImage.raycastTarget = false;
+
+            RectTransform bossIcon = CreateRect("Interaction Object Image", portrait);
+            bossIcon.anchorMin = bossIcon.anchorMax = new Vector2(0.5f, 0.5f);
+            bossIcon.sizeDelta = new Vector2(78f, 78f);
+            bossIcon.anchoredPosition = Vector2.zero;
+            interactionIconImage = bossIcon.gameObject.AddComponent<Image>();
+            bossPortraitSprite = LoadPixelSprite("Art/red_attack_crystal", 64f);
+            interactionIconImage.sprite = bossPortraitSprite;
+            interactionIconImage.preserveAspect = true;
+            interactionIconImage.raycastTarget = false;
+
+            interactionTitleText = CreateText("Interaction Object Name", interactionPanel,
+                "스테이지 보스 · 크림슨 골렘", 21, FontStyle.Bold, White,
+                new Vector2(0.04f, 0.18f), new Vector2(0.96f, 0.32f), TextAnchor.MiddleCenter);
+            interactionBodyText = CreateText("Interaction Object Description", interactionPanel,
+                "광물 증식형 바이러스 · 레이저와 수정 폭발 패턴", 16, FontStyle.Normal, Muted,
+                new Vector2(0.04f, 0.035f), new Vector2(0.96f, 0.18f), TextAnchor.MiddleCenter);
+
+            damagePopup = CreateText("Damage Popup", root, "-0", 52, FontStyle.Bold, TrailHot,
+                new Vector2(0.69f, 0.74f), new Vector2(0.79f, 0.86f), TextAnchor.MiddleLeft);
+            damagePopupGroup = damagePopup.gameObject.AddComponent<CanvasGroup>();
+            damagePopupGroup.alpha = 0f;
+
+            // Desktop gameplay is intentionally HUD-free. The references stay alive so
+            // combat state can continue updating without coupling game rules to presentation.
+            header.gameObject.SetActive(false);
+            interactionPanel.gameObject.SetActive(false);
+            damagePopup.gameObject.SetActive(false);
         }
 
         private void BuildMainField(RectTransform root)
         {
             RectTransform section = CreateRect("Main Field Section", root);
-            section.anchorMin = new Vector2(0.035f, 0.245f);
-            section.anchorMax = new Vector2(0.965f, 0.835f);
+            section.anchorMin = desktopLayout ? Vector2.zero : new Vector2(0.035f, 0.245f);
+            section.anchorMax = desktopLayout ? Vector2.one : new Vector2(0.965f, 0.835f);
             section.offsetMin = Vector2.zero;
             section.offsetMax = Vector2.zero;
 
             RectTransform titleBar = CreatePanel("Field Title", section, PanelLight,
                 new Vector2(0f, 0.91f), new Vector2(1f, 1f));
-            fieldTitleText = CreateText("Field Label", titleBar, "CRYSTAL CAVERN", 30, FontStyle.Bold, White,
+            fieldTitleText = CreateText("Field Label", titleBar, "IVY TEMPLE", 30, FontStyle.Bold, White,
                 new Vector2(0.04f, 0f), new Vector2(0.45f, 1f), TextAnchor.MiddleLeft);
             comboText = CreateText("Power", titleBar, "경로 1칸  ·  예상 피해 13", 25, FontStyle.Bold, Trail,
                 new Vector2(0.38f, 0f), new Vector2(0.96f, 1f), TextAnchor.MiddleRight);
+            if (desktopLayout)
+            {
+                titleBar.gameObject.SetActive(false);
+            }
 
-            RectTransform field = CreatePanel("Field Frame", section, Hex("0A1020"),
-                new Vector2(0f, 0f), new Vector2(1f, 0.89f));
+            RectTransform field = CreatePanel("Field Frame", section, desktopLayout ? ArenaVoid : Hex("0A1020"),
+                Vector2.zero, desktopLayout ? Vector2.one : new Vector2(1f, 0.89f));
             fieldFrame = field.GetComponent<Image>();
             Outline outline = field.gameObject.AddComponent<Outline>();
             outline.effectColor = Hex("42D9EA");
             outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = !desktopLayout;
 
-            Texture2D caveTexture = Resources.Load<Texture2D>("Art/cave_arena_background");
-            if (caveTexture != null)
+            string templeBackgroundPath = desktopLayout
+                ? "Art/temple_arena_background_wide"
+                : "Art/temple_arena_background";
+            Texture2D templeTexture = Resources.Load<Texture2D>(templeBackgroundPath);
+            if (templeTexture != null)
             {
-                caveTexture.filterMode = FilterMode.Point;
-                caveTexture.wrapMode = TextureWrapMode.Clamp;
-                RectTransform caveBackdrop = CreateImage("Cave Backdrop", field, White,
-                    Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-                Image caveImage = caveBackdrop.GetComponent<Image>();
-                caveImage.sprite = Sprite.Create(caveTexture,
-                    new Rect(0f, 0f, caveTexture.width, caveTexture.height),
+                templeTexture.filterMode = FilterMode.Point;
+                templeTexture.wrapMode = TextureWrapMode.Clamp;
+                RectTransform templeBackdrop = CreateImage("Ivy Temple Backdrop", field,
+                    desktopLayout ? new Color(0.92f, 0.90f, 0.82f, 0.92f) : White,
+                    Vector2.zero, Vector2.one,
+                    Vector2.zero, Vector2.zero);
+                Image templeImage = templeBackdrop.GetComponent<Image>();
+                templeImage.sprite = Sprite.Create(templeTexture,
+                    new Rect(0f, 0f, templeTexture.width, templeTexture.height),
                     new Vector2(0.5f, 0.5f), 100f);
-                caveImage.preserveAspect = false;
-                caveImage.raycastTarget = false;
+                templeImage.preserveAspect = false;
+                templeImage.raycastTarget = false;
             }
 
-            for (int i = 0; i < 18; i++)
+            int templeMoteCount = desktopLayout ? 34 : 14;
+            for (int i = 0; i < templeMoteCount; i++)
             {
                 float x = 0.035f + ((i * 37) % 91) / 100f;
                 float y = 0.035f + ((i * 53) % 87) / 100f;
                 float size = i % 4 == 0 ? 3.5f : 2f;
                 Color glow = i % 5 == 0
-                    ? new Color(1f, 0.48f, 0.12f, 0.34f)
-                    : new Color(0.26f, 0.9f, 0.96f, 0.24f);
-                CreateImage("Cave Spark " + i, field, glow, new Vector2(x, y), new Vector2(x, y),
+                    ? new Color(0.96f, 0.72f, 0.26f, 0.28f)
+                    : new Color(0.42f, 0.72f, 0.34f, 0.22f);
+                CreateImage("Temple Mote " + i, field, glow, new Vector2(x, y), new Vector2(x, y),
                     new Vector2(-size, -size), new Vector2(size, size));
+            }
+
+            if (desktopLayout)
+            {
+                BuildHudlessArenaPresentation(field);
             }
 
             mainGrid = CreateRect("Main Grid", field);
             mainGrid.anchorMin = new Vector2(0.5f, 0.5f);
             mainGrid.anchorMax = new Vector2(0.5f, 0.5f);
             mainGrid.pivot = new Vector2(0.5f, 0.5f);
-            mainGrid.sizeDelta = new Vector2(900f, 900f);
+            // Preserve the original 11x11-era cell dimensions even though the
+            // battlefield now contains 15x15 cells.
+            float legacyGridSize = desktopLayout ? LegacyDesktopGridSize : LegacyMobileGridSize;
+            float gridSize = legacyGridSize * TrailFieldModel.Size / LegacyFieldSize;
+            mainGrid.sizeDelta = new Vector2(gridSize, gridSize);
             mainGrid.anchoredPosition = Vector2.zero;
-            mainCellSize = 900f / TrailFieldModel.Size;
+            Image arenaSeparationShadow = mainGrid.gameObject.AddComponent<Image>();
+            arenaSeparationShadow.sprite = CreateCircleSprite(128);
+            arenaSeparationShadow.color = new Color(0.08f, 0.09f, 0.10f, 0.16f);
+            arenaSeparationShadow.raycastTarget = false;
+            Outline arenaSeparationOutline = mainGrid.gameObject.AddComponent<Outline>();
+            arenaSeparationOutline.effectColor = new Color(0.43f, 0.46f, 0.48f, 0.42f);
+            arenaSeparationOutline.effectDistance = new Vector2(2f, -2f);
+            mainCellSize = gridSize / TrailFieldModel.Size;
+            floorTileSprites = LoadFloorTileSprites();
+            floorTileSprite = floorTileSprites.Length > 0
+                ? floorTileSprites[0]
+                : LoadPixelSprite("Art/cave_floor_tile_v2", 128f);
+            RandomizeFloorTileLayout();
             startMarkerSprite = LoadPixelSprite("Art/start_sword_retouch", 32f);
             endMarkerSprite = LoadPixelSprite("Art/end_flag_retouch", 32f);
             powerIconSprite = LoadPixelSprite("Art/special_plus", 32f);
@@ -2093,20 +2746,44 @@ namespace NHN.TraceStrike
             mudIconSprite = LoadPixelSprite("Art/special_pause", 32f);
             curseIconSprite = LoadPixelSprite("Art/special_down", 32f);
 
+            // Slightly overlapping plates form one connected gray silhouette
+            // behind only the playable cells, separating the arena from the temple.
+            float groundExpansion = desktopLayout ? 18f : 14f;
+            for (int y = 0; y < TrailFieldModel.Size; y++)
+            {
+                for (int x = 0; x < TrailFieldModel.Size; x++)
+                {
+                    RectTransform ground = CreateRect("Arena Ground " + x + "," + y, mainGrid);
+                    ground.anchorMin = ground.anchorMax = new Vector2(0.5f, 0.5f);
+                    ground.sizeDelta = Vector2.one * (mainCellSize + groundExpansion);
+                    ground.anchoredPosition = GridPosition(x, y, mainCellSize);
+                    Image groundImage = ground.gameObject.AddComponent<Image>();
+                    groundImage.color = desktopLayout
+                        ? new Color(0.115f, 0.132f, 0.092f, 0.96f)
+                        : new Color(0.105f, 0.118f, 0.086f, 0.95f);
+                    groundImage.raycastTarget = false;
+                    ground.gameObject.SetActive(false);
+                    arenaGroundTiles[x, y] = groundImage;
+                }
+            }
+
             for (int y = 0; y < TrailFieldModel.Size; y++)
             {
                 for (int x = 0; x < TrailFieldModel.Size; x++)
                 {
                     RectTransform tile = CreateRect("Tile " + x + "," + y, mainGrid);
                     tile.anchorMin = tile.anchorMax = new Vector2(0.5f, 0.5f);
-                    tile.sizeDelta = Vector2.one * (mainCellSize - 5f);
+                    tile.sizeDelta = Vector2.one * (mainCellSize - (desktopLayout ? 7f : 5f));
                     tile.anchoredPosition = GridPosition(x, y, mainCellSize);
                     Image image = tile.gameObject.AddComponent<Image>();
+                    image.sprite = GetFloorTileSprite(x, y);
+                    image.type = Image.Type.Simple;
                     image.color = Floor;
                     mainTiles[x, y] = image;
                     Outline tileEdge = tile.gameObject.AddComponent<Outline>();
-                    tileEdge.effectColor = FloorEdge;
+                    tileEdge.effectColor = desktopLayout ? Hex("39251F") : FloorEdge;
                     tileEdge.effectDistance = new Vector2(1.2f, -1.2f);
+                    mainTileOutlines[x, y] = tileEdge;
 
                     RectTransform item = CreateRect("Special Item", tile);
                     item.anchorMin = item.anchorMax = new Vector2(0.5f, 0.5f);
@@ -2156,14 +2833,38 @@ namespace NHN.TraceStrike
                 }
             }
 
+            hubCampZone = CreateRect("Hub Campfire Zone", mainGrid);
+            hubCampZone.anchorMin = hubCampZone.anchorMax = new Vector2(0.5f, 0.5f);
+            hubCampZone.sizeDelta = Vector2.one * (mainCellSize * 4.25f);
+            hubCampZone.anchoredPosition = GridPosition(2, 2, mainCellSize);
+            Image campZoneImage = hubCampZone.gameObject.AddComponent<Image>();
+            campZoneImage.color = new Color(0.06f, 0.62f, 0.72f, 0.075f);
+            campZoneImage.raycastTarget = false;
+            Outline campZoneOutline = hubCampZone.gameObject.AddComponent<Outline>();
+            campZoneOutline.effectColor = Hex("1FB8D3");
+            campZoneOutline.effectDistance = new Vector2(3f, -3f);
+            hubCampZone.gameObject.SetActive(false);
+
+            hubStageLane = CreateRect("Hub Stage Lane", mainGrid);
+            hubStageLane.anchorMin = hubStageLane.anchorMax = new Vector2(0.5f, 0.5f);
+            hubStageLane.sizeDelta = new Vector2(mainCellSize * 10.4f, mainCellSize * 1.35f);
+            hubStageLane.anchoredPosition = GridPosition(5, 9, mainCellSize);
+            Image stageLaneImage = hubStageLane.gameObject.AddComponent<Image>();
+            stageLaneImage.color = new Color(0.72f, 0.06f, 0.10f, 0.055f);
+            stageLaneImage.raycastTarget = false;
+            Outline stageLaneOutline = hubStageLane.gameObject.AddComponent<Outline>();
+            stageLaneOutline.effectColor = new Color(Danger.r, Danger.g, Danger.b, 0.7f);
+            stageLaneOutline.effectDistance = new Vector2(2f, -2f);
+            hubStageLane.gameObject.SetActive(false);
+
             effectsLayer = CreateRect("Effects Layer", mainGrid);
             effectsLayer.anchorMin = effectsLayer.anchorMax = new Vector2(0.5f, 0.5f);
-            effectsLayer.sizeDelta = new Vector2(900f, 900f);
+            effectsLayer.sizeDelta = new Vector2(gridSize, gridSize);
             effectsLayer.anchoredPosition = Vector2.zero;
 
             attackSlash = CreateRect("Attack Slash", effectsLayer);
             attackSlash.anchorMin = attackSlash.anchorMax = new Vector2(0.5f, 0.5f);
-            attackSlash.sizeDelta = new Vector2(820f, 22f);
+            attackSlash.sizeDelta = new Vector2(desktopLayout ? 780f : 820f, desktopLayout ? 20f : 22f);
             attackSlash.gameObject.AddComponent<Image>().color = TrailHot;
             attackSlashGroup = attackSlash.gameObject.AddComponent<CanvasGroup>();
             attackSlashGroup.alpha = 0f;
@@ -2194,7 +2895,96 @@ namespace NHN.TraceStrike
                 crystalVisuals[i] = crystal;
             }
 
+            campfireSprite = CreateCampfireSprite();
+            playerCharacterSprite = LoadPixelSprite("Art/warrior_front", 32f);
+            for (int y = 0; y < HubWorldModel.Size; y++)
+            {
+                for (int x = 0; x < HubWorldModel.Size; x++)
+                {
+                    RectTransform hubObject = CreateRect("Hub Object " + x + "," + y, mainGrid);
+                    hubObject.anchorMin = hubObject.anchorMax = new Vector2(0.5f, 0.5f);
+                    hubObject.sizeDelta = Vector2.one * (mainCellSize * 0.82f);
+                    hubObject.anchoredPosition = GridPosition(x, y, mainCellSize);
+                    Image objectImage = hubObject.gameObject.AddComponent<Image>();
+                    objectImage.color = Hex("100E14");
+                    objectImage.raycastTarget = false;
+                    Outline objectOutline = hubObject.gameObject.AddComponent<Outline>();
+                    objectOutline.effectColor = ArenaBorderGlow;
+                    objectOutline.effectDistance = new Vector2(3f, -3f);
+
+                    RectTransform icon = CreateRect("Hub Object Icon", hubObject);
+                    icon.anchorMin = icon.anchorMax = new Vector2(0.5f, 0.5f);
+                    icon.sizeDelta = Vector2.one * (mainCellSize * 0.68f);
+                    icon.anchoredPosition = Vector2.zero;
+                    Image iconImage = icon.gameObject.AddComponent<Image>();
+                    iconImage.color = White;
+                    iconImage.preserveAspect = true;
+                    iconImage.raycastTarget = false;
+
+                    Text label = CreateText("Hub Object Label", hubObject, string.Empty, 18,
+                        FontStyle.Bold, White, new Vector2(0f, 0f), new Vector2(1f, 0.28f),
+                        TextAnchor.MiddleCenter);
+                    hubObject.gameObject.SetActive(false);
+                    hubObjectVisuals[x, y] = hubObject;
+                    hubObjectImages[x, y] = objectImage;
+                    hubObjectIconImages[x, y] = iconImage;
+                    hubObjectLabels[x, y] = label;
+                }
+            }
+
             mainPlayer = CreatePlayer("Player", mainGrid, mainCellSize * BattlePlayerSizeRatio, false);
+        }
+
+        private void BuildHudlessArenaPresentation(RectTransform field)
+        {
+            arenaBossCore = CreateRect("Crimson Golem World Core", field);
+            arenaBossCore.anchorMin = arenaBossCore.anchorMax = new Vector2(0.84f, 0.52f);
+            arenaBossCore.sizeDelta = new Vector2(220f, 220f);
+            Image coreImage = arenaBossCore.gameObject.AddComponent<Image>();
+            coreImage.sprite = LoadPixelSprite("Art/red_attack_crystal", 64f);
+            coreImage.color = White;
+            coreImage.preserveAspect = true;
+            coreImage.raycastTarget = false;
+            Outline coreOutline = arenaBossCore.gameObject.AddComponent<Outline>();
+            coreOutline.effectColor = Hex("FF264B");
+            coreOutline.effectDistance = new Vector2(5f, -5f);
+
+            arenaBossHealthRoot = CreatePanel("World Boss Health Back", field, Hex("16090D"),
+                new Vector2(0.755f, 0.345f), new Vector2(0.925f, 0.385f));
+            Outline worldHealthOutline = arenaBossHealthRoot.gameObject.AddComponent<Outline>();
+            worldHealthOutline.effectColor = Hex("FF264B");
+            worldHealthOutline.effectDistance = new Vector2(2f, -2f);
+            RectTransform worldHealthFill = CreateRect("World Boss Health Fill", arenaBossHealthRoot);
+            worldHealthFill.anchorMin = new Vector2(0.018f, 0.16f);
+            worldHealthFill.anchorMax = new Vector2(0.982f, 0.84f);
+            worldHealthFill.offsetMin = Vector2.zero;
+            worldHealthFill.offsetMax = Vector2.zero;
+            bossHealthFill = worldHealthFill.gameObject.AddComponent<Image>();
+            bossHealthFill.color = Danger;
+            bossHealthFill.type = Image.Type.Filled;
+            bossHealthFill.fillMethod = Image.FillMethod.Horizontal;
+            bossHealthFill.fillOrigin = 0;
+            bossHealthFill.raycastTarget = false;
+            bossHealthText = CreateText("World Boss Health Text", arenaBossHealthRoot, "150 / 150", 18,
+                FontStyle.Bold, White, Vector2.zero, Vector2.one, TextAnchor.MiddleCenter);
+
+            for (int i = 0; i < 42; i++)
+            {
+                float x = 0.018f + ((i * 47) % 965) / 1000f;
+                float y = 0.025f + ((i * 83) % 930) / 1000f;
+                RectTransform particle = CreateRect("Ambient Pixel " + i, field);
+                particle.anchorMin = particle.anchorMax = new Vector2(x, y);
+                float size = 3f + (i % 4) * 2f;
+                particle.sizeDelta = Vector2.one * size;
+                particle.localRotation = Quaternion.Euler(0f, 0f, 45f);
+                Image image = particle.gameObject.AddComponent<Image>();
+                image.color = i % 5 == 0
+                    ? new Color(0.08f, 0.95f, 0.88f, 0.34f)
+                    : new Color(1f, 0.31f, 0.10f, 0.28f);
+                image.raycastTarget = false;
+                ambientParticles.Add(particle);
+                ambientParticleImages.Add(image);
+            }
         }
 
         private void BuildAttackWarningVisual(RectTransform tile, int x, int y)
@@ -2243,6 +3033,12 @@ namespace NHN.TraceStrike
 
         private void BuildFooterV2(RectTransform root)
         {
+            if (desktopLayout)
+            {
+                BuildDesktopPlayerPanel(root);
+                return;
+            }
+
             RectTransform footer = CreateRect("Footer", root);
             footer.anchorMin = new Vector2(0.035f, 0.02f);
             footer.anchorMax = new Vector2(0.965f, 0.225f);
@@ -2284,6 +3080,172 @@ namespace NHN.TraceStrike
                 new Vector2(0.025f, 0f), new Vector2(0.975f, 1f), TextAnchor.MiddleCenter);
         }
 
+        private void BuildDesktopPlayerPanel(RectTransform root)
+        {
+            RectTransform panel = CreatePanel("Desktop Player Panel", root, Panel,
+                new Vector2(0.025f, 0.14f), new Vector2(0.19f, 0.69f));
+            Outline outline = panel.gameObject.AddComponent<Outline>();
+            outline.effectColor = Hex("A64CC2");
+            outline.effectDistance = new Vector2(4f, -4f);
+            AddAccent(panel, Vector2.zero, new Vector2(0.025f, 1f), Hex("B85BD4"));
+
+            CreateText("Player Panel Label", panel, "CURRENT CHARACTER", 16, FontStyle.Bold, Hex("D88BEE"),
+                new Vector2(0.07f, 0.925f), new Vector2(0.93f, 0.985f), TextAnchor.MiddleCenter);
+
+            RectTransform portrait = CreatePanel("Character Portrait Frame", panel, Hex("0D1424"),
+                new Vector2(0.26f, 0.68f), new Vector2(0.74f, 0.91f));
+            Outline portraitOutline = portrait.gameObject.AddComponent<Outline>();
+            portraitOutline.effectColor = Trail;
+            portraitOutline.effectDistance = new Vector2(2f, -2f);
+            RectTransform portraitImageRect = CreateRect("Character Portrait Image", portrait);
+            portraitImageRect.anchorMin = Vector2.zero;
+            portraitImageRect.anchorMax = Vector2.one;
+            portraitImageRect.offsetMin = new Vector2(8f, 8f);
+            portraitImageRect.offsetMax = new Vector2(-8f, -8f);
+            Image portraitImage = portraitImageRect.gameObject.AddComponent<Image>();
+            portraitImage.sprite = LoadPixelSprite("Art/warrior_front", 32f);
+            portraitImage.color = White;
+            portraitImage.preserveAspect = true;
+            portraitImage.raycastTarget = false;
+
+            CreateText("Character Name", panel, "트레이스 워리어", 23, FontStyle.Bold, White,
+                new Vector2(0.07f, 0.61f), new Vector2(0.93f, 0.68f), TextAnchor.MiddleCenter);
+            playerHealthText = CreateText("Player HP", panel, "♥  HP 1", 22, FontStyle.Bold, StartColor,
+                new Vector2(0.07f, 0.555f), new Vector2(0.93f, 0.615f), TextAnchor.MiddleCenter);
+
+            RectTransform special = CreatePanel("Character Special Ability", panel, Hex("16102A"),
+                new Vector2(0.07f, 0.31f), new Vector2(0.93f, 0.54f));
+            AddAccent(special, Vector2.zero, new Vector2(0.025f, 1f), Hex("B85BD4"));
+            CreateText("Special Ability Label", special, "특수능력", 15, FontStyle.Bold, Hex("D88BEE"),
+                new Vector2(0.07f, 0.70f), new Vector2(0.93f, 0.95f), TextAnchor.MiddleLeft);
+            CreateText("Special Ability Name", special, "트레이스 드라이버", 17, FontStyle.Bold, White,
+                new Vector2(0.07f, 0.45f), new Vector2(0.93f, 0.72f), TextAnchor.MiddleLeft);
+            CreateText("Special Ability Description", special, "END 도착 시\n그린 경로로 공격", 14,
+                FontStyle.Normal, Muted, new Vector2(0.07f, 0.06f), new Vector2(0.93f, 0.46f),
+                TextAnchor.MiddleLeft);
+
+            RectTransform passive = CreatePanel("Character Passive Ability", panel, Hex("10192C"),
+                new Vector2(0.07f, 0.07f), new Vector2(0.93f, 0.29f));
+            AddAccent(passive, Vector2.zero, new Vector2(0.025f, 1f), Trail);
+            CreateText("Passive Ability Label", passive, "패시브", 15, FontStyle.Bold, Trail,
+                new Vector2(0.07f, 0.69f), new Vector2(0.93f, 0.95f), TextAnchor.MiddleLeft);
+            CreateText("Passive Ability Name", passive, "경로 증폭", 17, FontStyle.Bold, White,
+                new Vector2(0.07f, 0.44f), new Vector2(0.93f, 0.70f), TextAnchor.MiddleLeft);
+            CreateText("Passive Ability Description", passive, "경로가 길수록\n공격 피해 증가", 14,
+                FontStyle.Normal, Muted, new Vector2(0.07f, 0.06f), new Vector2(0.93f, 0.45f),
+                TextAnchor.MiddleLeft);
+
+            RectTransform status = CreatePanel("Desktop Status", root, PanelLight,
+                new Vector2(0.025f, 0.07f), new Vector2(0.19f, 0.13f));
+            AddAccent(status, Vector2.zero, new Vector2(0.025f, 1f), TrailHot);
+            statusText = CreateText("Status Text", status, string.Empty, 14, FontStyle.Bold, White,
+                new Vector2(0.07f, 0.08f), new Vector2(0.93f, 0.92f), TextAnchor.MiddleLeft);
+
+            powerText = CreateText("Hidden Rule State", panel, string.Empty, 1, FontStyle.Normal,
+                new Color(0f, 0f, 0f, 0f), Vector2.zero, Vector2.zero, TextAnchor.MiddleCenter);
+            powerText.gameObject.SetActive(false);
+            directionPadArea = null;
+
+            panel.gameObject.SetActive(false);
+            status.gameObject.SetActive(false);
+        }
+
+        private void BuildDesktopMinimap(RectTransform root)
+        {
+            RectTransform minimap = CreatePanel("Desktop Minimap", root, Panel,
+                new Vector2(0.815f, 0.69f), new Vector2(0.975f, 0.965f));
+            Outline outline = minimap.gameObject.AddComponent<Outline>();
+            outline.effectColor = TrailHot;
+            outline.effectDistance = new Vector2(4f, -4f);
+            AddAccent(minimap, new Vector2(0f, 0.96f), Vector2.one, TrailHot);
+            CreateText("Minimap Title", minimap, "MINIMAP", 20, FontStyle.Bold, TrailHot,
+                new Vector2(0.07f, 0.84f), new Vector2(0.93f, 0.96f), TextAnchor.MiddleCenter);
+
+            const float miniCellSize = 17f;
+            float miniGridSize = miniCellSize * TrailFieldModel.Size;
+            minimapGrid = CreateRect("Minimap Grid", minimap);
+            minimapGrid.anchorMin = minimapGrid.anchorMax = new Vector2(0.5f, 0.46f);
+            minimapGrid.pivot = new Vector2(0.5f, 0.5f);
+            minimapGrid.sizeDelta = Vector2.one * miniGridSize;
+            minimapGrid.anchoredPosition = Vector2.zero;
+
+            for (int y = 0; y < TrailFieldModel.Size; y++)
+            {
+                for (int x = 0; x < TrailFieldModel.Size; x++)
+                {
+                    RectTransform tile = CreateRect("Minimap Tile " + x + "," + y, minimapGrid);
+                    tile.anchorMin = tile.anchorMax = new Vector2(0.5f, 0.5f);
+                    tile.sizeDelta = Vector2.one * (miniCellSize - 1.4f);
+                    tile.anchoredPosition = GridPosition(x, y, miniCellSize);
+                    Image image = tile.gameObject.AddComponent<Image>();
+                    image.color = Floor;
+                    image.raycastTarget = false;
+                    minimapTiles[x, y] = image;
+                }
+            }
+
+            minimap.gameObject.SetActive(false);
+        }
+
+        private void RefreshMinimap()
+        {
+            if (!desktopLayout || minimapGrid == null)
+            {
+                return;
+            }
+
+            int tutorialOffset = (TrailFieldModel.Size - TutorialRules.Size) / 2;
+            for (int y = 0; y < TrailFieldModel.Size; y++)
+            {
+                for (int x = 0; x < TrailFieldModel.Size; x++)
+                {
+                    Image tile = minimapTiles[x, y];
+                    if (tile == null)
+                    {
+                        continue;
+                    }
+
+                    if (tutorialActive)
+                    {
+                        bool active = x >= tutorialOffset && x < tutorialOffset + TutorialRules.Size &&
+                            y >= tutorialOffset && y < tutorialOffset + TutorialRules.Size;
+                        tile.gameObject.SetActive(active);
+                        if (!active)
+                        {
+                            continue;
+                        }
+
+                        Vector2Int cell = new Vector2Int(x - tutorialOffset, y - tutorialOffset);
+                        Color color = Floor;
+                        if (tutorialStep == 0 && tutorialTrail.Contains(cell)) color = Trail;
+                        if (tutorialStep == 0 && cell == TutorialRules.Start) color = StartColor;
+                        if (tutorialStep == 0 && cell == TutorialRules.End) color = EndColor;
+                        if (cell == tutorialPlayer) color = TrailHot;
+                        tile.color = color;
+                        continue;
+                    }
+
+                    Vector2Int boardCell = new Vector2Int(x, y);
+                    bool walkable = model.IsWalkable(boardCell);
+                    tile.gameObject.SetActive(walkable);
+                    if (!walkable)
+                    {
+                        continue;
+                    }
+
+                    Color boardColor = Floor;
+                    if (model.IsTrail(boardCell)) boardColor = Trail;
+                    if (boardCell == model.Start) boardColor = StartColor;
+                    if (boardCell == model.End) boardColor = EndColor;
+                    if (crystalCells.Contains(boardCell)) boardColor = Danger;
+                    if (warnedCells.Contains(boardCell) || targetedCells.Contains(boardCell) ||
+                        crystalWarningCounts.ContainsKey(boardCell)) boardColor = Hex("C7465F");
+                    if (boardCell == model.Player) boardColor = TrailHot;
+                    tile.color = boardColor;
+                }
+            }
+        }
+
         private void BuildDirectionButton(RectTransform parent, string name, string label,
             Vector2Int direction, Vector2 min, Vector2 max)
         {
@@ -2315,12 +3277,14 @@ namespace NHN.TraceStrike
 
         private void RefreshBoard()
         {
+            HideHubWorldVisuals();
             for (int y = 0; y < TrailFieldModel.Size; y++)
             {
                 for (int x = 0; x < TrailFieldModel.Size; x++)
                 {
                     var cell = new Vector2Int(x, y);
                     bool active = model.IsWalkable(cell);
+                    arenaGroundTiles[x, y].gameObject.SetActive(active);
                     mainTiles[x, y].gameObject.SetActive(active);
                     if (!active)
                     {
@@ -2328,6 +3292,15 @@ namespace NHN.TraceStrike
                     }
 
                     Color color = GetFloorColor(x, y);
+                    Outline tileOutline = mainTileOutlines[x, y];
+                    if (desktopLayout && tileOutline != null)
+                    {
+                        bool boundary = IsArenaBoundary(cell);
+                        tileOutline.effectColor = boundary ? ArenaBorderGlow : Hex("39251F");
+                        tileOutline.effectDistance = boundary
+                            ? new Vector2(2.4f, -2.4f)
+                            : new Vector2(1.1f, -1.1f);
+                    }
                     bool isCrystal = crystalCells.Contains(cell);
                     bool crystalWarned = crystalWarningCounts.ContainsKey(cell);
                     bool crystalFiring = crystalFiringCounts.ContainsKey(cell);
@@ -2336,7 +3309,7 @@ namespace NHN.TraceStrike
                     if (model.IsTrail(cell)) color = Trail;
                     if (cell == model.Start) color = StartColor;
                     if (cell == model.End) color = EndColor;
-                    color.a = 0.5f;
+                    color.a = model.IsTrail(cell) ? 1f : 0.5f;
                     if (warnedCells.Contains(cell))
                     {
                         if (hazardFiring)
@@ -2382,14 +3355,123 @@ namespace NHN.TraceStrike
 
             mainPlayer.anchoredPosition = GridPosition(model.Player.x, model.Player.y, mainCellSize);
             mainPlayer.SetAsLastSibling();
+            RefreshMinimap();
 
             int shownLength = model.IsTracing ? model.Trail.Count : 0;
-            int projectedDamage = SpecialTileRules.ApplyDamageModifiers(
-                CalculateDamage(shownLength), nextAttackFlatBonus, nextAttackMultiplier);
+            int projectedDamage = model.IsTracing ? CalculateDamage(model.Trail) : 0;
             comboText.text = model.IsTracing
                 ? "경로 " + shownLength + "칸  ·  예상 피해 " + projectedDamage
                 : "경로 대기  ·  START 필요";
             UpdatePowerRuleText();
+            RefreshInteractionPanel();
+        }
+
+        private void HideHubWorldVisuals()
+        {
+            if (hubCampZone != null) hubCampZone.gameObject.SetActive(false);
+            if (hubStageLane != null) hubStageLane.gameObject.SetActive(false);
+            for (int y = 0; y < HubWorldModel.Size; y++)
+            {
+                for (int x = 0; x < HubWorldModel.Size; x++)
+                {
+                    RectTransform visual = hubObjectVisuals[x, y];
+                    if (visual != null)
+                    {
+                        visual.gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+
+        private void RefreshInteractionPanel()
+        {
+            if (hubActive || !desktopLayout || interactionTitleText == null || interactionBodyText == null)
+            {
+                return;
+            }
+
+            Vector2Int frontCell = model.Player + playerFacing;
+            string title = "스테이지 보스 · 크림슨 골렘";
+            string body = "광물 증식형 바이러스 · 레이저와 수정 폭발 패턴";
+            Sprite icon = bossPortraitSprite;
+            Color accent = Danger;
+
+            if (crystalCells.Contains(frontCell))
+            {
+                title = "공격 수정 · 이동 불가";
+                body = phaseTwoActive
+                    ? "주변 2칸에 격자 폭발을 일으키는 바이러스 복제 노드"
+                    : "2페이즈에서 활성화되는 바이러스 복제 노드";
+                icon = bossPortraitSprite;
+                accent = Hex("FF3156");
+            }
+            else if (frontCell == model.Start)
+            {
+                title = "공격 시작 타일";
+                body = "이 지점을 밟으면 트레이스 경로 기록이 시작됩니다";
+                icon = startMarkerSprite;
+                accent = StartColor;
+            }
+            else if (frontCell == model.End)
+            {
+                title = "공격 종료 타일";
+                body = "경로를 유지한 채 도착하면 보스 공격이 실행됩니다";
+                icon = endMarkerSprite;
+                accent = EndColor;
+            }
+            else if (specialTiles.TryGetValue(frontCell, out SpecialTileType specialType))
+            {
+                GetSpecialInteractionInfo(specialType, out title, out body);
+                icon = GetSpecialTileIcon(specialType);
+                accent = GetSpecialTileColor(specialType);
+            }
+            else if (!model.IsWalkable(frontCell))
+            {
+                title = "필드 경계";
+                body = "이동할 수 없는 영역입니다 · 다른 방향으로 이동하세요";
+                icon = null;
+                accent = Muted;
+            }
+
+            interactionTitleText.text = title;
+            interactionBodyText.text = body;
+            if (interactionRingImage != null)
+            {
+                interactionRingImage.color = accent;
+            }
+            if (interactionIconImage != null)
+            {
+                interactionIconImage.sprite = icon;
+                interactionIconImage.color = icon == null ? accent : White;
+                interactionIconImage.gameObject.SetActive(icon != null);
+            }
+        }
+
+        private static void GetSpecialInteractionInfo(SpecialTileType type, out string title, out string body)
+        {
+            switch (type)
+            {
+                case SpecialTileType.Power:
+                    title = "더하기 발판 · 공격 보조";
+                    body = "다음 공격의 기본 피해가 25 증가합니다";
+                    break;
+                case SpecialTileType.Amplify:
+                    title = "곱셈 발판 · 출력 증폭";
+                    body = "다음 공격 피해가 1.35배로 증가합니다";
+                    break;
+                case SpecialTileType.Mud:
+                    title = "정지 발판 · 이동 방해";
+                    body = "밟으면 플레이어 이동이 1초 동안 정지합니다";
+                    break;
+                case SpecialTileType.Curse:
+                    title = "다운 발판 · 출력 감소";
+                    body = "다음 공격 피해가 0.65배로 감소합니다";
+                    break;
+                default:
+                    title = "위험 발판";
+                    body = "플레이어에게 불리한 효과를 발생시킵니다";
+                    break;
+            }
         }
 
         private void SetSpecialItemVisual(int x, int y, bool active, SpecialTileType type, float size)
@@ -2481,10 +3563,174 @@ namespace NHN.TraceStrike
                 new Vector2(0.5f, 0.5f), pixelsPerUnit);
         }
 
+        private static Sprite[] LoadFloorTileSprites()
+        {
+            const int rows = 5;
+            const int columns = 3;
+            var sprites = new List<Sprite>(rows * columns);
+            for (int row = 1; row <= rows; row++)
+            {
+                for (int column = 1; column <= columns; column++)
+                {
+                    Sprite sprite = LoadPixelSprite(
+                        $"Art/IvyTiles/ivy_tile_r{row}_c{column}", 32f);
+                    if (sprite != null)
+                    {
+                        sprites.Add(sprite);
+                    }
+                }
+            }
+
+            return sprites.ToArray();
+        }
+
+        private Sprite GetFloorTileSprite(int x, int y)
+        {
+            if (floorTileSprites == null || floorTileSprites.Length == 0)
+            {
+                return floorTileSprite;
+            }
+
+            int index = floorTileVariantIndices[x, y] % floorTileSprites.Length;
+            return floorTileSprites[index];
+        }
+
+        private void RandomizeFloorTileLayout()
+        {
+            if (floorTileSprites == null || floorTileSprites.Length == 0)
+            {
+                return;
+            }
+
+            var shuffleBag = new List<int>(floorTileSprites.Length);
+            int cellIndex = 0;
+            int cellCount = TrailFieldModel.Size * TrailFieldModel.Size;
+            while (cellIndex < cellCount)
+            {
+                shuffleBag.Clear();
+                for (int i = 0; i < floorTileSprites.Length; i++)
+                {
+                    shuffleBag.Add(i);
+                }
+
+                for (int i = shuffleBag.Count - 1; i > 0; i--)
+                {
+                    int swapIndex = floorTileRandom.Next(i + 1);
+                    int value = shuffleBag[i];
+                    shuffleBag[i] = shuffleBag[swapIndex];
+                    shuffleBag[swapIndex] = value;
+                }
+
+                for (int i = 0; i < shuffleBag.Count && cellIndex < cellCount; i++, cellIndex++)
+                {
+                    int x = cellIndex % TrailFieldModel.Size;
+                    int y = cellIndex / TrailFieldModel.Size;
+                    floorTileVariantIndices[x, y] = shuffleBag[i];
+                }
+            }
+        }
+
+        private void ApplyFloorTileLayout()
+        {
+            for (int y = 0; y < TrailFieldModel.Size; y++)
+            {
+                for (int x = 0; x < TrailFieldModel.Size; x++)
+                {
+                    if (mainTiles[x, y] != null)
+                    {
+                        mainTiles[x, y].sprite = GetFloorTileSprite(x, y);
+                    }
+                }
+            }
+        }
+
+        private static Sprite CreateCircleSprite(int size)
+        {
+            Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            texture.name = "Runtime Circle";
+            texture.filterMode = FilterMode.Bilinear;
+            texture.wrapMode = TextureWrapMode.Clamp;
+            Color32[] pixels = new Color32[size * size];
+            float center = (size - 1) * 0.5f;
+            float radius = center - 1f;
+            float featherStart = radius - 1.5f;
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float distance = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
+                    byte alpha = distance <= featherStart
+                        ? (byte)255
+                        : distance >= radius ? (byte)0 : (byte)Mathf.RoundToInt((radius - distance) / 1.5f * 255f);
+                    pixels[y * size + x] = new Color32(255, 255, 255, alpha);
+                }
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            return Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), size);
+        }
+
+        private static Sprite CreateCampfireSprite()
+        {
+            const int size = 32;
+            Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            texture.name = "Runtime Pixel Campfire";
+            texture.filterMode = FilterMode.Point;
+            texture.wrapMode = TextureWrapMode.Clamp;
+            Color32[] pixels = new Color32[size * size];
+
+            PaintRect(pixels, size, 6, 5, 20, 5, new Color32(72, 38, 27, 255));
+            PaintRect(pixels, size, 9, 7, 14, 4, new Color32(151, 75, 39, 255));
+            PaintRect(pixels, size, 9, 11, 14, 8, new Color32(255, 91, 30, 255));
+            PaintRect(pixels, size, 12, 15, 8, 9, new Color32(255, 176, 38, 255));
+            PaintRect(pixels, size, 14, 20, 4, 7, new Color32(255, 241, 126, 255));
+            PaintRect(pixels, size, 6, 3, 6, 3, new Color32(116, 61, 37, 255));
+            PaintRect(pixels, size, 20, 3, 6, 3, new Color32(116, 61, 37, 255));
+
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            return Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), size);
+        }
+
+        private static void PaintRect(Color32[] pixels, int textureSize, int startX, int startY,
+            int width, int height, Color32 color)
+        {
+            for (int y = startY; y < startY + height; y++)
+            {
+                for (int x = startX; x < startX + width; x++)
+                {
+                    pixels[y * textureSize + x] = color;
+                }
+            }
+        }
+
         private Color GetFloorColor(int x, int y)
         {
+            if (floorTileSprite != null)
+            {
+                Color textureTint = CombatBalanceRules.IsCenterDamageCell(
+                    new Vector2Int(x, y), TrailFieldModel.Size)
+                    ? CenterDamageTileTint
+                    : ArenaTileTextureTint;
+                textureTint.a = 0.5f;
+                return textureTint;
+            }
+
             Color baseColor;
             Color highlight;
+            if (desktopLayout)
+            {
+                baseColor = ArenaTile;
+                highlight = ArenaTileLift;
+                float arenaPattern = (x + y) % 2 == 0 ? 0.34f : 0.10f;
+                if ((x * 3 + y * 5 + stage) % 7 == 0)
+                {
+                    arenaPattern += 0.14f;
+                }
+                Color arenaColor = Color.Lerp(baseColor, highlight, arenaPattern);
+                arenaColor.a = 0.5f;
+                return arenaColor;
+            }
             switch (model.ShapeIndex)
             {
                 case 1:
@@ -2513,6 +3759,7 @@ namespace NHN.TraceStrike
 
         private void AnimateVisuals()
         {
+            AnimateArenaAmbience();
             if (mainPlayerImage == null)
             {
                 return;
@@ -2531,6 +3778,27 @@ namespace NHN.TraceStrike
                 return;
             }
 
+            if (hubActive)
+            {
+                float hubPulse = (Mathf.Sin(Time.unscaledTime * 4.2f) + 1f) * 0.5f;
+                if (!playerDead && !movementFrozen)
+                {
+                    mainPlayerImage.color = Color.Lerp(activeCharacterTint, White, hubPulse * 0.12f);
+                }
+                foreach (KeyValuePair<Vector2Int, HubObjectData> entry in hubModel.Objects)
+                {
+                    RectTransform visual = hubObjectVisuals[entry.Key.x, entry.Key.y];
+                    if (visual == null || !visual.gameObject.activeSelf)
+                    {
+                        continue;
+                    }
+                    bool focused = hubModel.FocusedCell.HasValue && hubModel.FocusedCell.Value == entry.Key;
+                    float scale = focused ? 1.08f + hubPulse * 0.08f : 0.96f + hubPulse * 0.04f;
+                    visual.localScale = Vector3.one * PixelStep(scale, 0.02f);
+                }
+                return;
+            }
+
             if (!model.IsWalkable(model.Start) || !model.IsWalkable(model.End))
             {
                 return;
@@ -2539,8 +3807,8 @@ namespace NHN.TraceStrike
             float pulse = (Mathf.Sin(Time.unscaledTime * 4.5f) + 1f) * 0.5f;
             Color startPulse = Color.Lerp(StartColor, White, pulse * 0.2f);
             Color endPulse = Color.Lerp(EndColor, TrailHot, pulse * 0.35f);
-            startPulse.a = 0.5f;
-            endPulse.a = 0.5f;
+            startPulse.a = model.IsTrail(model.Start) ? 1f : 0.5f;
+            endPulse.a = model.IsTrail(model.End) ? 1f : 0.5f;
             if (!warnedCells.Contains(model.Start) && !targetedCells.Contains(model.Start))
             {
                 mainTiles[model.Start.x, model.Start.y].color = startPulse;
@@ -2551,7 +3819,7 @@ namespace NHN.TraceStrike
             }
             if (!playerDead && !movementFrozen)
             {
-                mainPlayerImage.color = Color.Lerp(White, TrailHot, pulse * 0.08f);
+                mainPlayerImage.color = Color.Lerp(activeCharacterTint, TrailHot, pulse * 0.08f);
             }
             for (int i = 0; i < crystalVisuals.Length; i++)
             {
@@ -2561,6 +3829,43 @@ namespace NHN.TraceStrike
                     float crystalPulse = (Mathf.Sin(Time.unscaledTime * 7f + i * 1.4f) + 1f) * 0.5f;
                     crystal.localScale = Vector3.one * PixelStep(0.94f + crystalPulse * 0.14f, 0.04f);
                 }
+            }
+        }
+
+        private bool IsArenaBoundary(Vector2Int cell)
+        {
+            return !model.IsWalkable(cell + Vector2Int.up) ||
+                !model.IsWalkable(cell + Vector2Int.right) ||
+                !model.IsWalkable(cell + Vector2Int.down) ||
+                !model.IsWalkable(cell + Vector2Int.left);
+        }
+
+        private void AnimateArenaAmbience()
+        {
+            if (!desktopLayout)
+            {
+                return;
+            }
+
+            float time = Time.unscaledTime;
+            for (int i = 0; i < ambientParticles.Count; i++)
+            {
+                RectTransform particle = ambientParticles[i];
+                Image image = ambientParticleImages[i];
+                float wave = (Mathf.Sin(time * (1.7f + i % 4 * 0.23f) + i * 0.91f) + 1f) * 0.5f;
+                particle.anchoredPosition = PixelSnap(new Vector2(
+                    Mathf.Sin(time * 0.65f + i) * (2f + i % 5),
+                    Mathf.Cos(time * 0.82f + i * 0.7f) * (3f + i % 7)));
+                Color color = image.color;
+                color.a = (i % 5 == 0 ? 0.18f : 0.12f) + wave * 0.34f;
+                image.color = color;
+                particle.localScale = Vector3.one * PixelStep(0.75f + wave * 0.65f, 0.125f);
+            }
+
+            float bossPulse = (Mathf.Sin(time * 3.6f) + 1f) * 0.5f;
+            if (arenaBossCore != null)
+            {
+                arenaBossCore.localScale = Vector3.one * PixelStep(0.94f + bossPulse * 0.12f, 0.02f);
             }
         }
 
@@ -2842,7 +4147,8 @@ namespace NHN.TraceStrike
 
         private IEnumerator PunchPlayer(bool blocked)
         {
-            Vector2 basePosition = GridPosition(model.Player.x, model.Player.y, mainCellSize);
+            Vector2Int playerCell = hubActive ? hubModel.Player : model.Player;
+            Vector2 basePosition = GridPosition(playerCell.x, playerCell.y, mainCellSize);
             if (blocked)
             {
                 for (float t = 0f; t < 1f; t += Time.deltaTime * 8f)
@@ -2938,6 +4244,59 @@ namespace NHN.TraceStrike
             deathSfx = CreateSynthClip("death", 0.9f, new[] { 310f, 190f, 95f }, 0.1f, -210f);
             phaseTwoSfx = CreateSynthClip("phase-two", 1.15f, new[] { 72f, 144f, 288f, 576f }, 0.12f, 420f);
             targetLockSfx = CreateSynthClip("target-lock", 0.34f, new[] { 540f, 810f }, 0.025f, 260f);
+            templeMusic = CreateTempleMusicLoop();
+        }
+
+        private AudioClip CreateTempleMusicLoop()
+        {
+            const int sampleRate = 22050;
+            const float duration = 16f;
+            int sampleCount = Mathf.RoundToInt(sampleRate * duration);
+            var samples = new float[sampleCount];
+            var random = new System.Random(7319);
+            float[] melody =
+            {
+                146.83f, 174.61f, 196f, 220f,
+                196f, 174.61f, 146.83f, 130.81f,
+                146.83f, 196f, 220f, 261.63f,
+                220f, 196f, 174.61f, 146.83f
+            };
+
+            for (int i = 0; i < sampleCount; i++)
+            {
+                float time = (float)i / sampleRate;
+                float normalized = (float)i / sampleCount;
+                float loopFade = Mathf.Clamp01(Mathf.Min(normalized, 1f - normalized) * 90f);
+
+                float dronePulse = 0.78f + Mathf.Sin(2f * Mathf.PI * 0.125f * time) * 0.22f;
+                float drone = Mathf.Sin(2f * Mathf.PI * 73.415f * time) * 0.105f;
+                drone += Mathf.Sin(2f * Mathf.PI * 110f * time) * 0.035f;
+
+                const float stepLength = 0.5f;
+                int step = Mathf.FloorToInt(time / stepLength) % melody.Length;
+                float stepTime = time - Mathf.Floor(time / stepLength) * stepLength;
+                float noteEnvelope = Mathf.Clamp01(stepTime / 0.025f) *
+                    Mathf.Pow(1f - stepTime / stepLength, 2.2f);
+                float noteFrequency = melody[step];
+                float notePhase = 2f * Mathf.PI * noteFrequency * time;
+                float note = (Mathf.Sin(notePhase) * 0.055f +
+                    Mathf.Sign(Mathf.Sin(notePhase * 0.5f)) * 0.018f) * noteEnvelope;
+
+                float bellTime = time % 2f;
+                float bellEnvelope = Mathf.Exp(-bellTime * 3.1f);
+                float bellFrequency = step % 4 == 0 ? 587.33f : 440f;
+                float bell = (Mathf.Sin(2f * Mathf.PI * bellFrequency * time) +
+                    Mathf.Sin(2f * Mathf.PI * bellFrequency * 2.01f * time) * 0.35f) *
+                    bellEnvelope * 0.035f;
+
+                float air = ((float)random.NextDouble() * 2f - 1f) * 0.0045f;
+                samples[i] = Mathf.Clamp((drone * dronePulse + note + bell + air) * loopFade,
+                    -0.82f, 0.82f);
+            }
+
+            AudioClip clip = AudioClip.Create("ivy-temple-loop", sampleCount, 1, sampleRate, false);
+            clip.SetData(samples, 0);
+            return clip;
         }
 
         private AudioClip CreateSynthClip(string clipName, float duration, float[] frequencies, float noise, float sweep)
@@ -2993,6 +4352,24 @@ namespace NHN.TraceStrike
             {
                 model.TryMove(Vector2Int.up);
                 RefreshBoard();
+            }
+            else if (System.Array.IndexOf(arguments, "-captureHubCharacterInfo") >= 0 && hubActive)
+            {
+                HubMove(Vector2Int.up);
+            }
+            else if (System.Array.IndexOf(arguments, "-captureTitleReveal") >= 0 && titleActive)
+            {
+                yield return StartCoroutine(RevealTitleScreen(Vector2Int.right));
+            }
+            else if (System.Array.IndexOf(arguments, "-capturePhaseTransition") >= 0)
+            {
+                phaseOverlayRoot.SetAsLastSibling();
+                phaseBannerGroup.alpha = 1f;
+                phasePageLeft.localScale = Vector3.one;
+                phasePageRight.localScale = Vector3.one;
+                phaseBanner.text = "PHASE 2\nENRAGED";
+                phaseBanner.color = Danger;
+                phaseBanner.rectTransform.localScale = Vector3.one;
             }
             else if (System.Array.IndexOf(arguments, "-captureTelegraph") >= 0)
             {
@@ -3058,7 +4435,9 @@ namespace NHN.TraceStrike
                 Directory.CreateDirectory(directory);
             }
 
-            var renderTexture = new RenderTexture(540, 960, 24, RenderTextureFormat.ARGB32);
+            int captureWidth = desktopLayout ? 1600 : 540;
+            int captureHeight = desktopLayout ? 900 : 960;
+            var renderTexture = new RenderTexture(captureWidth, captureHeight, 24, RenderTextureFormat.ARGB32);
             uiCamera.targetTexture = renderTexture;
 
             for (int frame = 0; frame < 4; frame++)

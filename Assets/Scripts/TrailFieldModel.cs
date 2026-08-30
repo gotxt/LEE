@@ -72,7 +72,7 @@ namespace NHN.TraceStrike
                             int ay = Mathf.Abs(dy);
                             inside = (ax <= 1 || ay <= 1 || ax == ay) && ax <= 5 && ay <= 5;
                             break;
-                        default: // circle
+                        default: // legacy circular arena
                             inside = dx * dx + dy * dy <= 27;
                             break;
                     }
@@ -216,6 +216,18 @@ namespace NHN.TraceStrike
         public bool IsBlocked(Vector2Int cell) => blocked.Contains(cell);
         public bool IsTraversable(Vector2Int cell) => traversable.Contains(cell);
         public bool IsTrail(Vector2Int cell) => trailSet.Contains(cell);
+
+        public bool TryPlacePlayer(Vector2Int cell)
+        {
+            if (!traversable.Contains(cell))
+            {
+                return false;
+            }
+
+            Player = cell;
+            ClearTrail();
+            return true;
+        }
 
         private void AddTrail(Vector2Int cell)
         {

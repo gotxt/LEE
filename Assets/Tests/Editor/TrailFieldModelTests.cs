@@ -22,6 +22,19 @@ namespace NHN.TraceStrike.Tests
         }
 
         [Test]
+        public void FirstStageUsesLegacyElevenByElevenCircularArena()
+        {
+            var model = new TrailFieldModel();
+            model.CreateField(0);
+
+            Assert.That(TrailFieldModel.Size, Is.EqualTo(11));
+            Assert.That(model.Walkable.Count, Is.EqualTo(89));
+            Assert.That(model.IsWalkable(new Vector2Int(5, 5)), Is.True);
+            Assert.That(model.IsWalkable(new Vector2Int(0, 0)), Is.False);
+            Assert.That(model.IsWalkable(new Vector2Int(10, 10)), Is.False);
+        }
+
+        [Test]
         public void LeavingTheFieldIsBlocked()
         {
             var model = new TrailFieldModel();
@@ -99,6 +112,37 @@ namespace NHN.TraceStrike.Tests
 
             Assert.That(model.Player, Is.EqualTo(previousPosition));
             Assert.That(model.IsWalkable(previousPosition), Is.True);
+        }
+
+        [Test]
+        public void IntroPlacementCentersPlayerAndClearsActiveTrail()
+        {
+            var model = new TrailFieldModel();
+            model.CreateField(0);
+            model.BeginRound(0);
+            var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+
+            Assert.That(model.TryPlacePlayer(center), Is.True);
+            Assert.That(model.Player, Is.EqualTo(center));
+            Assert.That(model.IsTracing, Is.False);
+            Assert.That(model.Trail.Count, Is.Zero);
+            Assert.That(model.TryPlacePlayer(new Vector2Int(-1, -1)), Is.False);
+            Assert.That(model.Player, Is.EqualTo(center));
+        }
+
+        [Test]
+        public void TitleRevealRadiusCoversEverySixteenByNineCorner()
+        {
+            var center = new Vector2(0.5f, 0.35f);
+            float aspect = 16f / 9f;
+            float radius = TraceStrikeGame.CalculateTitleRevealRadius(center, aspect);
+
+            foreach (Vector2 corner in new[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.one })
+            {
+                Vector2 delta = corner - center;
+                delta.x *= aspect;
+                Assert.That(radius, Is.GreaterThan(delta.magnitude));
+            }
         }
 
         [Test]
@@ -182,8 +226,8 @@ namespace NHN.TraceStrike.Tests
         [Test]
         public void BossUsesSeparateHealthPoolForEachPhase()
         {
-            Assert.That(BossPatternRules.PhaseMaxHealth(false), Is.EqualTo(500));
-            Assert.That(BossPatternRules.PhaseMaxHealth(true), Is.EqualTo(1500));
+            Assert.That(BossPatternRules.PhaseMaxHealth(false), Is.EqualTo(150));
+            Assert.That(BossPatternRules.PhaseMaxHealth(true), Is.EqualTo(150));
         }
 
         [Test]
@@ -445,6 +489,17 @@ namespace NHN.TraceStrike.Tests
             Rect desktopViewport = TraceStrikeGame.CalculateViewport(9f / 20f, false);
             Assert.That(desktopViewport.height, Is.LessThan(1f));
             Assert.That(desktopViewport.y, Is.GreaterThan(0f));
+        }
+
+        [Test]
+        public void DesktopViewportUsesSixteenByNinePresentation()
+        {
+            Rect exact = TraceStrikeGame.CalculateViewport(16f / 9f, false);
+            Assert.That(exact, Is.EqualTo(new Rect(0f, 0f, 1f, 1f)));
+
+            Rect ultraWide = TraceStrikeGame.CalculateViewport(21f / 9f, false);
+            Assert.That(ultraWide.width, Is.LessThan(1f));
+            Assert.That(ultraWide.x, Is.GreaterThan(0f));
         }
     }
 }
