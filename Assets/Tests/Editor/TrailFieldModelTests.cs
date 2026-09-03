@@ -22,16 +22,82 @@ namespace NHN.TraceStrike.Tests
         }
 
         [Test]
-        public void FirstStageUsesLegacyElevenByElevenCircularArena()
+        public void FirstStageExpandsCircularArenaProportionallyToSeventeenBySeventeen()
         {
             var model = new TrailFieldModel();
             model.CreateField(0);
 
-            Assert.That(TrailFieldModel.Size, Is.EqualTo(11));
-            Assert.That(model.Walkable.Count, Is.EqualTo(89));
-            Assert.That(model.IsWalkable(new Vector2Int(5, 5)), Is.True);
+            Assert.That(TrailFieldModel.Size, Is.EqualTo(17));
+            Assert.That(model.Walkable.Count, Is.EqualTo(221));
+            Assert.That(model.IsWalkable(new Vector2Int(8, 8)), Is.True);
             Assert.That(model.IsWalkable(new Vector2Int(0, 0)), Is.False);
-            Assert.That(model.IsWalkable(new Vector2Int(10, 10)), Is.False);
+            Assert.That(model.IsWalkable(new Vector2Int(16, 16)), Is.False);
+            int[] expectedRowWidths = { 5, 9, 11, 13, 15, 15, 17, 17, 17, 17, 17, 15, 15, 13, 11, 9, 5 };
+            for (int y = 0; y < TrailFieldModel.Size; y++)
+            {
+                int width = 0;
+                for (int x = 0; x < TrailFieldModel.Size; x++)
+                    if (model.IsWalkable(new Vector2Int(x, y))) width++;
+                Assert.That(width, Is.EqualTo(expectedRowWidths[y]), "Arena row " + y);
+            }
+        }
+
+        [Test]
+        public void ExpandedArenaIsConnectedAndSymmetric()
+        {
+            var model = new TrailFieldModel();
+            model.CreateField(0);
+            var visited = new HashSet<Vector2Int>();
+            var pending = new Queue<Vector2Int>();
+            pending.Enqueue(new Vector2Int(8, 8));
+            while (pending.Count > 0)
+            {
+                Vector2Int cell = pending.Dequeue();
+                if (!model.IsWalkable(cell) || !visited.Add(cell)) continue;
+                pending.Enqueue(cell + Vector2Int.up);
+                pending.Enqueue(cell + Vector2Int.down);
+                pending.Enqueue(cell + Vector2Int.left);
+                pending.Enqueue(cell + Vector2Int.right);
+            }
+            Assert.That(visited.Count, Is.EqualTo(model.Walkable.Count));
+            foreach (Vector2Int cell in model.Walkable)
+            {
+                Assert.That(model.IsWalkable(new Vector2Int(16 - cell.x, cell.y)), Is.True);
+                Assert.That(model.IsWalkable(new Vector2Int(cell.x, 16 - cell.y)), Is.True);
+            }
+            Assert.That(TrailFieldModel.ScaleLegacyDistance(3), Is.EqualTo(5));
+            Assert.That(TrailFieldModel.ScaleLegacyDistance(5), Is.EqualTo(8));
+        }
+
+        [Test]
+        public void BossCanUseCompactArenaInsideExpandedCoordinateSpace()
+        {
+            var model = new TrailFieldModel();
+            model.CreateField(0, 11);
+            model.BeginRound(0);
+
+            Assert.That(model.FieldSize, Is.EqualTo(11));
+            Assert.That(model.Walkable.Count, Is.LessThan(221));
+            Assert.That(model.IsWalkable(new Vector2Int(8, 8)), Is.True);
+            Assert.That(model.Start, Is.Not.EqualTo(model.End));
+        }
+
+        [Test]
+        public void CloseCameraClampsAtArenaEdges()
+        {
+            Vector2 camera = TraceStrikeGame.ClampBattleCamera(new Vector2(5000f, -5000f),
+                new Vector2(2600f, 2600f), new Vector2(1920f, 1080f));
+            Assert.That(camera, Is.EqualTo(new Vector2(340f, -760f)));
+        }
+
+        [Test]
+        public void CloseCameraKeepsInteriorTargetAndCentersSmallArenas()
+        {
+            Vector2 interior = new Vector2(-180f, 120f);
+            Assert.That(TraceStrikeGame.ClampBattleCamera(interior, new Vector2(2600f, 2600f),
+                new Vector2(1920f, 1080f)), Is.EqualTo(interior));
+            Assert.That(TraceStrikeGame.ClampBattleCamera(interior, new Vector2(820f, 820f),
+                new Vector2(1920f, 1080f)), Is.EqualTo(Vector2.zero));
         }
 
         [Test]

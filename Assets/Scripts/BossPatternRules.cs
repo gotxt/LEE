@@ -5,6 +5,18 @@ namespace NHN.TraceStrike
 {
     public static class BossPatternRules
     {
+        // Field dimensions are selected per boss/stage. The current Crimson
+        // Golem uses the expanded arena; additional bosses can be assigned a
+        // different size here without changing the presentation layer.
+        public static int FieldSizeForBoss(int stage)
+        {
+            switch (stage)
+            {
+                case 0: return 17;
+                default: return 11;
+            }
+        }
+
         public static float TelegraphSeconds(bool phaseTwo)
         {
             return phaseTwo ? 1f : 2f;

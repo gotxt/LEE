@@ -20,7 +20,14 @@ namespace NHN.TraceStrike
     /// </summary>
     public sealed class TrailFieldModel
     {
-        public const int Size = 11;
+        public const int MaxSize = 17;
+        public const int Size = MaxSize;
+        public int FieldSize { get; private set; } = MaxSize;
+
+        public static int ScaleLegacyDistance(int distance, int fieldSize = MaxSize)
+        {
+            return Mathf.RoundToInt(distance * (fieldSize - 1) / 10f);
+        }
 
         private readonly HashSet<Vector2Int> walkable = new HashSet<Vector2Int>();
         private readonly HashSet<Vector2Int> blocked = new HashSet<Vector2Int>();
@@ -37,6 +44,7 @@ namespace NHN.TraceStrike
         public Vector2Int Start { get; private set; }
         public Vector2Int End { get; private set; }
         public bool IsTracing { get; private set; }
+        public Vector2Int NavigationTarget => IsTracing ? End : Start;
         public int ShapeIndex { get; private set; }
 
         public void CreateField(int stage)
@@ -46,16 +54,24 @@ namespace NHN.TraceStrike
 
         public void CreateField(int stage, Vector2Int? requiredPlayerCell)
         {
+            CreateField(stage, MaxSize, requiredPlayerCell);
+        }
+
+        public void CreateField(int stage, int fieldSize, Vector2Int? requiredPlayerCell = null)
+        {
+            FieldSize = Mathf.Clamp(fieldSize, 5, MaxSize);
             ShapeIndex = Mathf.Abs(stage) % 3;
             walkable.Clear();
             blocked.Clear();
             traversable.Clear();
             orderedCells.Clear();
 
-            int center = Size / 2;
-            for (int y = 0; y < Size; y++)
+            int center = MaxSize / 2;
+            int shapeCenter = FieldSize / 2;
+            int fieldOffset = center - shapeCenter;
+            for (int y = 0; y < MaxSize; y++)
             {
-                for (int x = 0; x < Size; x++)
+                for (int x = 0; x < MaxSize; x++)
                 {
                     int dx = x - center;
                     int dy = y - center;
@@ -64,16 +80,19 @@ namespace NHN.TraceStrike
                     switch (ShapeIndex)
                     {
                         case 1: // triangle
-                            int halfWidth = (Size - 1 - y) / 2;
+                            int localY = y - fieldOffset;
+                            int halfWidth = (FieldSize - 1 - localY) / 2;
                             inside = Mathf.Abs(dx) <= halfWidth;
                             break;
                         case 2: // eight-point grid star
                             int ax = Mathf.Abs(dx);
                             int ay = Mathf.Abs(dy);
-                            inside = (ax <= 1 || ay <= 1 || ax == ay) && ax <= 5 && ay <= 5;
+                            int armWidth = ScaleLegacyDistance(1, FieldSize);
+                            inside = (ax <= armWidth || ay <= armWidth || ax == ay) &&
+                                ax <= shapeCenter && ay <= shapeCenter;
                             break;
-                        default: // legacy circular arena
-                            inside = dx * dx + dy * dy <= 27;
+                        default: // Scale the original rounded outline uniformly on both axes.
+                        inside = (dx * dx + dy * dy) * 25 <= 27 * shapeCenter * shapeCenter;
                             break;
                     }
 
@@ -94,7 +113,7 @@ namespace NHN.TraceStrike
                 var fieldCenter = new Vector2Int(center, center);
                 while (true)
                 {
-                    if (corridor.x >= 0 && corridor.x < Size && corridor.y >= 0 && corridor.y < Size && walkable.Add(corridor))
+                    if (corridor.x >= 0 && corridor.x < MaxSize && corridor.y >= 0 && corridor.y < MaxSize && walkable.Add(corridor))
                     {
                         orderedCells.Add(corridor);
                     }
