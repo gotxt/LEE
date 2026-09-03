@@ -1,0 +1,520 @@
+fileFormatVersion: 2
+guid: d16fb8655f03c0741b57a5ea785293a1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7352824833701184088
+    second: ivy_tiles_3x5_0
+  - first:
+      213: 4618272870760699221
+    second: ivy_tiles_3x5_1
+  - first:
+      213: 3302711883628115877
+    second: ivy_tiles_3x5_2
+  - first:
+      213: -4290530547106632935
+    second: ivy_tiles_3x5_3
+  - first:
+      213: -811477465679075086
+    second: ivy_tiles_3x5_4
+  - first:
+      213: -2506776671839684960
+    second: ivy_tiles_3x5_5
+  - first:
+      213: -1834383806806291812
+    second: ivy_tiles_3x5_6
+  - first:
+      213: -823879233735113122
+    second: ivy_tiles_3x5_7
+  - first:
+      213: 80472400339810524
+    second: ivy_tiles_3x5_8
+  - first:
+      213: 6215824364618021074
+    second: ivy_tiles_3x5_9
+  - first:
+      213: -8061409550904884289
+    second: ivy_tiles_3x5_10
+  - first:
+      213: -2723124205635522008
+    second: ivy_tiles_3x5_11
+  - first:
+      213: -2495861704586361853
+    second: ivy_tiles_3x5_12
+  - first:
+      213: -2928365512501554336
+    second: ivy_tiles_3x5_13
+  - first:
+      213: 5850260161465322776
+    second: ivy_tiles_3x5_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 134
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8520e64ba3b7a0660800000000000000
+      internalID: 7352824833701184088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_1
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 135
+        width: 31
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 555d38115b6671040800000000000000
+      internalID: 4618272870760699221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 134
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a77d1ba5f695dd20800000000000000
+      internalID: 3302711883628115877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 101
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91b2fb91339f474c0800000000000000
+      internalID: -4290530547106632935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_4
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 101
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f8e6fa5b8d0db4f0800000000000000
+      internalID: -811477465679075086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_5
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 101
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a672cff5e3263dd0800000000000000
+      internalID: -2506776671839684960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 67
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9a059d85a5fa86e0800000000000000
+      internalID: -1834383806806291812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_7
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 67
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e56c567b33ef094f0800000000000000
+      internalID: -823879233735113122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_8
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 67
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd83a74c835ed1100800000000000000
+      internalID: 80472400339810524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d87647a35b034650800000000000000
+      internalID: 6215824364618021074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_10
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 32
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb38f5189be102090800000000000000
+      internalID: -8061409550904884289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_11
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 822b3d376f4853ad0800000000000000
+      internalID: -2723124205635522008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30401a9d00bec5dd0800000000000000
+      internalID: -2495861704586361853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_13
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 0
+        width: 31
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06317ded41b5c57d0800000000000000
+      internalID: -2928365512501554336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ivy_tiles_3x5_14
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81d82cfee9c403150800000000000000
+      internalID: 5850260161465322776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ivy_tiles_3x5_0: 7352824833701184088
+      ivy_tiles_3x5_1: 4618272870760699221
+      ivy_tiles_3x5_10: -8061409550904884289
+      ivy_tiles_3x5_11: -2723124205635522008
+      ivy_tiles_3x5_12: -2495861704586361853
+      ivy_tiles_3x5_13: -2928365512501554336
+      ivy_tiles_3x5_14: 5850260161465322776
+      ivy_tiles_3x5_2: 3302711883628115877
+      ivy_tiles_3x5_3: -4290530547106632935
+      ivy_tiles_3x5_4: -811477465679075086
+      ivy_tiles_3x5_5: -2506776671839684960
+      ivy_tiles_3x5_6: -1834383806806291812
+      ivy_tiles_3x5_7: -823879233735113122
+      ivy_tiles_3x5_8: 80472400339810524
+      ivy_tiles_3x5_9: 6215824364618021074
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

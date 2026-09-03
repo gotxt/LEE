@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="51" result="Passed" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.0889841">
+  <test-suite type="TestSuite" id="1000" name="Trace Strike" fullname="Trace Strike" runstate="Runnable" testcasecount="51" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.088984" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1057" name="Assembly-CSharp-Editor.dll" fullname="D:/codex/NHN/NHN_New/Library/ScriptAssemblies/Assembly-CSharp-Editor.dll" runstate="Runnable" testcasecount="51" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.081944" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="5664" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1058" name="NHN" fullname="NHN" runstate="Runnable" testcasecount="51" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.081553" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1059" name="TraceStrike" fullname="NHN.TraceStrike" runstate="Runnable" testcasecount="51" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.081294" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1060" name="Tests" fullname="NHN.TraceStrike.Tests" runstate="Runnable" testcasecount="51" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.081105" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="CombatBalanceRulesTests" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.030678" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1006" name="CenterThreeByThreeUsesDoubleDamage" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.CenterThreeByThreeUsesDoubleDamage" methodname="CenterThreeByThreeUsesDoubleDamage" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1942587441" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.014616" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1009" name="EnteringAfterExplosionDoesNotReceiveOldDamage" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.EnteringAfterExplosionDoesNotReceiveOldDamage" methodname="EnteringAfterExplosionDoesNotReceiveOldDamage" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1419439467" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000705" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="LeavingDangerDuringCoyoteTimeSurvives" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.LeavingDangerDuringCoyoteTimeSurvives" methodname="LeavingDangerDuringCoyoteTimeSurvives" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1533534640" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000266" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="MixedTrailDamageDependsOnTilePosition" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.MixedTrailDamageDependsOnTilePosition" methodname="MixedTrailDamageDependsOnTilePosition" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1019186715" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000199" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1010" name="RemainingInsideDangerAfterCoyoteTimeIsHit" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.RemainingInsideDangerAfterCoyoteTimeIsHit" methodname="RemainingInsideDangerAfterCoyoteTimeIsHit" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1528680868" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000279" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1005" name="TrailDamageIsExactlyOnePerPaintedCell" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.TrailDamageIsExactlyOnePerPaintedCell" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.002443" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1002" name="TrailDamageIsExactlyOnePerPaintedCell(1,1)" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.TrailDamageIsExactlyOnePerPaintedCell(1,1)" methodname="TrailDamageIsExactlyOnePerPaintedCell" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1825190576" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000218" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1003" name="TrailDamageIsExactlyOnePerPaintedCell(7,7)" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.TrailDamageIsExactlyOnePerPaintedCell(7,7)" methodname="TrailDamageIsExactlyOnePerPaintedCell" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1216043072" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000051" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1004" name="TrailDamageIsExactlyOnePerPaintedCell(24,24)" fullname="NHN.TraceStrike.Tests.CombatBalanceRulesTests.TrailDamageIsExactlyOnePerPaintedCell(24,24)" methodname="TrailDamageIsExactlyOnePerPaintedCell" classname="NHN.TraceStrike.Tests.CombatBalanceRulesTests" runstate="Runnable" seed="1381550432" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000037" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1011" name="HubWorldModelTests" fullname="NHN.TraceStrike.Tests.HubWorldModelTests" classname="NHN.TraceStrike.Tests.HubWorldModelTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.006684" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1014" name="AvailableStageRequiresTwoCollisions" fullname="NHN.TraceStrike.Tests.HubWorldModelTests.AvailableStageRequiresTwoCollisions" methodname="AvailableStageRequiresTwoCollisions" classname="NHN.TraceStrike.Tests.HubWorldModelTests" runstate="Runnable" seed="1456141722" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.003622" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="CharacterCollisionPreviewsThenSwapsAndMovesThrough" fullname="NHN.TraceStrike.Tests.HubWorldModelTests.CharacterCollisionPreviewsThenSwapsAndMovesThrough" methodname="CharacterCollisionPreviewsThenSwapsAndMovesThrough" classname="NHN.TraceStrike.Tests.HubWorldModelTests" runstate="Runnable" seed="955525329" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001311" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1015" name="FutureStageStaysLockedOnSecondCollision" fullname="NHN.TraceStrike.Tests.HubWorldModelTests.FutureStageStaysLockedOnSecondCollision" methodname="FutureStageStaysLockedOnSecondCollision" classname="NHN.TraceStrike.Tests.HubWorldModelTests" runstate="Runnable" seed="643596456" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000217" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1016" name="MapBoundaryBlocksMovement" fullname="NHN.TraceStrike.Tests.HubWorldModelTests.MapBoundaryBlocksMovement" methodname="MapBoundaryBlocksMovement" classname="NHN.TraceStrike.Tests.HubWorldModelTests" runstate="Runnable" seed="1192910371" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000156" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="MovingTwoCellsFromFocusedObjectClearsPreview" fullname="NHN.TraceStrike.Tests.HubWorldModelTests.MovingTwoCellsFromFocusedObjectClearsPreview" methodname="MovingTwoCellsFromFocusedObjectClearsPreview" classname="NHN.TraceStrike.Tests.HubWorldModelTests" runstate="Runnable" seed="1337115155" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000171" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1017" name="TrailFieldModelTests" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" testcasecount="38" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.042570" total="38" passed="38" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1045" name="BlockedCrystalCellRejectsMovementAndRoundEndpoints" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.BlockedCrystalCellRejectsMovementAndRoundEndpoints" methodname="BlockedCrystalCellRejectsMovementAndRoundEndpoints" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="728260701" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.007358" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1032" name="BossTelegraphAcceleratesInPhaseTwo" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.BossTelegraphAcceleratesInPhaseTwo" methodname="BossTelegraphAcceleratesInPhaseTwo" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="2108452848" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001049" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="BossUsesSeparateHealthPoolForEachPhase" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.BossUsesSeparateHealthPoolForEachPhase" methodname="BossUsesSeparateHealthPoolForEachPhase" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1759002203" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000320" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1046" name="CardinalCrystalLayoutPlacesFourCellsOneStepInsideEdges" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.CardinalCrystalLayoutPlacesFourCellsOneStepInsideEdges" methodname="CardinalCrystalLayoutPlacesFourCellsOneStepInsideEdges" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1137218266" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001246" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="CloseCameraClampsAtArenaEdges" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.CloseCameraClampsAtArenaEdges" methodname="CloseCameraClampsAtArenaEdges" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1167946123" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001490" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="CloseCameraKeepsInteriorTargetAndCentersSmallArenas" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.CloseCameraKeepsInteriorTargetAndCentersSmallArenas" methodname="CloseCameraKeepsInteriorTargetAndCentersSmallArenas" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="2101841324" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000295" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1040" name="CombinedGlyphContainsCrossAndDiamond" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.CombinedGlyphContainsCrossAndDiamond" methodname="CombinedGlyphContainsCrossAndDiamond" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1201492853" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001242" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1037" name="CombinedLaserContainsHorizontalAndVerticalPairs" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.CombinedLaserContainsHorizontalAndVerticalPairs" methodname="CombinedLaserContainsHorizontalAndVerticalPairs" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1610257758" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.003254" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1050" name="CrystalAttackIntervalsMatchBothGimmickStages" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.CrystalAttackIntervalsMatchBothGimmickStages" methodname="CrystalAttackIntervalsMatchBothGimmickStages" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1969479268" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000272" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1048" name="CrystalBlastUsesTwoCellCheckerPattern" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.CrystalBlastUsesTwoCellCheckerPattern" methodname="CrystalBlastUsesTwoCellCheckerPattern" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1382174961" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000782" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1056" name="DesktopViewportUsesSixteenByNinePresentation" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.DesktopViewportUsesSixteenByNinePresentation" methodname="DesktopViewportUsesSixteenByNinePresentation" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="57762764" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000974" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1041" name="EscapeRouteAlwaysLeavesAnAdjacentSafeTile" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.EscapeRouteAlwaysLeavesAnAdjacentSafeTile" methodname="EscapeRouteAlwaysLeavesAnAdjacentSafeTile" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="56319686" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001096" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1021" name="EveryFieldHasReachableStartAndEnd" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.EveryFieldHasReachableStartAndEnd" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001105" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1018" name="EveryFieldHasReachableStartAndEnd(0)" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.EveryFieldHasReachableStartAndEnd(0)" methodname="EveryFieldHasReachableStartAndEnd" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="586265950" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000418" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1019" name="EveryFieldHasReachableStartAndEnd(1)" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.EveryFieldHasReachableStartAndEnd(1)" methodname="EveryFieldHasReachableStartAndEnd" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="2019554330" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000129" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1020" name="EveryFieldHasReachableStartAndEnd(2)" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.EveryFieldHasReachableStartAndEnd(2)" methodname="EveryFieldHasReachableStartAndEnd" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="34553750" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000116" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1023" name="ExpandedArenaIsConnectedAndSymmetric" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.ExpandedArenaIsConnectedAndSymmetric" methodname="ExpandedArenaIsConnectedAndSymmetric" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1362019234" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001002" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1034" name="ExplosionMarksThreeByThreeAreaInsideField" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.ExplosionMarksThreeByThreeAreaInsideField" methodname="ExplosionMarksThreeByThreeAreaInsideField" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="447573566" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000892" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="FirstStageExpandsCircularArenaProportionallyToSeventeenBySeventeen" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.FirstStageExpandsCircularArenaProportionallyToSeventeenBySeventeen" methodname="FirstStageExpandsCircularArenaProportionallyToSeventeenBySeventeen" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="694247324" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000619" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1039" name="FixedGlyphsMatchTheirGridEquations" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.FixedGlyphsMatchTheirGridEquations" methodname="FixedGlyphsMatchTheirGridEquations" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1567503473" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000991" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1030" name="IntroPlacementCentersPlayerAndClearsActiveTrail" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.IntroPlacementCentersPlayerAndClearsActiveTrail" methodname="IntroPlacementCentersPlayerAndClearsActiveTrail" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1017202907" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000700" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1033" name="LaserMarksOnlyTargetedRowOrColumn" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.LaserMarksOnlyTargetedRowOrColumn" methodname="LaserMarksOnlyTargetedRowOrColumn" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="804991371" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000747" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="LeavingTheFieldIsBlocked" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.LeavingTheFieldIsBlocked" methodname="LeavingTheFieldIsBlocked" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="716460649" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000403" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1055" name="MobileViewportAlwaysFillsTheWholeScreen" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.MobileViewportAlwaysFillsTheWholeScreen" methodname="MobileViewportAlwaysFillsTheWholeScreen" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1285907336" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000311" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1036" name="MultiLaserMarksEveryRequestedLine" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.MultiLaserMarksEveryRequestedLine" methodname="MultiLaserMarksEveryRequestedLine" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="111917126" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000533" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1028" name="NewAttackPointsDoNotTeleportPlayer" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.NewAttackPointsDoNotTeleportPlayer" methodname="NewAttackPointsDoNotTeleportPlayer" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="863793611" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000696" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1035" name="PatternIntervalAcceleratesWithFightProgress" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.PatternIntervalAcceleratesWithFightProgress" methodname="PatternIntervalAcceleratesWithFightProgress" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1732315064" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000298" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1049" name="PhaseTwoGridPatternsCoverAlternatingRowsAndColumnsSeparately" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.PhaseTwoGridPatternsCoverAlternatingRowsAndColumnsSeparately" methodname="PhaseTwoGridPatternsCoverAlternatingRowsAndColumnsSeparately" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="2083137490" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001336" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1047" name="RandomCrystalLayoutAvoidsExcludedAndUsesUniqueCells" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.RandomCrystalLayoutAvoidsExcludedAndUsesUniqueCells" methodname="RandomCrystalLayoutAvoidsExcludedAndUsesUniqueCells" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="677335260" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.001904" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1027" name="RevisitingTrailResetsAndRequiresStart" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.RevisitingTrailResetsAndRequiresStart" methodname="RevisitingTrailResetsAndRequiresStart" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1856213749" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000507" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1029" name="ShapeChangeCanPreservePlayerCell" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.ShapeChangeCanPreservePlayerCell" methodname="ShapeChangeCanPreservePlayerCell" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1508266700" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000399" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1044" name="SpecialDamageModifiersApplyFlatBonusBeforeMultiplier" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.SpecialDamageModifiersApplyFlatBonusBeforeMultiplier" methodname="SpecialDamageModifiersApplyFlatBonusBeforeMultiplier" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="199243715" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000337" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1043" name="SpecialTileGenerationIsDeterministic" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.SpecialTileGenerationIsDeterministic" methodname="SpecialTileGenerationIsDeterministic" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1877593608" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.002650" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1042" name="SpecialTilesContainEveryEffectAndAvoidReservedCells" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.SpecialTilesContainEveryEffectAndAvoidReservedCells" methodname="SpecialTilesContainEveryEffectAndAvoidReservedCells" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1400909735" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.002148" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1054" name="TelegraphProgressReachesBorderExactlyAtAttackTime" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.TelegraphProgressReachesBorderExactlyAtAttackTime" methodname="TelegraphProgressReachesBorderExactlyAtAttackTime" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="870186069" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000245" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1031" name="TitleRevealRadiusCoversEverySixteenByNineCorner" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.TitleRevealRadiusCoversEverySixteenByNineCorner" methodname="TitleRevealRadiusCoversEverySixteenByNineCorner" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="502341828" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000430" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1052" name="TutorialIntroducesSpecialTilesInRequiredOrder" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.TutorialIntroducesSpecialTilesInRequiredOrder" methodname="TutorialIntroducesSpecialTilesInRequiredOrder" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="610425848" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000344" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1053" name="TutorialSpecialTargetsAreUniqueAndConnected" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.TutorialSpecialTargetsAreUniqueAndConnected" methodname="TutorialSpecialTargetsAreUniqueAndConnected" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="1607873975" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000368" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1051" name="TutorialUsesFourByFourBounds" fullname="NHN.TraceStrike.Tests.TrailFieldModelTests.TutorialUsesFourByFourBounds" methodname="TutorialUsesFourByFourBounds" classname="NHN.TraceStrike.Tests.TrailFieldModelTests" runstate="Runnable" seed="224793708" result="Passed" start-time="2026-09-02 07:21:46Z" end-time="2026-09-02 07:21:46Z" duration="0.000170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/owner/AppData/LocalLow/NHN Challenge Team/Trace Strike\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

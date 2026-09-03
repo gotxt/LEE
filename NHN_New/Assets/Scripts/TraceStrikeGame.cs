@@ -25,9 +25,16 @@ namespace NHN.TraceStrike
         private const float LandscapeAspect = 16f / 9f;
         private const float TutorialCellSize = 180f;
         private const float TutorialPlayerSizeRatio = 0.68f;
-        private const float BattlePlayerSizeRatio = 0.58f;
+        private const float BattlePlayerSizeRatio = 0.78f;
         private const float TargetedWarningSeconds = 0.65f;
         private const float StandardTileOpacity = 0.68f;
+        private const bool UseIsometricArena = false;
+        private const bool UseExtraTileDepth = false;
+        private const float BattleCameraZoom = 2.05f;
+        private const float BattleCameraFollowSpeed = 10f;
+        private const float BattlePlayerMoveSeconds = 0.11f;
+        private const float DesktopMinimapSize = 280f;
+        private const float MinimapCellSize = 14f;
         private const float TitleInitialRadius = 0.115f;
         private const float TitleRevealSeconds = 1.35f;
         private const string BestClearTimeKey = "TraceStrike.BestClearTime";
@@ -113,7 +120,12 @@ namespace NHN.TraceStrike
 
         private Font gameFont;
         private RectTransform mainGrid;
+        private RectTransform objectiveArrow;
+        private float objectiveArrowAngle;
+        private bool objectiveArrowInitialized;
         private RectTransform minimapGrid;
+        private RectTransform minimapRoot;
+        private RectTransform minimapPlayer;
         private RectTransform mainPlayer;
         private RectTransform effectsLayer;
         private RectTransform directionPadArea;
@@ -226,7 +238,17 @@ namespace NHN.TraceStrike
         private Color activeCharacterTint = White;
         private Vector2Int tutorialPlayer;
         private Vector2Int playerFacing = Vector2Int.up;
+        private Vector2 battleCameraTarget;
+        private Vector2 battlePlayerVisualPosition;
+        private Vector2 battlePlayerMoveFrom;
+        private Vector2 battlePlayerMoveTarget;
+        private Vector2 battlePlayerNudge;
+        private float battlePlayerMoveTime;
+        private Vector2 battleCameraPosition;
+        private Vector2 battleCameraShake;
+        private int fieldShakeVersion;
         private float mainCellSize;
+        private bool battleCameraInitialized;
         private float ActiveTutorialCellSize => desktopLayout ? 132f : TutorialCellSize;
         private int appliedScreenWidth = -1;
         private int appliedScreenHeight = -1;
@@ -607,6 +629,8 @@ namespace NHN.TraceStrike
             specialTiles.Clear();
             hubModel.Reset(hubModel.CurrentCharacter);
             RestoreMainGridLayout();
+            battleCameraInitialized = false;
+            mainGrid.anchoredPosition = Vector2.zero;
             activeCharacterTint = HubCharacterTints[hubModel.CurrentCharacter];
             mainPlayer.sizeDelta = Vector2.one * (mainCellSize * BattlePlayerSizeRatio);
             mainPlayer.localScale = Vector3.one;
@@ -633,7 +657,7 @@ namespace NHN.TraceStrike
                 {
                     Image tile = mainTiles[x, y];
                     arenaGroundTiles[x, y].gameObject.SetActive(false);
-                    mainTileDepthRoots[x, y].gameObject.SetActive(true);
+                    mainTileDepthRoots[x, y].gameObject.SetActive(UseExtraTileDepth);
                     tile.gameObject.SetActive(true);
                     Color color = Color.Lerp(ArenaTile, ArenaTileLift, (x + y) % 2 == 0 ? 0.28f : 0.08f);
                     color.a = 0.68f;
@@ -770,6 +794,7 @@ namespace NHN.TraceStrike
             StartStage(0);
             var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
             model.TryPlacePlayer(center);
+            battleCameraInitialized = false;
             GenerateSpecialTiles();
             specialTiles.Remove(center);
             specialTiles.Remove(center + Vector2Int.up);
@@ -1014,6 +1039,8 @@ namespace NHN.TraceStrike
             movementFrozen = false;
             playerDead = false;
             phaseTwoActive = false;
+            battleCameraInitialized = false;
+            mainGrid.anchoredPosition = Vector2.zero;
             mainPlayer.sizeDelta = Vector2.one * (ActiveTutorialCellSize * TutorialPlayerSizeRatio);
             mainPlayer.localScale = Vector3.one;
             crystalCells.Clear();
@@ -1337,7 +1364,7 @@ namespace NHN.TraceStrike
                 {
                     bool active = x < TutorialRules.Size && y < TutorialRules.Size;
                     arenaGroundTiles[x, y].gameObject.SetActive(false);
-                    mainTileDepthRoots[x, y].gameObject.SetActive(active);
+                    mainTileDepthRoots[x, y].gameObject.SetActive(active && UseExtraTileDepth);
                     mainTiles[x, y].gameObject.SetActive(active);
                     if (!active)
                     {
@@ -1657,6 +1684,7 @@ namespace NHN.TraceStrike
             targetedCells.Clear();
             hazardTelegraphProgress = 0f;
             targetedTelegraphProgress = 0f;
+            battleCameraInitialized = false;
             RestoreMainGridLayout();
             RandomizeFloorTileLayout();
             ApplyFloorTileLayout();
@@ -1713,7 +1741,9 @@ namespace NHN.TraceStrike
                     ground.anchoredPosition = GridPosition(x, y, mainCellSize);
                     LayoutTileDepth(x, y, mainCellSize, GridPosition(x, y, mainCellSize));
                     RectTransform tile = mainTiles[x, y].rectTransform;
-                    tile.sizeDelta = Vector2.one * (mainCellSize - (desktopLayout ? 7f : 5f));
+                    tile.sizeDelta = Vector2.one * (UseIsometricArena
+                        ? mainCellSize + 1f
+                        : mainCellSize - (desktopLayout ? 7f : 5f));
                     tile.anchoredPosition = GridPosition(x, y, mainCellSize);
                     tileLabels[x, y].fontSize = 24;
                 }
@@ -1733,6 +1763,16 @@ namespace NHN.TraceStrike
             float gap = desktopLayout ? 7f : 5f;
             float faceSize = cellSize - gap;
             root.anchoredPosition = position;
+            if (UseIsometricArena)
+            {
+                faceSize = cellSize + 1f;
+                depthImage.rectTransform.sizeDelta = Vector2.one * faceSize;
+                depthImage.rectTransform.anchoredPosition = new Vector2(0f, -faceSize * 0.12f);
+                shadow.sizeDelta = new Vector2(faceSize * 0.88f, faceSize * 0.42f);
+                shadow.anchoredPosition = new Vector2(4f, -faceSize * 0.36f);
+                return;
+            }
+
             if (golemEdgeTileSprite != null)
             {
                 float sideHeight = (faceSize + 2f) * 0.55f;
@@ -2177,7 +2217,7 @@ namespace NHN.TraceStrike
             switch (pattern)
             {
                 case 1:
-                    int distance = diamondUseCount % 2 == 0 ? 3 : 5;
+                    int distance = TrailFieldModel.ScaleLegacyDistance(diamondUseCount % 2 == 0 ? 3 : 5);
                     diamondUseCount++;
                     glyph = BossPatternRules.CreateDiamondGlyph(model.Traversable, center, distance);
                     patternName = "마름모 문양 " + distance;
@@ -2187,7 +2227,8 @@ namespace NHN.TraceStrike
                     patternName = "X 문양";
                     break;
                 case 3:
-                    glyph = BossPatternRules.CreateCombinedGlyph(model.Traversable, center, 3);
+                    glyph = BossPatternRules.CreateCombinedGlyph(model.Traversable, center,
+                        TrailFieldModel.ScaleLegacyDistance(3));
                     patternName = "이중 문양";
                     break;
                 case 4:
@@ -2775,10 +2816,13 @@ namespace NHN.TraceStrike
             mainGrid.anchorMin = new Vector2(0.5f, 0.5f);
             mainGrid.anchorMax = new Vector2(0.5f, 0.5f);
             mainGrid.pivot = new Vector2(0.5f, 0.5f);
-            // Preserve the original 11x11-era cell dimensions even though the
-            // battlefield now contains 15x15 cells.
+            // Enlarge the arena without shrinking its cells to fit the screen.
             float legacyGridSize = desktopLayout ? LegacyDesktopGridSize : LegacyMobileGridSize;
             float gridSize = legacyGridSize * TrailFieldModel.Size / LegacyFieldSize;
+            if (desktopLayout)
+            {
+                gridSize *= BattleCameraZoom;
+            }
             mainGrid.sizeDelta = new Vector2(gridSize, gridSize);
             mainGrid.anchoredPosition = Vector2.zero;
             mainCellSize = gridSize / TrailFieldModel.Size;
@@ -2860,7 +2904,9 @@ namespace NHN.TraceStrike
                 {
                     RectTransform tile = CreateRect("Tile " + x + "," + y, mainGrid);
                     tile.anchorMin = tile.anchorMax = new Vector2(0.5f, 0.5f);
-                    tile.sizeDelta = Vector2.one * (mainCellSize - (desktopLayout ? 7f : 5f));
+                    tile.sizeDelta = Vector2.one * (UseIsometricArena
+                        ? mainCellSize + 1f
+                        : mainCellSize - (desktopLayout ? 7f : 5f));
                     tile.anchoredPosition = GridPosition(x, y, mainCellSize);
                     Image image = tile.gameObject.AddComponent<Image>();
                     image.sprite = GetFloorTileSprite(x, y);
@@ -2872,18 +2918,21 @@ namespace NHN.TraceStrike
                     tileEdge.effectDistance = new Vector2(1.2f, -1.2f);
                     mainTileOutlines[x, y] = tileEdge;
 
-                    CreateImage("Top Bevel", tile, new Color(0.92f, 0.84f, 0.62f, 0.38f),
-                        new Vector2(0f, 1f), new Vector2(1f, 1f),
-                        new Vector2(3f, -3f), new Vector2(-3f, 0f)).GetComponent<Image>().raycastTarget = false;
-                    CreateImage("Left Bevel", tile, new Color(0.78f, 0.72f, 0.52f, 0.28f),
-                        new Vector2(0f, 0f), new Vector2(0f, 1f),
-                        new Vector2(0f, 3f), new Vector2(3f, -3f)).GetComponent<Image>().raycastTarget = false;
-                    CreateImage("Bottom Shade", tile, new Color(0.015f, 0.012f, 0.01f, 0.68f),
-                        new Vector2(0f, 0f), new Vector2(1f, 0f),
-                        new Vector2(2f, 0f), new Vector2(-2f, 5f)).GetComponent<Image>().raycastTarget = false;
-                    CreateImage("Right Shade", tile, new Color(0.015f, 0.012f, 0.01f, 0.58f),
-                        new Vector2(1f, 0f), new Vector2(1f, 1f),
-                        new Vector2(-5f, 2f), new Vector2(0f, -2f)).GetComponent<Image>().raycastTarget = false;
+                    if (UseExtraTileDepth && !UseIsometricArena)
+                    {
+                        CreateImage("Top Bevel", tile, new Color(0.92f, 0.84f, 0.62f, 0.38f),
+                            new Vector2(0f, 1f), new Vector2(1f, 1f),
+                            new Vector2(3f, -3f), new Vector2(-3f, 0f)).GetComponent<Image>().raycastTarget = false;
+                        CreateImage("Left Bevel", tile, new Color(0.78f, 0.72f, 0.52f, 0.28f),
+                            new Vector2(0f, 0f), new Vector2(0f, 1f),
+                            new Vector2(0f, 3f), new Vector2(3f, -3f)).GetComponent<Image>().raycastTarget = false;
+                        CreateImage("Bottom Shade", tile, new Color(0.015f, 0.012f, 0.01f, 0.68f),
+                            new Vector2(0f, 0f), new Vector2(1f, 0f),
+                            new Vector2(2f, 0f), new Vector2(-2f, 5f)).GetComponent<Image>().raycastTarget = false;
+                        CreateImage("Right Shade", tile, new Color(0.015f, 0.012f, 0.01f, 0.58f),
+                            new Vector2(1f, 0f), new Vector2(1f, 1f),
+                            new Vector2(-5f, 2f), new Vector2(0f, -2f)).GetComponent<Image>().raycastTarget = false;
+                    }
 
                     RectTransform item = CreateRect("Special Item", tile);
                     item.anchorMin = item.anchorMax = new Vector2(0.5f, 0.5f);
@@ -3033,6 +3082,31 @@ namespace NHN.TraceStrike
             }
 
             mainPlayer = CreatePlayer("Player", mainGrid, mainCellSize * BattlePlayerSizeRatio, false);
+            objectiveArrow = CreateRect("Objective Direction Arrow", mainGrid);
+            objectiveArrow.anchorMin = objectiveArrow.anchorMax = new Vector2(0.5f, 0.5f);
+            objectiveArrow.sizeDelta = new Vector2(40f, 50f);
+            ObjectiveArrowGraphic arrowGraphic = objectiveArrow.gameObject.AddComponent<ObjectiveArrowGraphic>();
+            arrowGraphic.color = White;
+            arrowGraphic.raycastTarget = false;
+            objectiveArrow.gameObject.SetActive(false);
+            // The supplied block already includes its side faces. Draw distant
+            // blocks first so the nearer blocks cover their back edges.
+            if (UseIsometricArena)
+            {
+                for (int diagonal = (TrailFieldModel.Size - 1) * 2; diagonal >= 0; diagonal--)
+                {
+                    for (int x = 0; x < TrailFieldModel.Size; x++)
+                    {
+                        int y = diagonal - x;
+                        if (y >= 0 && y < TrailFieldModel.Size)
+                            mainTiles[x, y].transform.SetAsLastSibling();
+                    }
+                }
+                foreach (RectTransform crystal in crystalVisuals)
+                    if (crystal != null) crystal.SetAsLastSibling();
+                mainPlayer.SetAsLastSibling();
+            }
+            if (arenaBossCore != null) arenaBossCore.SetAsLastSibling();
         }
 
         private void BuildHudlessArenaPresentation(RectTransform field)
@@ -3076,10 +3150,20 @@ namespace NHN.TraceStrike
         private void BuildAttackWarningVisual(RectTransform tile, int x, int y)
         {
             RectTransform warning = CreateRect("Attack Warning", tile);
-            warning.anchorMin = Vector2.zero;
-            warning.anchorMax = Vector2.one;
-            warning.offsetMin = new Vector2(3f, 3f);
-            warning.offsetMax = new Vector2(-3f, -3f);
+            if (UseIsometricArena)
+            {
+                warning.anchorMin = warning.anchorMax = new Vector2(0.5f, 0.5f);
+                warning.sizeDelta = Vector2.one * (mainCellSize * 0.68f);
+                warning.anchoredPosition = Vector2.zero;
+                warning.localRotation = Quaternion.Euler(0f, 0f, 45f);
+            }
+            else
+            {
+                warning.anchorMin = Vector2.zero;
+                warning.anchorMax = Vector2.one;
+                warning.offsetMin = new Vector2(3f, 3f);
+                warning.offsetMax = new Vector2(-3f, -3f);
+            }
 
             RectTransform fill = CreateRect("Warning Fill", warning);
             fill.anchorMin = fill.anchorMax = new Vector2(0.5f, 0.5f);
@@ -3238,19 +3322,36 @@ namespace NHN.TraceStrike
 
         private void BuildDesktopMinimap(RectTransform root)
         {
-            RectTransform minimap = CreatePanel("Desktop Minimap", root, Panel,
-                new Vector2(0.815f, 0.69f), new Vector2(0.975f, 0.965f));
-            Outline outline = minimap.gameObject.AddComponent<Outline>();
-            outline.effectColor = TrailHot;
-            outline.effectDistance = new Vector2(4f, -4f);
-            AddAccent(minimap, new Vector2(0f, 0.96f), Vector2.one, TrailHot);
-            CreateText("Minimap Title", minimap, "MINIMAP", 20, FontStyle.Bold, TrailHot,
-                new Vector2(0.07f, 0.84f), new Vector2(0.93f, 0.96f), TextAnchor.MiddleCenter);
+            // Anchor a true square to the screen, not the moving battle grid.
+            minimapRoot = CreateRect("Desktop Minimap", root);
+            minimapRoot.anchorMin = minimapRoot.anchorMax = Vector2.one;
+            minimapRoot.pivot = Vector2.one;
+            minimapRoot.sizeDelta = Vector2.one * DesktopMinimapSize;
+            minimapRoot.anchoredPosition = new Vector2(-28f, -28f);
+            Image backdrop = minimapRoot.gameObject.AddComponent<Image>();
+            backdrop.color = new Color(0.025f, 0.035f, 0.045f, 0.30f);
+            backdrop.raycastTarget = false;
+            CanvasGroup group = minimapRoot.gameObject.AddComponent<CanvasGroup>();
+            group.interactable = false;
+            group.blocksRaycasts = false;
+            // Thin edge images avoid Outline duplicating a translucent panel's entire fill.
+            for (int side = 0; side < 4; side++)
+            {
+                bool horizontal = side < 2;
+                float edge = side % 2;
+                RectTransform border = CreateRect("Minimap Border " + side, minimapRoot);
+                border.anchorMin = horizontal ? new Vector2(0f, edge) : new Vector2(edge, 0f);
+                border.anchorMax = horizontal ? new Vector2(1f, edge) : new Vector2(edge, 1f);
+                border.sizeDelta = horizontal ? new Vector2(0f, 1f) : new Vector2(1f, 0f);
+                border.anchoredPosition = Vector2.zero;
+                Image borderImage = border.gameObject.AddComponent<Image>();
+                borderImage.color = new Color(0.76f, 0.80f, 0.77f, 0.45f);
+                borderImage.raycastTarget = false;
+            }
 
-            const float miniCellSize = 17f;
-            float miniGridSize = miniCellSize * TrailFieldModel.Size;
-            minimapGrid = CreateRect("Minimap Grid", minimap);
-            minimapGrid.anchorMin = minimapGrid.anchorMax = new Vector2(0.5f, 0.46f);
+            float miniGridSize = MinimapCellSize * TrailFieldModel.Size;
+            minimapGrid = CreateRect("Minimap Grid", minimapRoot);
+            minimapGrid.anchorMin = minimapGrid.anchorMax = new Vector2(0.5f, 0.5f);
             minimapGrid.pivot = new Vector2(0.5f, 0.5f);
             minimapGrid.sizeDelta = Vector2.one * miniGridSize;
             minimapGrid.anchoredPosition = Vector2.zero;
@@ -3261,8 +3362,8 @@ namespace NHN.TraceStrike
                 {
                     RectTransform tile = CreateRect("Minimap Tile " + x + "," + y, minimapGrid);
                     tile.anchorMin = tile.anchorMax = new Vector2(0.5f, 0.5f);
-                    tile.sizeDelta = Vector2.one * (miniCellSize - 1.4f);
-                    tile.anchoredPosition = GridPosition(x, y, miniCellSize);
+                    tile.sizeDelta = Vector2.one * (MinimapCellSize - 1.5f);
+                    tile.anchoredPosition = GridPosition(x, y, MinimapCellSize);
                     Image image = tile.gameObject.AddComponent<Image>();
                     image.color = Floor;
                     image.raycastTarget = false;
@@ -3270,7 +3371,17 @@ namespace NHN.TraceStrike
                 }
             }
 
-            minimap.gameObject.SetActive(false);
+            minimapPlayer = CreateRect("Minimap Player", minimapGrid);
+            minimapPlayer.anchorMin = minimapPlayer.anchorMax = new Vector2(0.5f, 0.5f);
+            minimapPlayer.sizeDelta = Vector2.one * 10f;
+            minimapPlayer.localRotation = Quaternion.Euler(0f, 0f, 45f);
+            Image playerMarker = minimapPlayer.gameObject.AddComponent<Image>();
+            playerMarker.color = White;
+            playerMarker.raycastTarget = false;
+            Outline playerOutline = minimapPlayer.gameObject.AddComponent<Outline>();
+            playerOutline.effectColor = new Color(0f, 0f, 0f, 0.95f);
+            playerOutline.effectDistance = new Vector2(2f, -2f);
+            minimapRoot.gameObject.SetActive(false);
         }
 
         private void RefreshMinimap()
@@ -3306,7 +3417,6 @@ namespace NHN.TraceStrike
                         if (tutorialStep == 0 && tutorialTrail.Contains(cell)) color = Trail;
                         if (tutorialStep == 0 && cell == TutorialRules.Start) color = StartColor;
                         if (tutorialStep == 0 && cell == TutorialRules.End) color = EndColor;
-                        if (cell == tutorialPlayer) color = TrailHot;
                         tile.color = color;
                         continue;
                     }
@@ -3319,17 +3429,43 @@ namespace NHN.TraceStrike
                         continue;
                     }
 
-                    Color boardColor = Floor;
-                    if (model.IsTrail(boardCell)) boardColor = Trail;
-                    if (boardCell == model.Start) boardColor = StartColor;
-                    if (boardCell == model.End) boardColor = EndColor;
+                    Color boardColor = CombatBalanceRules.IsCenterDamageCell(boardCell, TrailFieldModel.Size)
+                        ? new Color(0.90f, 0.55f, 0.24f, 0.65f)
+                        : new Color(0.65f, 0.62f, 0.53f, 0.48f);
+                    if (model.IsTrail(boardCell))
+                        boardColor = new Color(Trail.r, Trail.g, Trail.b, 0.85f);
                     if (crystalCells.Contains(boardCell)) boardColor = Danger;
                     if (warnedCells.Contains(boardCell) || targetedCells.Contains(boardCell) ||
-                        crystalWarningCounts.ContainsKey(boardCell)) boardColor = Hex("C7465F");
-                    if (boardCell == model.Player) boardColor = TrailHot;
+                        crystalWarningCounts.ContainsKey(boardCell) ||
+                        crystalFiringCounts.ContainsKey(boardCell)) boardColor = Hex("C7465F");
+                    // Navigation endpoints remain legible even during a warning.
+                    if (boardCell == model.Start) boardColor = StartColor;
+                    if (boardCell == model.End) boardColor = EndColor;
                     tile.color = boardColor;
                 }
             }
+            UpdateMinimapPlayer();
+        }
+
+        private void UpdateMinimapPlayer()
+        {
+            if (minimapRoot == null) return;
+            bool visible = desktopLayout && !titleActive && !hubActive;
+            minimapRoot.gameObject.SetActive(visible);
+            if (!visible || minimapPlayer == null) return;
+
+            if (tutorialActive)
+            {
+                int offset = (TrailFieldModel.Size - TutorialRules.Size) / 2;
+                minimapPlayer.anchoredPosition = GridPosition(
+                    tutorialPlayer.x + offset, tutorialPlayer.y + offset, MinimapCellSize);
+            }
+            else
+            {
+                // Ignore camera scrolling and shake; track the player's smooth grid position.
+                minimapPlayer.anchoredPosition = battlePlayerVisualPosition * (MinimapCellSize / mainCellSize);
+            }
+            minimapPlayer.SetAsLastSibling();
         }
 
         private void BuildDirectionButton(RectTransform parent, string name, string label,
@@ -3371,7 +3507,8 @@ namespace NHN.TraceStrike
                     var cell = new Vector2Int(x, y);
                     bool active = model.IsWalkable(cell);
                     arenaGroundTiles[x, y].gameObject.SetActive(false);
-                    mainTileDepthRoots[x, y].gameObject.SetActive(active);
+                    mainTileDepthRoots[x, y].gameObject.SetActive(
+                        active && UseExtraTileDepth);
                     mainTiles[x, y].gameObject.SetActive(active);
                     if (!active)
                     {
@@ -3441,8 +3578,8 @@ namespace NHN.TraceStrike
                 }
             }
 
-            mainPlayer.anchoredPosition = GridPosition(model.Player.x, model.Player.y, mainCellSize);
             mainPlayer.SetAsLastSibling();
+            UpdateBattleCameraTarget();
             RefreshMinimap();
 
             int shownLength = model.IsTracing ? model.Trail.Count : 0;
@@ -3452,6 +3589,112 @@ namespace NHN.TraceStrike
                 : "경로 대기  ·  START 필요";
             UpdatePowerRuleText();
             RefreshInteractionPanel();
+        }
+
+        private void UpdateBattleCameraTarget()
+        {
+            if (mainGrid == null || tutorialActive || hubActive)
+            {
+                return;
+            }
+
+            Vector2 playerPosition = GridPosition(model.Player.x, model.Player.y, mainCellSize);
+            battleCameraTarget = GetBattleCameraTarget(playerPosition);
+            if (!battleCameraInitialized)
+            {
+                battlePlayerVisualPosition = playerPosition;
+                battlePlayerMoveFrom = playerPosition;
+                battlePlayerMoveTarget = playerPosition;
+                battlePlayerMoveTime = BattlePlayerMoveSeconds;
+                battlePlayerNudge = Vector2.zero;
+                battleCameraPosition = battleCameraTarget;
+                battleCameraShake = Vector2.zero;
+                mainPlayer.anchoredPosition = PixelSnap(playerPosition);
+                mainGrid.anchoredPosition = PixelSnap(battleCameraPosition);
+                battleCameraInitialized = true;
+            }
+            else if (battlePlayerMoveTarget != playerPosition)
+            {
+                battlePlayerMoveFrom = battlePlayerVisualPosition;
+                battlePlayerMoveTarget = playerPosition;
+                battlePlayerMoveTime = 0f;
+            }
+        }
+
+        private Vector2 GetBattleCameraTarget(Vector2 playerPosition)
+        {
+            Vector2 focus = desktopLayout ? new Vector2(-96f, -24f) : new Vector2(0f, -60f);
+            Vector2 lookAhead = titleActive ? Vector2.zero : (Vector2)playerFacing * (mainCellSize * 0.24f);
+            Vector2 viewport = desktopLayout
+                ? new Vector2(DesktopReferenceWidth, DesktopReferenceHeight)
+                : ((RectTransform)mainGrid.parent).rect.size;
+            return ClampBattleCamera(focus - playerPosition - lookAhead, mainGrid.sizeDelta, viewport);
+        }
+
+        public static Vector2 ClampBattleCamera(Vector2 desired, Vector2 arenaSize, Vector2 viewportSize)
+        {
+            Vector2 limit = Vector2.Max(Vector2.zero, (arenaSize - viewportSize) * 0.5f);
+            return new Vector2(Mathf.Clamp(desired.x, -limit.x, limit.x),
+                Mathf.Clamp(desired.y, -limit.y, limit.y));
+        }
+
+        private void LateUpdate()
+        {
+            AnimateBattleCamera();
+            UpdateObjectiveArrow();
+            UpdateMinimapPlayer();
+        }
+
+        private void UpdateObjectiveArrow()
+        {
+            if (objectiveArrow == null || mainPlayer == null) return;
+            bool visible = !titleActive && !hubActive && !playerDead && !gameCleared &&
+                !inputLocked && !tutorialTransitioning && (!tutorialActive || tutorialStep == 0) &&
+                (phaseBannerGroup == null || phaseBannerGroup.alpha < 0.2f);
+            Vector2 target = tutorialActive
+                ? TutorialGridPosition(tutorialTrail.Count > 0 ? TutorialRules.End : TutorialRules.Start)
+                : GridPosition(model.NavigationTarget.x, model.NavigationTarget.y, mainCellSize);
+            Vector2 direction = target - mainPlayer.anchoredPosition;
+            visible &= direction.sqrMagnitude > 4f;
+            objectiveArrow.gameObject.SetActive(visible);
+            if (!visible)
+            {
+                objectiveArrowInitialized = false;
+                return;
+            }
+
+            float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            objectiveArrowAngle = objectiveArrowInitialized
+                ? Mathf.MoveTowardsAngle(objectiveArrowAngle, targetAngle, 900f * Time.unscaledDeltaTime)
+                : targetAngle;
+            objectiveArrowInitialized = true;
+            float radius = mainPlayer.sizeDelta.x * 0.5f + 38f;
+            float radians = objectiveArrowAngle * Mathf.Deg2Rad;
+            Vector2 orbit = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * radius;
+            objectiveArrow.anchoredPosition = PixelSnap(mainPlayer.anchoredPosition + orbit);
+            objectiveArrow.localRotation = Quaternion.Euler(0f, 0f, objectiveArrowAngle);
+            objectiveArrow.SetAsLastSibling();
+        }
+
+        private void AnimateBattleCamera()
+        {
+            if (!battleCameraInitialized || mainGrid == null ||
+                tutorialActive || hubActive)
+            {
+                return;
+            }
+
+            battlePlayerMoveTime = Mathf.Min(BattlePlayerMoveSeconds,
+                battlePlayerMoveTime + Time.unscaledDeltaTime);
+            float moveProgress = Mathf.SmoothStep(0f, 1f, battlePlayerMoveTime / BattlePlayerMoveSeconds);
+            battlePlayerVisualPosition = Vector2.Lerp(battlePlayerMoveFrom, battlePlayerMoveTarget, moveProgress);
+            mainPlayer.anchoredPosition = PixelSnap(battlePlayerVisualPosition + battlePlayerNudge);
+            battleCameraTarget = GetBattleCameraTarget(battlePlayerMoveTarget);
+            Vector2 trackingTarget = GetBattleCameraTarget(battlePlayerVisualPosition);
+            float blend = 1f - Mathf.Exp(-BattleCameraFollowSpeed * Time.unscaledDeltaTime);
+            // Preserve subpixel progress; snap only the displayed position.
+            battleCameraPosition = Vector2.Lerp(battleCameraPosition, trackingTarget, blend);
+            mainGrid.anchoredPosition = PixelSnap(battleCameraPosition + battleCameraShake);
         }
 
         private void HideHubWorldVisuals()
@@ -3653,6 +3896,40 @@ namespace NHN.TraceStrike
 
         private void LoadGolemTileSprites()
         {
+            Texture2D squareFloor = Resources.Load<Texture2D>("Art/cave_floor_tile_128x128");
+            if (!UseIsometricArena && squareFloor != null)
+            {
+                squareFloor.filterMode = FilterMode.Point;
+                squareFloor.wrapMode = TextureWrapMode.Clamp;
+                // Slice out only the supplied tile's face; preserve the source PNG.
+                // The 128x128 source has a 101x101 opaque face at (14,14), top-left
+                // origin. Remove only transparent padding, retaining the pixel border.
+                Rect face = new Rect(14f, 13f, 101f, 101f);
+                golemBaseTileSprite = Sprite.Create(squareFloor, face,
+                    new Vector2(0.5f, 0.5f), 64f);
+                golemEdgeTileSprite = null;
+                return;
+            }
+
+            Texture2D isometricFloor = Resources.Load<Texture2D>(
+                "Art/rounded_cave_block_tile_64");
+            Texture2D isometricEdge = Resources.Load<Texture2D>(
+                "Art/isometric_brown_edge_tile_64");
+            if (UseIsometricArena && isometricFloor != null && isometricEdge != null)
+            {
+                isometricFloor.filterMode = FilterMode.Point;
+                isometricFloor.wrapMode = TextureWrapMode.Clamp;
+                isometricEdge.filterMode = FilterMode.Point;
+                isometricEdge.wrapMode = TextureWrapMode.Clamp;
+                golemBaseTileSprite = Sprite.Create(isometricFloor,
+                    new Rect(0f, 0f, isometricFloor.width, isometricFloor.height),
+                    new Vector2(0.5f, 0.5f), 64f);
+                golemEdgeTileSprite = Sprite.Create(isometricEdge,
+                    new Rect(0f, 0f, isometricEdge.width, isometricEdge.height),
+                    new Vector2(0.5f, 0.5f), 64f);
+                return;
+            }
+
             Texture2D texture = Resources.Load<Texture2D>("Art/golem_tiles");
             if (texture == null || texture.width < 80 || texture.height < 64)
             {
@@ -4023,7 +4300,9 @@ namespace NHN.TraceStrike
                     }
 
                     progress = Mathf.Clamp01(progress);
-                    float maxSize = Mathf.Max(0f, mainTiles[x, y].rectTransform.sizeDelta.x - 10f);
+                    float maxSize = Mathf.Max(0f, UseIsometricArena
+                        ? warning.sizeDelta.x - 8f
+                        : mainTiles[x, y].rectTransform.sizeDelta.x - 10f);
                     float size = PixelStep(maxSize * progress, 1f);
                     fillImage.rectTransform.sizeDelta = Vector2.one * size;
                     fillImage.rectTransform.anchoredPosition = Vector2.zero;
@@ -4249,14 +4528,23 @@ namespace NHN.TraceStrike
 
         private IEnumerator ShakeField(float strength, float duration)
         {
+            int version = ++fieldShakeVersion;
             Vector2 basePosition = mainGrid.anchoredPosition;
             for (float elapsed = 0f; elapsed < duration; elapsed += Time.deltaTime)
             {
+                if (version != fieldShakeVersion) yield break;
                 float fade = 1f - elapsed / duration;
-                mainGrid.anchoredPosition = PixelSnap(basePosition + Random.insideUnitCircle * (strength * fade));
+                Vector2 offset = Random.insideUnitCircle * (strength * fade);
+                if (battleCameraInitialized && !tutorialActive && !hubActive)
+                    battleCameraShake = offset;
+                else
+                    mainGrid.anchoredPosition = PixelSnap(basePosition + offset);
                 yield return null;
             }
-            mainGrid.anchoredPosition = basePosition;
+            if (version != fieldShakeVersion) yield break;
+            battleCameraShake = Vector2.zero;
+            if (!battleCameraInitialized || tutorialActive || hubActive)
+                mainGrid.anchoredPosition = basePosition;
         }
 
         private IEnumerator PunchPlayer(bool blocked)
@@ -4267,10 +4555,16 @@ namespace NHN.TraceStrike
             {
                 for (float t = 0f; t < 1f; t += Time.deltaTime * 8f)
                 {
-                    mainPlayer.anchoredPosition = basePosition + Vector2.right * (Mathf.Sin(t * 38f) * (1f - t) * 13f);
+                    Vector2 nudge = Vector2.right * (Mathf.Sin(t * 38f) * (1f - t) * 13f);
+                    if (battleCameraInitialized && !tutorialActive && !hubActive)
+                        battlePlayerNudge = nudge;
+                    else
+                        mainPlayer.anchoredPosition = basePosition + nudge;
                     yield return null;
                 }
-                mainPlayer.anchoredPosition = basePosition;
+                battlePlayerNudge = Vector2.zero;
+                if (!battleCameraInitialized || tutorialActive || hubActive)
+                    mainPlayer.anchoredPosition = basePosition;
             }
             else
             {
@@ -4462,7 +4756,109 @@ namespace NHN.TraceStrike
             }
 
             Application.runInBackground = true;
-            if (System.Array.IndexOf(arguments, "-captureEndpoints") >= 0 && !tutorialActive)
+            if (System.Array.IndexOf(arguments, "-captureMinimap") >= 0)
+            {
+                model.TryPlacePlayer(new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2));
+                battleCameraInitialized = false;
+                RefreshBoard();
+                yield return null;
+                Vector2 panelPosition = minimapRoot.anchoredPosition;
+                Vector2 markerPosition = minimapPlayer.anchoredPosition;
+                Move(Vector2Int.right);
+                // Inspect after LateUpdate has actually advanced the marker, including slow startup frames.
+                for (int frame = 0; frame < 60; frame++)
+                {
+                    yield return null;
+                    if (Vector2.Distance(minimapPlayer.anchoredPosition - markerPosition,
+                        Vector2.right * MinimapCellSize) <= 0.1f) break;
+                }
+                if (minimapRoot.anchoredPosition != panelPosition ||
+                    Vector2.Distance(minimapPlayer.anchoredPosition - markerPosition,
+                        Vector2.right * MinimapCellSize) > 0.1f)
+                    Debug.LogError("Minimap movement validation failed: marker delta " +
+                        (minimapPlayer.anchoredPosition - markerPosition) + ", panel " + minimapRoot.anchoredPosition);
+                else
+                    Debug.Log("Minimap movement validation passed: player tracks one cell; panel stays fixed.");
+            }
+            else if (System.Array.IndexOf(arguments, "-captureArenaOverview") >= 0)
+            {
+                // Preview-only overview; normal play retains the close follow camera.
+                battleCameraInitialized = false;
+                mainGrid.anchoredPosition = Vector2.zero;
+                mainGrid.localScale = Vector3.one * (LegacyDesktopGridSize / mainGrid.sizeDelta.x);
+            }
+            else if (System.Array.IndexOf(arguments, "-captureObjectiveStart") >= 0 ||
+                System.Array.IndexOf(arguments, "-captureObjectiveEnd") >= 0)
+            {
+                bool endTarget = System.Array.IndexOf(arguments, "-captureObjectiveEnd") >= 0;
+                var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+                if (endTarget)
+                {
+                    Vector2Int start = model.Start;
+                    model.TryPlacePlayer(start + Vector2Int.up);
+                    model.TryMove(Vector2Int.down);
+                    for (int step = 0; step < TrailFieldModel.Size && model.Player.y < center.y; step++)
+                        model.TryMove(Vector2Int.up);
+                    for (int step = 0; step < TrailFieldModel.Size && model.Player.x != center.x; step++)
+                        model.TryMove(model.Player.x < center.x ? Vector2Int.right : Vector2Int.left);
+                }
+                else
+                {
+                    model.TryPlacePlayer(center);
+                }
+                battleCameraInitialized = false;
+                RefreshBoard();
+                UpdateObjectiveArrow();
+                Vector2 target = GridPosition(model.NavigationTarget.x, model.NavigationTarget.y, mainCellSize);
+                Vector2 expectedDirection = (target - mainPlayer.anchoredPosition).normalized;
+                Vector2 shownDirection = (objectiveArrow.anchoredPosition - mainPlayer.anchoredPosition).normalized;
+                if (model.IsTracing != endTarget || !objectiveArrow.gameObject.activeSelf ||
+                    Vector2.Dot(expectedDirection, shownDirection) < 0.99f)
+                    Debug.LogError("Objective arrow validation failed.");
+                else
+                    Debug.Log("Objective arrow validation passed: target " + (endTarget ? "END" : "START") +
+                        ", cell " + model.NavigationTarget);
+            }
+            else if (System.Array.IndexOf(arguments, "-captureCameraFollow") >= 0)
+            {
+                var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+                model.TryPlacePlayer(center);
+                battleCameraInitialized = false;
+                RefreshBoard();
+                Vector2 initialTarget = battleCameraTarget;
+                Move(Vector2Int.up);
+                if (battlePlayerVisualPosition == battlePlayerMoveTarget)
+                    Debug.LogError("Player interpolation validation failed: move snapped instantly.");
+                yield return null;
+                Move(Vector2Int.right);
+                yield return StartCoroutine(ShakeField(12f, 0.18f));
+                for (float elapsed = 0f; elapsed < 0.9f; elapsed += Time.unscaledDeltaTime)
+                    yield return null;
+                float error = Vector2.Distance(battleCameraPosition, battleCameraTarget);
+                if (Vector2.Distance(battlePlayerVisualPosition, battlePlayerMoveTarget) > 0.5f ||
+                    model.Player != center + Vector2Int.up + Vector2Int.right ||
+                    Vector2.Distance(initialTarget, battleCameraTarget) < 1f || error > 1f)
+                    Debug.LogError("Camera follow validation failed: target error " + error);
+                else
+                    Debug.Log("Camera follow validation passed: smooth grid moves, shake recovery, error " + error);
+            }
+            else if (System.Array.IndexOf(arguments, "-captureCameraEdge") >= 0)
+            {
+                model.TryPlacePlayer(new Vector2Int(TrailFieldModel.Size / 2, 0));
+                battleCameraInitialized = false;
+                RefreshBoard();
+                Vector2 renderedPlayer = battleCameraTarget + battlePlayerMoveTarget;
+                Vector2 halfView = (desktopLayout
+                    ? new Vector2(DesktopReferenceWidth, DesktopReferenceHeight)
+                    : ((RectTransform)mainGrid.parent).rect.size) * 0.5f;
+                Vector2 halfPlayer = mainPlayer.sizeDelta * 0.5f;
+                if (Mathf.Abs(renderedPlayer.x) + halfPlayer.x > halfView.x ||
+                    Mathf.Abs(renderedPlayer.y) + halfPlayer.y > halfView.y)
+                    Debug.LogError("Camera edge validation failed: player outside viewport.");
+                else
+                    Debug.Log("Camera edge validation passed: full player visible at arena boundary.");
+            }
+            else if (System.Array.IndexOf(arguments, "-captureEndpoints") >= 0 && !tutorialActive)
             {
                 model.TryMove(Vector2Int.up);
                 RefreshBoard();
@@ -4560,6 +4956,8 @@ namespace NHN.TraceStrike
             }
 
             Canvas.ForceUpdateCanvases();
+            if (System.Array.IndexOf(arguments, "-validateMinimap") >= 0)
+                ValidateMinimapCapture();
             uiCamera.Render();
             RenderTexture previous = RenderTexture.active;
             RenderTexture.active = renderTexture;
@@ -4576,9 +4974,59 @@ namespace NHN.TraceStrike
             Application.Quit();
         }
 
+        private void ValidateMinimapCapture()
+        {
+            var errors = new List<string>();
+            bool shouldShow = desktopLayout && !titleActive && !hubActive;
+            if (minimapRoot == null)
+            {
+                Debug.LogError("Minimap validation failed: missing desktop minimap.");
+                return;
+            }
+            if (minimapRoot.gameObject.activeSelf != shouldShow) errors.Add("visibility");
+            if (!Mathf.Approximately(minimapRoot.rect.width, minimapRoot.rect.height)) errors.Add("not square");
+            if (minimapRoot.anchorMin != Vector2.one || minimapRoot.anchorMax != Vector2.one)
+                errors.Add("not top-right anchored");
+            float opacity = minimapRoot.GetComponent<Image>().color.a;
+            if (!Mathf.Approximately(opacity, 0.30f)) errors.Add("backdrop opacity is not 30%");
+            if (minimapRoot.GetComponent<CanvasGroup>().blocksRaycasts) errors.Add("blocks input");
+            foreach (Graphic graphic in minimapRoot.GetComponentsInChildren<Graphic>(true))
+                if (graphic.raycastTarget) errors.Add("raycast target: " + graphic.name);
+
+            var corners = new Vector3[4];
+            minimapRoot.GetWorldCorners(corners);
+            RectTransform parent = (RectTransform)minimapRoot.parent;
+            foreach (Vector3 corner in corners)
+                if (!parent.rect.Contains(parent.InverseTransformPoint(corner))) errors.Add("outside viewport");
+
+            if (shouldShow && !tutorialActive)
+            {
+                int activeCells = 0;
+                foreach (Image tile in minimapTiles)
+                    if (tile.gameObject.activeSelf) activeCells++;
+                if (activeCells != model.Walkable.Count) errors.Add("incomplete map");
+                if (minimapTiles[model.Start.x, model.Start.y].color != StartColor) errors.Add("start marker");
+                if (minimapTiles[model.End.x, model.End.y].color != EndColor) errors.Add("end marker");
+                Vector2 expectedPlayer = battlePlayerVisualPosition * (MinimapCellSize / mainCellSize);
+                if (Vector2.Distance(minimapPlayer.anchoredPosition, expectedPlayer) > 0.1f)
+                    errors.Add("player marker position");
+            }
+
+            if (errors.Count > 0) Debug.LogError("Minimap validation failed: " + string.Join(", ", errors));
+            else Debug.Log("Minimap validation passed: square, top-right, 30% backdrop, input pass-through; " +
+                (shouldShow ? "full map and navigation markers." : "hidden on title/hub."));
+        }
+
         private static Vector2 GridPosition(int x, int y, float size)
         {
             float center = (TrailFieldModel.Size - 1) * 0.5f;
+            if (UseIsometricArena)
+            {
+                return new Vector2(
+                    (x - y) * size * 0.5f,
+                    (x + y - center * 2f) * size * 0.5f);
+            }
+
             return new Vector2((x - center) * size, (y - center) * size);
         }
 
