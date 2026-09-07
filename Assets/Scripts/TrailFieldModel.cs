@@ -59,7 +59,9 @@ namespace NHN.TraceStrike
 
         public void CreateField(int stage, int fieldSize, Vector2Int? requiredPlayerCell = null)
         {
-            FieldSize = Mathf.Clamp(fieldSize, 5, MaxSize);
+            if (fieldSize < 5 || fieldSize > MaxSize || fieldSize % 2 == 0)
+                throw new ArgumentOutOfRangeException(nameof(fieldSize), "Arena size must be odd, from 5 to 17.");
+            FieldSize = fieldSize;
             ShapeIndex = Mathf.Abs(stage) % 3;
             walkable.Clear();
             blocked.Clear();
@@ -82,7 +84,7 @@ namespace NHN.TraceStrike
                         case 1: // triangle
                             int localY = y - fieldOffset;
                             int halfWidth = (FieldSize - 1 - localY) / 2;
-                            inside = Mathf.Abs(dx) <= halfWidth;
+                            inside = localY >= 0 && localY < FieldSize && Mathf.Abs(dx) <= halfWidth;
                             break;
                         case 2: // eight-point grid star
                             int ax = Mathf.Abs(dx);
@@ -92,7 +94,8 @@ namespace NHN.TraceStrike
                                 ax <= shapeCenter && ay <= shapeCenter;
                             break;
                         default: // Scale the original rounded outline uniformly on both axes.
-                        inside = (dx * dx + dy * dy) * 25 <= 27 * shapeCenter * shapeCenter;
+                            inside = Mathf.Abs(dx) <= shapeCenter && Mathf.Abs(dy) <= shapeCenter &&
+                                (dx * dx + dy * dy) * 25 <= 27 * shapeCenter * shapeCenter;
                             break;
                     }
 

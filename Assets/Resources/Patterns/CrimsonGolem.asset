@@ -1,0 +1,2116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96e060000004acaa500000000000002, type: 3}
+  m_Name: CrimsonGolem
+  m_EditorClassIdentifier:
+  id: crimson-golem
+  displayName: 크림슨 골렘
+  portrait: {fileID: 0}
+  arena:
+    size: 17
+    shape: 0
+    cameraZoom: 2.05
+    playerSizeRatio: 0.78
+  libraryPatterns:
+  - id: targeted
+    name: Targeted
+    enabled: 1
+    minimumDuration: 0.85
+    clips:
+    - enabled: 1
+      label: Target warning
+      start: 0
+      duration: 0.65
+      action:
+        rid: 1
+    - enabled: 1
+      label: Target hit
+      start: 0.65
+      duration: 0.2
+      action:
+        rid: 2
+    - enabled: 1
+      label: SFX
+      start: 0.65
+      duration: 0.2
+      action:
+        rid: 3
+  - id: example-devices
+    name: Example_Devices
+    enabled: 1
+    minimumDuration: 6
+    clips:
+    - enabled: 1
+      label: Spawn device
+      start: 0
+      duration: 0
+      action:
+        rid: 4
+    - enabled: 1
+      label: Wall
+      start: 1
+      duration: 2
+      action:
+        rid: 5
+    - enabled: 1
+      label: Hazard
+      start: 2
+      duration: 0
+      action:
+        rid: 6
+    - enabled: 1
+      label: Remove hazard
+      start: 4
+      duration: 0
+      action:
+        rid: 7
+    - enabled: 1
+      label: Remove device
+      start: 5
+      duration: 0
+      action:
+        rid: 8
+    - enabled: 1
+      label: Signal
+      start: 5.5
+      duration: 0
+      action:
+        rid: 9
+  phases:
+  - name: PHASE 1
+    health: 150
+    initialDelay: 2.4
+    interval: 1.85
+    acceleration: 0.1
+    minimumInterval: 0.45
+    shuffle: 0
+    patterns:
+    - id: p1-cross-0
+      name: P1_Cross_0
+      enabled: 1
+      minimumDuration: 2.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 2
+        action:
+          rid: 10
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 2
+        action:
+          rid: 11
+      - enabled: 1
+        label: Damage
+        start: 2
+        duration: 0.3
+        action:
+          rid: 12
+      - enabled: 1
+        label: Impact SFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 13
+      - enabled: 1
+        label: Impact VFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 14
+      - enabled: 1
+        label: Camera
+        start: 2
+        duration: 0.3
+        action:
+          rid: 15
+    - id: p1-cross-1
+      name: P1_Cross_1
+      enabled: 1
+      minimumDuration: 2.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 2
+        action:
+          rid: 16
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 2
+        action:
+          rid: 17
+      - enabled: 1
+        label: Damage
+        start: 2
+        duration: 0.3
+        action:
+          rid: 18
+      - enabled: 1
+        label: Impact SFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 19
+      - enabled: 1
+        label: Impact VFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 20
+      - enabled: 1
+        label: Camera
+        start: 2
+        duration: 0.3
+        action:
+          rid: 21
+    - id: p1-diagonal-0
+      name: P1_Diagonal_0
+      enabled: 1
+      minimumDuration: 2.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 2
+        action:
+          rid: 22
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 2
+        action:
+          rid: 23
+      - enabled: 1
+        label: Damage
+        start: 2
+        duration: 0.3
+        action:
+          rid: 24
+      - enabled: 1
+        label: Impact SFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 25
+      - enabled: 1
+        label: Impact VFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 26
+      - enabled: 1
+        label: Camera
+        start: 2
+        duration: 0.3
+        action:
+          rid: 27
+    - id: p1-diagonal-1
+      name: P1_Diagonal_1
+      enabled: 1
+      minimumDuration: 2.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 2
+        action:
+          rid: 28
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 2
+        action:
+          rid: 29
+      - enabled: 1
+        label: Damage
+        start: 2
+        duration: 0.3
+        action:
+          rid: 30
+      - enabled: 1
+        label: Impact SFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 31
+      - enabled: 1
+        label: Impact VFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 32
+      - enabled: 1
+        label: Camera
+        start: 2
+        duration: 0.3
+        action:
+          rid: 33
+    - id: p1-diamond-0
+      name: P1_Diamond_0
+      enabled: 1
+      minimumDuration: 2.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 2
+        action:
+          rid: 34
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 2
+        action:
+          rid: 35
+      - enabled: 1
+        label: Damage
+        start: 2
+        duration: 0.3
+        action:
+          rid: 36
+      - enabled: 1
+        label: Impact SFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 37
+      - enabled: 1
+        label: Impact VFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 38
+      - enabled: 1
+        label: Camera
+        start: 2
+        duration: 0.3
+        action:
+          rid: 39
+    - id: p1-diamond-1
+      name: P1_Diamond_1
+      enabled: 1
+      minimumDuration: 2.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 2
+        action:
+          rid: 40
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 2
+        action:
+          rid: 41
+      - enabled: 1
+        label: Damage
+        start: 2
+        duration: 0.3
+        action:
+          rid: 42
+      - enabled: 1
+        label: Impact SFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 43
+      - enabled: 1
+        label: Impact VFX
+        start: 2
+        duration: 0.3
+        action:
+          rid: 44
+      - enabled: 1
+        label: Camera
+        start: 2
+        duration: 0.3
+        action:
+          rid: 45
+    backgroundEnabled: 0
+    background:
+      id: phase-1-background
+      name: Background
+      enabled: 1
+      minimumDuration: 1
+      clips: []
+    legacyCrystals: 0
+  - name: PHASE 2
+    health: 150
+    initialDelay: 0.5
+    interval: 1.05
+    acceleration: 0.1
+    minimumInterval: 0.45
+    shuffle: 0
+    patterns:
+    - id: p2-combined-0
+      name: P2_Combined_0
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 46
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 47
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 48
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 49
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 50
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 51
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 52
+    - id: p2-combined-1
+      name: P2_Combined_1
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 53
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 54
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 55
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 56
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 57
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 58
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 59
+    - id: p2-cross-0
+      name: P2_Cross_0
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 60
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 61
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 62
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 63
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 64
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 65
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 66
+    - id: p2-cross-1
+      name: P2_Cross_1
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 67
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 68
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 69
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 70
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 71
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 72
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 73
+    - id: p2-diagonal-0
+      name: P2_Diagonal_0
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 74
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 75
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 76
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 77
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 78
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 79
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 80
+    - id: p2-diagonal-1
+      name: P2_Diagonal_1
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 81
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 82
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 83
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 84
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 85
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 86
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 87
+    - id: p2-diamond-0
+      name: P2_Diamond_0
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 88
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 89
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 90
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 91
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 92
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 93
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 94
+    - id: p2-diamond-1
+      name: P2_Diamond_1
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 95
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 96
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 97
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 98
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 99
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 100
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 101
+    - id: p2-horizontal-0
+      name: P2_Horizontal_0
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 102
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 103
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 104
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 105
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 106
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 107
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 108
+    - id: p2-horizontal-1
+      name: P2_Horizontal_1
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 109
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 110
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 111
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 112
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 113
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 114
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 115
+    - id: p2-vertical-0
+      name: P2_Vertical_0
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 116
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 117
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 118
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 119
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 120
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 121
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 122
+    - id: p2-vertical-1
+      name: P2_Vertical_1
+      enabled: 1
+      minimumDuration: 1.3
+      clips:
+      - enabled: 1
+        label: Warning
+        start: 0
+        duration: 1
+        action:
+          rid: 123
+      - enabled: 1
+        label: Warning SFX
+        start: 0
+        duration: 1
+        action:
+          rid: 124
+      - enabled: 1
+        label: Damage
+        start: 1
+        duration: 0.3
+        action:
+          rid: 125
+      - enabled: 1
+        label: Impact SFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 126
+      - enabled: 1
+        label: Impact VFX
+        start: 1
+        duration: 0.3
+        action:
+          rid: 127
+      - enabled: 1
+        label: Camera
+        start: 1
+        duration: 0.3
+        action:
+          rid: 128
+      - enabled: 1
+        label: Targeted subpattern
+        start: 0.15
+        duration: 0.85
+        action:
+          rid: 129
+    backgroundEnabled: 0
+    background:
+      id: phase-2-background
+      name: Background
+      enabled: 1
+      minimumDuration: 1
+      clips: []
+    legacyCrystals: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 1
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 2
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "target"
+          ensureEscape: 0
+        color: {r: 0.7, g: 0.3, b: 1, a: 0.7}
+    - rid: 2
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 2
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "target"
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: Targeted
+    - rid: 3
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 4
+      type: {class: SpawnEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        key: device
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 0, g: 1, b: 1, a: 1}
+        cellOffset: {x: 3, y: 0}
+        relativeToOrigin: 1
+        persist: 1
+    - rid: 5
+      type: {class: ObstacleEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 0
+          offset: {x: 0, y: 3}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          - {x: 2, y: -2}
+          snapshotKey: 
+          ensureEscape: 0
+        key: wall
+        persist: 0
+    - rid: 6
+      type: {class: HazardEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 8
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: 
+          ensureEscape: 0
+        key: pool
+        reason: Pool
+        persist: 1
+    - rid: 7
+      type: {class: RemoveResourceEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        key: pool
+    - rid: 8
+      type: {class: RemoveResourceEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        key: device
+    - rid: 9
+      type: {class: SignalEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        signal: device-cycle-complete
+        argument:
+    - rid: 10
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: glyph
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 11
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 12
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: glyph
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Cross
+    - rid: 13
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 14
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: glyph
+          ensureEscape: 1
+    - rid: 15
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 16
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 17
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 18
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Cross
+    - rid: 19
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 20
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 21
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 22
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 23
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 24
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diagonal
+    - rid: 25
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 26
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 27
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 28
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 29
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 30
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diagonal
+    - rid: 31
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 32
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 33
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 34
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 35
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 36
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diamond
+    - rid: 37
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 38
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 39
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 40
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 8
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 41
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 42
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 8
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diamond
+    - rid: 43
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 44
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 8
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 45
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 46
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 5
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 47
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 48
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 5
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Combined
+    - rid: 49
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 50
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 5
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 51
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 52
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 53
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 5
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 54
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 55
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 5
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Combined
+    - rid: 56
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 57
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 5
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 58
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 59
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 60
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 61
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 62
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Cross
+    - rid: 63
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 64
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 65
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 66
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 67
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 68
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 69
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Cross
+    - rid: 70
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 71
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 2
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 72
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 73
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 74
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 75
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 76
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diagonal
+    - rid: 77
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 78
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 79
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 80
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 81
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 82
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 83
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diagonal
+    - rid: 84
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 85
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 4
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 86
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 87
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 88
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 89
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 90
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diamond
+    - rid: 91
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 92
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 93
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 94
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 95
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 8
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 96
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 97
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 8
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Diamond
+    - rid: 98
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 99
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 3
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 8
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 100
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 101
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 102
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 6
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 103
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 104
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 6
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Horizontal
+    - rid: 105
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 106
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 6
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 107
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 108
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 109
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 6
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 110
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 111
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 6
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Horizontal
+    - rid: 112
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 113
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 6
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 114
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 115
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 116
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 7
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 117
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 118
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 7
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Vertical
+    - rid: 119
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 120
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 7
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 121
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 122
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1
+    - rid: 123
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 7
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 124
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 125
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 7
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Vertical
+    - rid: 126
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 127
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 7
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: "glyph"
+          ensureEscape: 1
+    - rid: 128
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 129
+      type: {class: CallEncounterPatternEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        patternId: targeted
+        originOffset: {x: 0, y: 0}
+        anchorToPlayer: 1

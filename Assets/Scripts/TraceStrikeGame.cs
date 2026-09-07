@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace NHN.TraceStrike
 {
-    public sealed class TraceStrikeGame : MonoBehaviour
+    public sealed partial class TraceStrikeGame : MonoBehaviour
     {
         private const float ReferenceWidth = 1080f;
         private const float ReferenceHeight = 1920f;
@@ -37,7 +37,8 @@ namespace NHN.TraceStrike
         private const float MinimapCellSize = 14f;
         private const float TitleInitialRadius = 0.115f;
         private const float TitleRevealSeconds = 1.35f;
-        private const string BestClearTimeKey = "TraceStrike.BestClearTime";
+        private string BestClearTimeKey => activeBoss == null || activeBoss.id == "crimson-golem"
+            ? "TraceStrike.BestClearTime" : "TraceStrike." + activeBoss.id + ".BestClearTime";
 
         private static readonly Color Background = Hex("101525");
         private static readonly Color ArenaVoid = Hex("020306");
@@ -218,8 +219,6 @@ namespace NHN.TraceStrike
         private bool stageTimerRunning;
         private bool bossPhaseSkipped;
         private int bossAttackCount;
-        private int glyphPatternIndex;
-        private int diamondUseCount;
         private int patternVersion;
         private int crystalLayoutVersion;
         private int tutorialStep;
@@ -316,19 +315,19 @@ namespace NHN.TraceStrike
             }
             else if (captureMode)
             {
-                StartStage(0);
+                StartStage(StartingBoss());
             }
             else
             {
                 PrepareTitleScreen();
             }
-            StartCoroutine(BossPatternLoop());
             StartCoroutine(CrystalPatternLoop());
             StartCoroutine(CaptureOnCommandLine());
         }
 
         private void OnDestroy()
         {
+            CancelTimeline();
             if (titleBlindMaterial != null)
             {
                 Destroy(titleBlindMaterial);
@@ -339,6 +338,7 @@ namespace NHN.TraceStrike
         {
             RefreshFixedAspect();
             AnimateVisuals();
+            TickTimeline();
             if (titleActive)
             {
                 HandleTitleInput();
@@ -613,6 +613,7 @@ namespace NHN.TraceStrike
 
         private void StartHub()
         {
+            CancelTimeline();
             hubActive = true;
             tutorialActive = false;
             tutorialTransitioning = false;
@@ -633,7 +634,7 @@ namespace NHN.TraceStrike
             battleCameraInitialized = false;
             mainGrid.anchoredPosition = Vector2.zero;
             activeCharacterTint = HubCharacterTints[hubModel.CurrentCharacter];
-            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * BattlePlayerSizeRatio);
+            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * ActiveBattlePlayerSizeRatio);
             mainPlayer.localScale = Vector3.one;
             mainPlayerImage.color = activeCharacterTint;
             SetWorldBossVisible(false);
@@ -731,7 +732,7 @@ namespace NHN.TraceStrike
             }
 
             mainPlayer.anchoredPosition = GridPosition(hubModel.Player.x, hubModel.Player.y, mainCellSize);
-            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * BattlePlayerSizeRatio);
+            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * ActiveBattlePlayerSizeRatio);
             mainPlayerImage.color = activeCharacterTint;
             mainPlayer.SetAsLastSibling();
             RefreshHubInteractionPanel();
@@ -792,7 +793,7 @@ namespace NHN.TraceStrike
 
         private void PrepareTitleScreen()
         {
-            StartStage(0);
+            StartStage(StartingBoss());
             var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
             model.TryPlacePlayer(center);
             battleCameraInitialized = false;
@@ -1022,6 +1023,7 @@ namespace NHN.TraceStrike
 
         private void StartTutorial()
         {
+            CancelTimeline();
             titleActive = false;
             if (titleScreen != null)
             {
@@ -1240,7 +1242,7 @@ namespace NHN.TraceStrike
             phaseBanner.rectTransform.localScale = Vector3.one;
             yield return new WaitForSeconds(skipped ? 0.35f : 0.9f);
             phaseBannerGroup.alpha = 0f;
-            StartStage(0);
+            StartStage(StartingBoss());
         }
 
         private bool HandleSkipInput()
@@ -1256,7 +1258,7 @@ namespace NHN.TraceStrike
                 tutorialVersion++;
                 tutorialActive = false;
                 tutorialTransitioning = false;
-                StartStage(0);
+                StartStage(StartingBoss());
                 return true;
             }
 
@@ -1271,6 +1273,7 @@ namespace NHN.TraceStrike
 
         private IEnumerator SkipBossPhase()
         {
+            CancelTimeline();
             inputLocked = true;
             bossPhaseSkipped = true;
             movementFrozen = false;
@@ -1286,16 +1289,16 @@ namespace NHN.TraceStrike
             crystalFiringCounts.Clear();
             crystalTelegraphProgress.Clear();
 
-            if (!phaseTwoActive)
+            if (HasNextBossPhase)
             {
                 bossHealth = 0;
                 bossHealthFill.fillAmount = 0f;
                 bossHealthText.text = "0 / " + bossMaxHealth;
-                statusText.text = "ESC — 1페이즈 스킵";
+                statusText.text = "ESC — PHASE " + (activePhaseIndex + 1) + " 스킵";
                 RefreshBoard();
                 yield return StartCoroutine(EnterPhaseTwo());
                 inputLocked = false;
-                statusText.text = "2페이즈 시작 — ESC로 2페이즈도 스킵할 수 있습니다";
+                statusText.text = ActivePhase.name + " 시작 — ESC로 현재 페이즈 스킵";
                 yield break;
             }
 
@@ -1308,7 +1311,7 @@ namespace NHN.TraceStrike
             crystalLayoutVersion++;
             crystalCells.Clear();
             RefreshCrystalVisuals();
-            statusText.text = "ESC — 2페이즈 스킵 · STAGE CLEAR";
+            statusText.text = "ESC — 마지막 페이즈 스킵 · STAGE CLEAR";
             PlaySfx(victorySfx);
             RefreshBoard();
         }
@@ -1603,12 +1606,12 @@ namespace NHN.TraceStrike
             yield return StartCoroutine(FlashFrame(TrailHot));
             yield return new WaitForSeconds(0.45f);
 
-            if (phaseTwoActive && !crystalsRelocated && bossHealth > 0 && bossHealth <= bossMaxHealth / 2)
+            if (ActivePhase.legacyCrystals && phaseTwoActive && !crystalsRelocated && bossHealth > 0 && bossHealth <= bossMaxHealth / 2)
             {
                 RelocateCrystals();
             }
 
-            if (bossHealth <= 0 && !phaseTwoActive)
+            if (bossHealth <= 0 && HasNextBossPhase)
             {
                 yield return StartCoroutine(EnterPhaseTwo());
             }
@@ -1626,7 +1629,8 @@ namespace NHN.TraceStrike
                 crystalWarningCounts.Clear();
                 crystalFiringCounts.Clear();
                 crystalTelegraphProgress.Clear();
-                statusText.text = "STAGE CLEAR — 크림슨 골렘 격파!" + CompleteStageTimer();
+                CancelTimeline();
+                statusText.text = "STAGE CLEAR — " + ActiveBossName + " 격파!" + CompleteStageTimer();
                 PlaySfx(victorySfx);
                 RefreshBoard();
             }
@@ -1644,6 +1648,8 @@ namespace NHN.TraceStrike
 
         private void StartStage(int nextStage, bool preservePlayer = false)
         {
+            CancelTimeline();
+            ConfigureBoss(nextStage);
             titleActive = false;
             hubActive = false;
             HideHubInteractionPanel();
@@ -1655,11 +1661,9 @@ namespace NHN.TraceStrike
             tutorialTransitioning = false;
             stage = nextStage;
             round = 0;
-            bossMaxHealth = BossPatternRules.PhaseMaxHealth(false);
+            bossMaxHealth = ActivePhase.health;
             bossHealth = bossMaxHealth;
             bossAttackCount = 0;
-            glyphPatternIndex = 0;
-            diamondUseCount = 0;
             patternVersion++;
             playerDead = false;
             gameCleared = false;
@@ -1686,26 +1690,27 @@ namespace NHN.TraceStrike
             hazardTelegraphProgress = 0f;
             targetedTelegraphProgress = 0f;
             battleCameraInitialized = false;
-            RestoreMainGridLayout();
+            currentFieldSize = activeBoss.arena.size;
+            ApplyEncounterArenaLayout();
             RandomizeFloorTileLayout();
             ApplyFloorTileLayout();
-            currentFieldSize = BossPatternRules.FieldSizeForBoss(nextStage);
-            model.CreateField(nextStage, currentFieldSize);
+            model.CreateField((int)activeBoss.arena.shape, currentFieldSize);
             model.SetBlockedCells(crystalCells);
             model.BeginRound(round);
             GenerateSpecialTiles();
             RefreshCrystalVisuals();
             SetWorldBossVisible(true);
 
-            bossNameText.text = "크림슨 골렘";
-            stageText.text = "STAGE 01";
+            bossNameText.text = ActiveBossName;
+            stageText.text = "STAGE " + (nextStage + 1).ToString("00");
+            ApplyBossPortrait();
             playerHealthText.text = "♥  HP 1";
             playerHealthText.color = StartColor;
             fieldTitleText.text = "IVY TEMPLE";
             bossHealthFill.color = Danger;
             phaseBanner.color = Danger;
             mainPlayer.localRotation = Quaternion.identity;
-            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * BattlePlayerSizeRatio);
+            mainPlayer.sizeDelta = Vector2.one * (mainCellSize * ActiveBattlePlayerSizeRatio);
             mainPlayer.localScale = Vector3.one;
             mainPlayerImage.color = activeCharacterTint;
             if (phaseBannerGroup != null)
@@ -1817,7 +1822,7 @@ namespace NHN.TraceStrike
 
         private void UpdatePhaseLabel()
         {
-            shapeText.text = phaseTwoActive ? "PHASE 2 · ESC SKIP" : "PHASE 1 · ESC SKIP";
+            shapeText.text = "PHASE " + (activePhaseIndex + 1) + " · ESC SKIP";
             shapeText.color = phaseTwoActive ? Danger : Muted;
         }
 
@@ -1861,6 +1866,7 @@ namespace NHN.TraceStrike
             crystalFiringCounts.Clear();
             crystalTelegraphProgress.Clear();
             var excluded = new HashSet<Vector2Int> { model.Player, model.Start, model.End };
+            foreach (var wall in timelineWalls.Values) excluded.UnionWith(wall);
             foreach (Vector2Int oldCrystal in crystalCells)
             {
                 excluded.Add(oldCrystal);
@@ -1882,7 +1888,7 @@ namespace NHN.TraceStrike
 
         private void ApplyCrystalLayout(bool regenerateRound)
         {
-            model.SetBlockedCells(crystalCells);
+            model.SetBlockedCells(CombinedWalls());
             if (regenerateRound || model.IsBlocked(model.Start) || model.IsBlocked(model.End))
             {
                 model.BeginRound(round, false);
@@ -1986,6 +1992,8 @@ namespace NHN.TraceStrike
             RefreshBoard();
             yield return new WaitForSeconds(CombatBalanceRules.ExplosionCoyoteSeconds);
 
+            if (layoutVersion != crystalLayoutVersion || !phaseTwoActive || gameCleared || playerDead)
+                yield break;
             RemoveCellCounts(crystalFiringCounts, blast);
             RemoveCellCounts(crystalWarningCounts, blast);
             RemoveCrystalTelegraphProgress(blast, telegraphId);
@@ -2000,6 +2008,7 @@ namespace NHN.TraceStrike
         private void EnsureCrystalEscape(HashSet<Vector2Int> blast)
         {
             var existingDanger = new HashSet<Vector2Int>(warnedCells);
+            foreach (var cells in timelineDanger.Values) existingDanger.UnionWith(cells);
             foreach (Vector2Int cell in crystalWarningCounts.Keys)
             {
                 existingDanger.Add(cell);
@@ -2111,30 +2120,11 @@ namespace NHN.TraceStrike
             }
         }
 
-        private IEnumerator BossPatternLoop()
-        {
-            while (titleActive || tutorialActive || hubActive)
-            {
-                yield return null;
-            }
-            yield return StartCoroutine(WaitGameplaySeconds(2.4f));
-            while (!gameCleared)
-            {
-                bossAttackCount++;
-                UpdatePhaseLabel();
-                yield return StartCoroutine(GlyphPattern());
-
-                if (!gameCleared)
-                {
-                    float interval = BossPatternRules.PatternIntervalSeconds(phaseTwoActive, bossAttackCount);
-                    yield return StartCoroutine(WaitGameplaySeconds(interval));
-                }
-            }
-        }
 
         private IEnumerator EnterPhaseTwo()
         {
-            phaseBanner.text = "PHASE 2\nENRAGED";
+            CancelTimeline();
+            phaseBanner.text = "PHASE " + (activePhaseIndex + 2);
             phaseBannerGroup.alpha = 1f;
             phaseOverlayRoot.SetAsLastSibling();
             phasePageLeft.localScale = new Vector3(0f, 1f, 1f);
@@ -2155,11 +2145,15 @@ namespace NHN.TraceStrike
             phasePageRight.localScale = Vector3.one;
 
             phaseTwoActive = true;
-            SetupFixedCrystals();
+            activePhaseIndex++;
+            crystalLayoutVersion++;
+            crystalCells.Clear();
+            model.SetBlockedCells(null);
+            if (ActivePhase.legacyCrystals) SetupFixedCrystals();
+            RefreshCrystalVisuals();
             patternVersion++;
-            glyphPatternIndex = 0;
             bossAttackCount = 0;
-            bossMaxHealth = BossPatternRules.PhaseMaxHealth(true);
+            bossMaxHealth = ActivePhase.health;
             bossHealth = bossMaxHealth;
             bossHealthFill.fillAmount = 1f;
             bossHealthText.text = bossHealth + " / " + bossMaxHealth;
@@ -2172,7 +2166,7 @@ namespace NHN.TraceStrike
             UpdatePhaseLabel();
             RefreshBoard();
 
-            statusText.text = "PHASE 2 — 공격 수정 4개와 격자 문양이 활성화됩니다";
+            statusText.text = ActivePhase.name;
             StartCoroutine(ShakeHud());
             StartCoroutine(FlashFrame(Danger));
 
@@ -2206,197 +2200,10 @@ namespace NHN.TraceStrike
             phaseBanner.rectTransform.localScale = Vector3.one;
         }
 
-        private IEnumerator GlyphPattern()
-        {
-            int version = patternVersion;
-            int sequenceLength = phaseTwoActive ? 6 : 3;
-            int pattern = glyphPatternIndex % sequenceLength;
-            glyphPatternIndex++;
-            var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
-            HashSet<Vector2Int> glyph;
-            string patternName;
-
-            switch (pattern)
-            {
-                case 1:
-                    int distance = TrailFieldModel.ScaleLegacyDistance(diamondUseCount % 2 == 0 ? 3 : 5);
-                    diamondUseCount++;
-                    glyph = BossPatternRules.CreateDiamondGlyph(model.Traversable, center, distance);
-                    patternName = "마름모 문양 " + distance;
-                    break;
-                case 2:
-                    glyph = BossPatternRules.CreateDiagonalGlyph(model.Traversable, center);
-                    patternName = "X 문양";
-                    break;
-                case 3:
-                    glyph = BossPatternRules.CreateCombinedGlyph(model.Traversable, center,
-                        TrailFieldModel.ScaleLegacyDistance(3));
-                    patternName = "이중 문양";
-                    break;
-                case 4:
-                    glyph = BossPatternRules.CreateHorizontalGrid(model.Traversable, center);
-                    patternName = "전체 가로 격자";
-                    break;
-                case 5:
-                    glyph = BossPatternRules.CreateVerticalGrid(model.Traversable, center);
-                    patternName = "전체 세로 격자";
-                    break;
-                default:
-                    glyph = BossPatternRules.CreateCrossGlyph(model.Traversable, center);
-                    patternName = "십자 문양";
-                    break;
-            }
-
-            warnedCells.Clear();
-            warnedCells.UnionWith(BossPatternRules.EnsureEscapeRoute(model.Traversable, model.Player, glyph));
-            yield return StartCoroutine(RunGlyphTelegraph(patternName, version));
-        }
-
-        private IEnumerator RunGlyphTelegraph(string patternName, int version)
-        {
-            float warningDuration = BossPatternRules.TelegraphSeconds(phaseTwoActive);
-            float remaining = warningDuration;
-            float elapsed = 0f;
-            float targetRemaining = 0f;
-            bool targetAttempted = false;
-            bool targetActive = false;
-            hazardFiring = false;
-            targetedFiring = false;
-            hazardTelegraphProgress = 0f;
-            targetedTelegraphProgress = 0f;
-            targetedCells.Clear();
-            PlaySfx(warningSfx, warningDuration <= 1f ? 1.35f : 1f);
-            RefreshBoard();
-
-            while (remaining > 0f && !gameCleared && version == patternVersion)
-            {
-                if (!inputLocked && !playerDead)
-                {
-                    remaining -= Time.deltaTime;
-                    elapsed += Time.deltaTime;
-                    hazardTelegraphProgress = BossPatternRules.TelegraphProgress(elapsed, warningDuration);
-
-                    if (phaseTwoActive && !targetAttempted && elapsed >= 0.15f)
-                    {
-                        targetAttempted = true;
-                        if (BossPatternRules.HasAdjacentSafeCell(model.Traversable, model.Player, warnedCells))
-                        {
-                            targetedCells.Add(model.Player);
-                            targetRemaining = TargetedWarningSeconds;
-                            targetedTelegraphProgress = 0f;
-                            targetActive = true;
-                            PlaySfx(targetLockSfx);
-                            RefreshBoard();
-                        }
-                    }
-
-                    if (targetActive)
-                    {
-                        targetRemaining -= Time.deltaTime;
-                        targetedTelegraphProgress = BossPatternRules.TelegraphProgress(
-                            TargetedWarningSeconds - Mathf.Max(0f, targetRemaining), TargetedWarningSeconds);
-                        statusText.text = "◉ 위치 추적 폭발  " + Mathf.Max(0f, targetRemaining).ToString("0.0") + "초";
-                        if (targetRemaining <= 0f)
-                        {
-                            targetActive = false;
-                            yield return StartCoroutine(FireTargetedShot(version));
-                        }
-                    }
-                    else
-                    {
-                        statusText.text = "⚠ " + patternName + " 예고  " + Mathf.Max(0f, remaining).ToString("0.0") + "초";
-                    }
-                }
-                if (remaining <= 0f)
-                {
-                    break;
-                }
-                yield return null;
-            }
-
-            if (gameCleared || version != patternVersion)
-            {
-                yield break;
-            }
-
-            hazardTelegraphProgress = 1f;
-            AnimateAttackWarnings();
-            hazardFiring = true;
-            var impactCells = new HashSet<Vector2Int>(warnedCells);
-            Vector2Int playerAtImpact = model.Player;
-            var impactCenter = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
-            foreach (Vector2Int cell in warnedCells)
-            {
-                float dirtDelay = (Mathf.Abs(cell.x - impactCenter.x) + Mathf.Abs(cell.y - impactCenter.y)) * 0.006f;
-                SpawnDirtLaneEruption(cell, dirtDelay);
-                SpawnBurst(cell, Danger, 1);
-            }
-            PlaySfx(laserSfx, phaseTwoActive ? 1.15f : 0.92f);
-            RefreshBoard();
-            yield return StartCoroutine(FlashFrame(Danger));
-            yield return new WaitForSeconds(Mathf.Max(0f,
-                CombatBalanceRules.ExplosionCoyoteSeconds - 0.12f));
-
-            hazardFiring = false;
-            warnedCells.Clear();
-            hazardTelegraphProgress = 0f;
-            RefreshBoard();
-
-            if (CombatBalanceRules.ShouldApplyExplosionDamage(
-                    impactCells, playerAtImpact, model.Player))
-            {
-                yield return StartCoroutine(KillPlayer(patternName));
-            }
-            else
-            {
-                statusText.text = "회피 성공! 공격 경로를 계속 연결하세요";
-                PlaySfx(startSfx, 1.35f, 0.7f);
-            }
-        }
-
-        private IEnumerator FireTargetedShot(int version)
-        {
-            if (targetedCells.Count == 0 || version != patternVersion)
-            {
-                yield break;
-            }
-
-            targetedTelegraphProgress = 1f;
-            AnimateAttackWarnings();
-            targetedFiring = true;
-            var impactCells = new HashSet<Vector2Int>(targetedCells);
-            Vector2Int playerAtImpact = model.Player;
-            Color targetColor = Hex("B44CFF");
-            foreach (Vector2Int cell in targetedCells)
-            {
-                SpawnDirtAreaExplosion(cell);
-                SpawnBurst(cell, targetColor, 6);
-            }
-            StartCoroutine(ShakeField(18f, 0.20f));
-            PlaySfx(explosionSfx, 1.3f, 0.75f);
-            RefreshBoard();
-            yield return StartCoroutine(FlashFrame(targetColor));
-            yield return new WaitForSeconds(Mathf.Max(0f,
-                CombatBalanceRules.ExplosionCoyoteSeconds - 0.12f));
-
-            targetedFiring = false;
-            targetedCells.Clear();
-            targetedTelegraphProgress = 0f;
-            RefreshBoard();
-
-            if (CombatBalanceRules.ShouldApplyExplosionDamage(
-                    impactCells, playerAtImpact, model.Player))
-            {
-                yield return StartCoroutine(KillPlayer("위치 추적 폭발"));
-            }
-            else
-            {
-                statusText.text = "견제 회피 — 문양 공격을 계속 피하세요";
-            }
-        }
 
         private IEnumerator KillPlayer(string patternName)
         {
+            CancelTimeline();
             playerDead = true;
             inputLocked = true;
             movementFrozen = false;
@@ -2432,7 +2239,17 @@ namespace NHN.TraceStrike
             mainPlayer.localScale = Vector3.one;
             mainPlayerImage.color = White;
             playerHealthText.color = StartColor;
-            StartStage(0);
+            StartStage(stage);
+        }
+
+        private void ApplyEncounterArenaLayout()
+        {
+            float legacyGridSize = desktopLayout ? LegacyDesktopGridSize : LegacyMobileGridSize;
+            float gridSize = legacyGridSize * TrailFieldModel.Size / LegacyFieldSize;
+            if (desktopLayout) gridSize *= ActiveBattleCameraZoom;
+            mainGrid.sizeDelta = new Vector2(gridSize, gridSize);
+            mainCellSize = gridSize / TrailFieldModel.Size;
+            RestoreMainGridLayout();
         }
 
         private IEnumerator WaitGameplaySeconds(float seconds)
@@ -2823,7 +2640,7 @@ namespace NHN.TraceStrike
             float gridSize = legacyGridSize * TrailFieldModel.Size / LegacyFieldSize;
             if (desktopLayout)
             {
-                gridSize *= BattleCameraZoom;
+                gridSize *= ActiveBattleCameraZoom;
             }
             mainGrid.sizeDelta = new Vector2(gridSize, gridSize);
             mainGrid.anchoredPosition = Vector2.zero;
@@ -3083,7 +2900,7 @@ namespace NHN.TraceStrike
                 }
             }
 
-            mainPlayer = CreatePlayer("Player", mainGrid, mainCellSize * BattlePlayerSizeRatio, false);
+            mainPlayer = CreatePlayer("Player", mainGrid, mainCellSize * ActiveBattlePlayerSizeRatio, false);
             objectiveArrow = CreateRect("Objective Direction Arrow", mainGrid);
             objectiveArrow.anchorMin = objectiveArrow.anchorMax = new Vector2(0.5f, 0.5f);
             objectiveArrow.sizeDelta = new Vector2(40f, 50f);
@@ -3696,7 +3513,7 @@ namespace NHN.TraceStrike
             float blend = 1f - Mathf.Exp(-BattleCameraFollowSpeed * Time.unscaledDeltaTime);
             // Preserve subpixel progress; snap only the displayed position.
             battleCameraPosition = Vector2.Lerp(battleCameraPosition, trackingTarget, blend);
-            mainGrid.anchoredPosition = PixelSnap(battleCameraPosition + battleCameraShake);
+            mainGrid.anchoredPosition = PixelSnap(battleCameraPosition + battleCameraShake + TimelineCameraOffset());
         }
 
         private void HideHubWorldVisuals()
