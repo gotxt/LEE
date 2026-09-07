@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace NHN.TraceStrike.Editor
 {
-    public sealed class BossEncounterEditorWindow : EditorWindow
+    public sealed partial class BossEncounterEditorWindow : EditorWindow
     {
         private enum NodeKind { Encounter, Arena, Phase, Pattern, Background, LibraryPattern }
 
@@ -64,6 +64,8 @@ namespace NHN.TraceStrike.Editor
 
         private void OnDisable()
         {
+            mapStroke.Cancel();
+            eventStroke.Cancel();
             EditorApplication.update -= UpdatePreview;
             Undo.undoRedoPerformed -= UndoChanged;
             DisposePreview();
@@ -79,8 +81,12 @@ namespace NHN.TraceStrike.Editor
 
         private void SelectEncounter(BossEncounterDefinition value)
         {
+            mapStroke.Cancel();
+            eventStroke.Cancel();
             DisposePreview();
             encounter = value;
+            if (value != null && value.arena != null)
+                previewPlayer = value.arena.overridePlayerStart ? value.arena.playerStart : value.arena.CenterCell;
             serialized = value != null ? new SerializedObject(value) : null;
             node = NodeKind.Encounter;
             phaseIndex = patternIndex = selectedClip = -1;
@@ -104,9 +110,16 @@ namespace NHN.TraceStrike.Editor
                 using (new EditorGUILayout.VerticalScope())
                 {
                     EncounterPattern pattern = CurrentPattern();
-                    if (pattern != null) DrawTimeline(pattern);
-                    else DrawOverview();
-                    DrawLowerPanel(pattern);
+                    if (node == NodeKind.Arena)
+                    {
+                        DrawArenaPainter();
+                    }
+                    else
+                    {
+                        if (pattern != null) DrawTimeline(pattern);
+                        else DrawOverview();
+                        DrawLowerPanel(pattern);
+                    }
                 }
             }
         }
@@ -205,6 +218,8 @@ namespace NHN.TraceStrike.Editor
         private void SelectNode(NodeKind kind, int phase, int pattern)
         {
             if (node == kind && phaseIndex == phase && patternIndex == pattern) return;
+            mapStroke.Cancel();
+            eventStroke.Cancel();
             node = kind;
             phaseIndex = phase;
             patternIndex = pattern;
@@ -341,7 +356,11 @@ namespace NHN.TraceStrike.Editor
                            GUILayout.Width(Mathf.Max(350f, (position.width - 245f) * 0.52f))))
                     DrawInspector(pattern);
                 using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    tilePreviewScroll = EditorGUILayout.BeginScrollView(tilePreviewScroll);
                     DrawPreview(pattern);
+                    EditorGUILayout.EndScrollView();
+                }
             }
         }
 
@@ -480,45 +499,31 @@ namespace NHN.TraceStrike.Editor
             }
             EditorGUILayout.LabelField("Arena " + encounter.arena.size + "×" + encounter.arena.size +
                 " · " + encounter.arena.shape, EditorStyles.miniBoldLabel);
-            float edge = Mathf.Min(300f, position.width * 0.32f);
-            Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
-            float unit = edge / TrailFieldModel.MaxSize;
             TileSelection selectedTiles = SelectedTiles(pattern);
-            Event current = Event.current;
-            for (int y = 0; y < TrailFieldModel.MaxSize; y++)
-            for (int x = 0; x < TrailFieldModel.MaxSize; x++)
+            DrawEventPaintTools(selectedTiles);
+            var paintedCells = selectedTiles != null && selectedTiles.shape == TileShape.Cells
+                ? new HashSet<Vector2Int>(selectedTiles.cells) : null;
+            float edge = Mathf.Max(Mathf.Min(300f, position.width * 0.32f), encounter.arena.GridSize * 14f);
+            Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
+            for (int y = 0; y < encounter.arena.GridSize; y++)
+            for (int x = 0; x < encounter.arena.GridSize; x++)
             {
                 var cell = new Vector2Int(x, y);
-                Rect rect = new Rect(board.x + x * unit,
-                    board.y + (TrailFieldModel.MaxSize - 1 - y) * unit, unit - 1f, unit - 1f);
+                Rect rect = PatternPreviewGridGUI.CellRect(
+                    board, x, y, encounter.arena.GridSize);
                 Color color = previewHost != null && previewHost.Walkable.Contains(cell)
                     ? new Color(0.27f, 0.3f, 0.35f) : new Color(0.12f, 0.13f, 0.15f);
                 if (previewHost != null)
                     foreach (var mark in previewHost.marks.Values)
                         if (mark.Item1.Contains(cell)) color = Color.Lerp(color, mark.Item2, mark.Item2.a);
-                if (selectedTiles != null && selectedTiles.shape == TileShape.Cells &&
-                    selectedTiles.cells.Contains(cell - PaintOrigin(selectedTiles)))
+                if (paintedCells != null && paintedCells.Contains(cell - PaintOrigin(selectedTiles)))
                     color = Color.Lerp(color, Color.green, 0.55f);
                 EditorGUI.DrawRect(rect, color);
                 if (cell == previewPlayer) GUI.Label(rect, "P", EditorStyles.whiteMiniLabel);
-                if (current.type == EventType.MouseDown && rect.Contains(current.mousePosition))
-                {
-                    if (current.button == 1)
-                    {
-                        previewPlayer = cell;
-                        RebuildPreview();
-                    }
-                    else if (selectedTiles != null && selectedTiles.shape == TileShape.Cells)
-                    {
-                        Record("Paint pattern tiles");
-                        Vector2Int offset = cell - PaintOrigin(selectedTiles);
-                        if (!selectedTiles.cells.Remove(offset)) selectedTiles.cells.Add(offset);
-                        Changed();
-                    }
-                    current.Use();
-                }
             }
-            EditorGUILayout.LabelField("Left click: paint Cells · Right click: preview player",
+            PatternPreviewGridGUI.DrawLines(board, encounter.arena.GridSize);
+            HandleEventPainting(board, selectedTiles);
+            EditorGUILayout.LabelField("클릭·드래그: 칠하기 · 우클릭/Shift: 지우기 · 플레이어 이동: 위치 도구",
                 EditorStyles.wordWrappedMiniLabel);
             if (!string.IsNullOrEmpty(previewError))
                 EditorGUILayout.HelpBox(previewError, MessageType.Warning);
@@ -768,8 +773,8 @@ namespace NHN.TraceStrike.Editor
 
         private Vector2Int PaintOrigin(TileSelection tiles)
         {
-            Vector2Int center = new Vector2Int(TrailFieldModel.MaxSize / 2,
-                TrailFieldModel.MaxSize / 2);
+            Vector2Int center = new Vector2Int(encounter.arena.GridSize / 2,
+                encounter.arena.GridSize / 2);
             return (tiles.anchor == TileAnchor.Absolute ? Vector2Int.zero :
                 tiles.anchor == TileAnchor.Player ? previewPlayer : center) + tiles.offset;
         }
@@ -780,10 +785,9 @@ namespace NHN.TraceStrike.Editor
             EncounterPattern pattern = CurrentPattern();
             if (encounter == null || pattern == null) return;
             previewError = null;
-            previewHost = new PatternPreviewHost(encounter.arena.size, encounter.arena.shape)
-                { player = previewPlayer };
             try
             {
+                previewHost = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
                 previewRunner = new PatternRunner(pattern, new PatternContext(previewHost,
                     previewHost.CenterCell, 0, encounter.FindPattern));
                 previewRunner.Advance(0f);

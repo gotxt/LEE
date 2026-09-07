@@ -182,17 +182,16 @@ namespace NHN.TraceStrike.Editor
             }
             float time = EditorGUILayout.Slider(playhead, 0, Mathf.Max(0.01f, pattern.Duration));
             if (!Mathf.Approximately(time, playhead)) { playhead = time; playing = false; RebuildPreview(); }
-            int size = EditorGUILayout.IntSlider("Preview arena", fieldSize, 5, 17); size |= 1;
+            int size = EditorGUILayout.IntSlider("Preview arena", fieldSize, 5, TrailFieldModel.MaxSize);
             if (size != fieldSize) { fieldSize = size; RebuildPreview(); }
             GUILayout.Label("Left: paint Cells offsets. Right: player position. Simulation only; VFX/SFX/movement are logged.", EditorStyles.wordWrappedMiniLabel);
             float edge = Mathf.Min(300, position.width * 0.45f);
             Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
-            float unit = edge / 17;
             var selectedTiles = SelectedTiles();
-            for (int y = 0; y < 17; y++) for (int x = 0; x < 17; x++)
+            for (int y = 0; y < Mathf.Max(TrailFieldModel.Size, fieldSize); y++) for (int x = 0; x < Mathf.Max(TrailFieldModel.Size, fieldSize); x++)
             {
                 var cell = new Vector2Int(x, y);
-                Rect r = new Rect(board.x + x * unit, board.y + (16 - y) * unit, unit - 1, unit - 1);
+                Rect r = PatternPreviewGridGUI.CellRect(board, x, y, Mathf.Max(TrailFieldModel.Size, fieldSize));
                 Color color = previewHost != null && previewHost.Walkable.Contains(cell) ? new Color(0.27f, 0.3f, 0.35f) : new Color(0.12f, 0.13f, 0.15f);
                 if (previewHost != null) foreach (var mark in previewHost.marks.Values) if (mark.Item1.Contains(cell)) color = Color.Lerp(color, mark.Item2, mark.Item2.a);
                 if (selectedTiles != null && selectedTiles.shape == TileShape.Cells && selectedTiles.cells.Contains(cell - PaintOrigin(selectedTiles))) color = Color.Lerp(color, Color.green, 0.5f);
@@ -209,6 +208,7 @@ namespace NHN.TraceStrike.Editor
                     Event.current.Use();
                 }
             }
+            PatternPreviewGridGUI.DrawLines(board, Mathf.Max(TrailFieldModel.Size, fieldSize));
             if (!string.IsNullOrEmpty(previewError)) EditorGUILayout.HelpBox(previewError, MessageType.Warning);
             if (previewHost != null) GUILayout.Label(string.Join("\n", previewHost.log.Skip(Mathf.Max(0, previewHost.log.Count - 4))), EditorStyles.wordWrappedMiniLabel);
         }
@@ -219,7 +219,7 @@ namespace NHN.TraceStrike.Editor
             return action?.GetType().GetField("tiles")?.GetValue(action) as TileSelection;
         }
         private Vector2Int PaintOrigin(TileSelection tiles) => (tiles.anchor == TileAnchor.Absolute ? Vector2Int.zero :
-            tiles.anchor == TileAnchor.Player ? previewPlayer : new Vector2Int(8, 8)) + tiles.offset;
+            tiles.anchor == TileAnchor.Player ? previewPlayer : previewHost.CenterCell) + tiles.offset;
         private void RebuildPreview()
         {
             preview?.Dispose(); preview = null; previewError = null;

@@ -69,6 +69,13 @@ namespace NHN.TraceStrike.Tests
                 var helper = new EncounterPattern { id = "helper", name = "Helper" };
                 helper.clips.Add(new PatternClip { duration = 0.2f, action = new WarningEvent() });
                 source.libraryPatterns.Add(helper);
+                source.arena.shape = ArenaShape.Custom;
+                source.arena.floorCells.Add(new Vector2Int(8, 8));
+                source.arena.floorCells.Add(new Vector2Int(9, 8));
+                source.arena.size = 50;
+                source.arena.overridePlayerStart = true; source.arena.playerStart = new Vector2Int(8, 8);
+                source.arena.restrictStartCells = true; source.arena.startCells.Add(new Vector2Int(8, 8));
+                source.arena.restrictEndCells = true; source.arena.endCells.Add(new Vector2Int(9, 8));
                 source.phases[0].patterns[0].clips.Add(new PatternClip
                 {
                     duration = helper.Duration,
@@ -77,6 +84,13 @@ namespace NHN.TraceStrike.Tests
                 EditorJsonUtility.FromJsonOverwrite(EditorJsonUtility.ToJson(source), copy);
                 Assert.IsInstanceOf<CallEncounterPatternEvent>(copy.phases[0].patterns[0].clips[0].action);
                 Assert.IsInstanceOf<WarningEvent>(copy.libraryPatterns[0].clips[0].action);
+                Assert.AreEqual(ArenaShape.Custom, copy.arena.shape);
+                CollectionAssert.AreEquivalent(source.arena.floorCells, copy.arena.floorCells);
+                Assert.AreEqual(50, copy.arena.size);
+                Assert.IsTrue(copy.arena.overridePlayerStart); Assert.AreEqual(source.arena.playerStart, copy.arena.playerStart);
+                Assert.IsTrue(copy.arena.restrictStartCells); Assert.IsTrue(copy.arena.restrictEndCells);
+                CollectionAssert.AreEqual(source.arena.startCells, copy.arena.startCells);
+                CollectionAssert.AreEqual(source.arena.endCells, copy.arena.endCells);
                 Assert.IsEmpty(copy.ValidateDefinition());
             }
             finally { Object.DestroyImmediate(source); Object.DestroyImmediate(copy); }
@@ -94,6 +108,27 @@ namespace NHN.TraceStrike.Tests
                 Assert.AreEqual(0.4f, b.clips[0].start);
             }
             finally { Object.DestroyImmediate(a); Object.DestroyImmediate(b); }
+        }
+
+        [Test]
+        public void PreviewGridCellsSharePixelSnappedBordersWithoutGaps()
+        {
+            var board = new Rect(0.37f, 0.63f, 300f, 300f);
+            for (int i = 0; i < TrailFieldModel.MaxSize - 1; i++)
+            {
+                Rect left = Editor.PatternPreviewGridGUI.CellRect(
+                    board, i, 0, TrailFieldModel.MaxSize);
+                Rect right = Editor.PatternPreviewGridGUI.CellRect(
+                    board, i + 1, 0, TrailFieldModel.MaxSize);
+                Rect upper = Editor.PatternPreviewGridGUI.CellRect(
+                    board, 0, i + 1, TrailFieldModel.MaxSize);
+                Rect lower = Editor.PatternPreviewGridGUI.CellRect(
+                    board, 0, i, TrailFieldModel.MaxSize);
+                Assert.AreEqual(left.xMax, right.xMin);
+                Assert.AreEqual(upper.yMax, lower.yMin);
+                Assert.Greater(left.width, 0f);
+                Assert.Greater(lower.height, 0f);
+            }
         }
     }
 }

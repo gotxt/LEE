@@ -192,7 +192,7 @@ namespace NHN.TraceStrike
         public void StopPatternPreview() => StartStage(stage);
 
         Vector2Int IPatternHost.PlayerCell => model.Player;
-        Vector2Int IPatternHost.CenterCell => new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+        Vector2Int IPatternHost.CenterCell => model.CenterCell;
         IReadOnlyCollection<Vector2Int> IPatternHost.Walkable => model.Walkable;
         IReadOnlyCollection<Vector2Int> IPatternHost.Traversable => model.Traversable;
         bool IPatternHost.IsAlive => !playerDead && !gameCleared && pendingTimelineDamage == null;
@@ -237,8 +237,8 @@ namespace NHN.TraceStrike
             accepted.Remove(model.Player); accepted.Remove(model.Start); accepted.Remove(model.End);
             accepted.ExceptWith(model.Trail);
             var combined = CombinedWalls(); combined.UnionWith(accepted);
-            if (!IsConnectedWithout(combined))
-            { Debug.LogWarning("Pattern wall rejected: would disconnect the arena."); return new Lease(() => { }); }
+            if (!IsConnectedWithout(combined) || !model.HasEndpointPair(combined))
+            { Debug.LogWarning("Pattern wall rejected: would disconnect the arena or exhaust START/END regions."); return new Lease(() => { }); }
             int id = ++leaseId;
             timelineWalls.Add(id, accepted);
             model.SetBlockedCells(combined);

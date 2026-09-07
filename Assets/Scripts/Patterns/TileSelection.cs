@@ -27,6 +27,7 @@ namespace NHN.TraceStrike.Patterns
                 anchor == TileAnchor.Player ? context.Host.PlayerCell :
                 anchor == TileAnchor.Origin ? context.Origin : Vector2Int.zero) + offset;
             var result = new HashSet<Vector2Int>();
+            var painted = shape == TileShape.Cells ? new HashSet<Vector2Int>(cells) : null;
             foreach (var cell in context.Host.Walkable)
             {
                 Vector2Int p = cell - origin;
@@ -34,7 +35,7 @@ namespace NHN.TraceStrike.Patterns
                 bool inside = false;
                 switch (shape)
                 {
-                    case TileShape.Cells: inside = cells.Contains(p); break;
+                    case TileShape.Cells: inside = painted.Contains(p); break;
                     case TileShape.All: inside = true; break;
                     case TileShape.Cross: inside = p.x == 0 || p.y == 0; break;
                     case TileShape.Diamond: inside = ax + ay == radius; break;

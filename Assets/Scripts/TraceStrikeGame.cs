@@ -82,21 +82,21 @@ namespace NHN.TraceStrike
 
         private readonly TrailFieldModel model = new TrailFieldModel();
         private readonly HubWorldModel hubModel = new HubWorldModel();
-        private readonly Image[,] arenaGroundTiles = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly RectTransform[,] mainTileDepthRoots = new RectTransform[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Image[,] mainTileDepthImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly RectTransform[,] mainTileDropShadows = new RectTransform[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Image[,] mainTiles = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Outline[,] mainTileOutlines = new Outline[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Text[,] tileLabels = new Text[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Image[,] minimapTiles = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly RectTransform[,] attackWarningVisuals = new RectTransform[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Image[,] attackWarningFillImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Image[,] endpointMarkerImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly RectTransform[,] specialItemVisuals = new RectTransform[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Image[,] specialItemImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Image[,] specialItemIconImages = new Image[TrailFieldModel.Size, TrailFieldModel.Size];
-        private readonly Text[,] specialItemLabels = new Text[TrailFieldModel.Size, TrailFieldModel.Size];
+        private readonly Image[,] arenaGroundTiles = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly RectTransform[,] mainTileDepthRoots = new RectTransform[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Image[,] mainTileDepthImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly RectTransform[,] mainTileDropShadows = new RectTransform[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Image[,] mainTiles = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Outline[,] mainTileOutlines = new Outline[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Text[,] tileLabels = new Text[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Image[,] minimapTiles = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly RectTransform[,] attackWarningVisuals = new RectTransform[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Image[,] attackWarningFillImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Image[,] endpointMarkerImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly RectTransform[,] specialItemVisuals = new RectTransform[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Image[,] specialItemImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Image[,] specialItemIconImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly Text[,] specialItemLabels = new Text[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
         private readonly RectTransform[,] hubObjectVisuals = new RectTransform[HubWorldModel.Size, HubWorldModel.Size];
         private readonly Image[,] hubObjectImages = new Image[HubWorldModel.Size, HubWorldModel.Size];
         private readonly Image[,] hubObjectIconImages = new Image[HubWorldModel.Size, HubWorldModel.Size];
@@ -116,7 +116,7 @@ namespace NHN.TraceStrike
         private readonly List<RectTransform> ambientParticles = new List<RectTransform>();
         private readonly List<Image> ambientParticleImages = new List<Image>();
         private readonly int[,] floorTileVariantIndices =
-            new int[TrailFieldModel.Size, TrailFieldModel.Size];
+            new int[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
         private readonly System.Random floorTileRandom = new System.Random();
 
         private Font gameFont;
@@ -224,7 +224,9 @@ namespace NHN.TraceStrike
         private int tutorialStep;
         private int tutorialVersion;
         private int stage;
-        private int currentFieldSize = TrailFieldModel.MaxSize;
+        private int currentFieldSize = TrailFieldModel.Size;
+        private int renderGridSize = TrailFieldModel.Size;
+        private int BoardGridSize => hubActive || tutorialActive ? TrailFieldModel.Size : model.GridSize;
         private int round;
         private int bossHealth;
         private int bossMaxHealth;
@@ -630,7 +632,15 @@ namespace NHN.TraceStrike
             crystalFiringCounts.Clear();
             specialTiles.Clear();
             hubModel.Reset(hubModel.CurrentCharacter);
-            RestoreMainGridLayout();
+            ApplyEncounterArenaLayout();
+            for (int y = 0; y < renderGridSize; y++)
+            for (int x = 0; x < renderGridSize; x++)
+            {
+                if (x < HubWorldModel.Size && y < HubWorldModel.Size) continue;
+                mainTiles[x, y].gameObject.SetActive(false);
+                mainTileDepthRoots[x, y].gameObject.SetActive(false);
+                arenaGroundTiles[x, y].gameObject.SetActive(false);
+            }
             battleCameraInitialized = false;
             mainGrid.anchoredPosition = Vector2.zero;
             activeCharacterTint = HubCharacterTints[hubModel.CurrentCharacter];
@@ -794,7 +804,7 @@ namespace NHN.TraceStrike
         private void PrepareTitleScreen()
         {
             StartStage(StartingBoss());
-            var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+            var center = model.CenterCell;
             model.TryPlacePlayer(center);
             battleCameraInitialized = false;
             GenerateSpecialTiles();
@@ -1362,9 +1372,9 @@ namespace NHN.TraceStrike
         {
             HideHubWorldVisuals();
             int activeSpecialStep = tutorialStep - 1;
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
                     bool active = x < TutorialRules.Size && y < TutorialRules.Size;
                     arenaGroundTiles[x, y].gameObject.SetActive(false);
@@ -1691,12 +1701,12 @@ namespace NHN.TraceStrike
             targetedTelegraphProgress = 0f;
             battleCameraInitialized = false;
             currentFieldSize = activeBoss.arena.size;
+            activeBoss.arena.ApplyTo(model);
             ApplyEncounterArenaLayout();
             RandomizeFloorTileLayout();
             ApplyFloorTileLayout();
-            model.CreateField((int)activeBoss.arena.shape, currentFieldSize);
             model.SetBlockedCells(crystalCells);
-            model.BeginRound(round);
+            model.BeginRound(round, true, activeBoss.arena.overridePlayerStart ? (Vector2Int?)activeBoss.arena.playerStart : null);
             GenerateSpecialTiles();
             RefreshCrystalVisuals();
             SetWorldBossVisible(true);
@@ -1739,9 +1749,9 @@ namespace NHN.TraceStrike
 
         private void RestoreMainGridLayout()
         {
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
                     RectTransform ground = arenaGroundTiles[x, y].rectTransform;
                     ground.sizeDelta = Vector2.one * (mainCellSize + (desktopLayout ? 18f : 14f));
@@ -1834,7 +1844,7 @@ namespace NHN.TraceStrike
             crystalFiringCounts.Clear();
             crystalTelegraphProgress.Clear();
             crystalCells.Clear();
-            var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+            var center = model.CenterCell;
             List<Vector2Int> fixedLayout = CrystalRules.CreateCardinalLayout(model.Walkable, center);
             foreach (Vector2Int original in fixedLayout)
             {
@@ -1888,6 +1898,10 @@ namespace NHN.TraceStrike
 
         private void ApplyCrystalLayout(bool regenerateRound)
         {
+            // Never let legacy crystals consume all permitted START/END cells or cut off spawn.
+            while (crystalCells.Count > 0 &&
+                (!model.HasEndpointPair(CombinedWalls()) || !IsConnectedWithout(CombinedWalls())))
+                crystalCells.RemoveAt(crystalCells.Count - 1);
             model.SetBlockedCells(CombinedWalls());
             if (regenerateRound || model.IsBlocked(model.Start) || model.IsBlocked(model.End))
             {
@@ -2245,10 +2259,11 @@ namespace NHN.TraceStrike
         private void ApplyEncounterArenaLayout()
         {
             float legacyGridSize = desktopLayout ? LegacyDesktopGridSize : LegacyMobileGridSize;
-            float gridSize = legacyGridSize * TrailFieldModel.Size / LegacyFieldSize;
+            float gridSize = legacyGridSize * BoardGridSize / LegacyFieldSize;
             if (desktopLayout) gridSize *= ActiveBattleCameraZoom;
             mainGrid.sizeDelta = new Vector2(gridSize, gridSize);
-            mainCellSize = gridSize / TrailFieldModel.Size;
+            mainCellSize = gridSize / BoardGridSize;
+            EnsureBattleGridCapacity(BoardGridSize);
             RestoreMainGridLayout();
         }
 
@@ -2267,7 +2282,7 @@ namespace NHN.TraceStrike
 
         private int CalculateDamage(IReadOnlyCollection<Vector2Int> trailCells)
         {
-            return CombatBalanceRules.CalculateTrailDamage(trailCells, TrailFieldModel.MaxSize);
+            return CombatBalanceRules.CalculateTrailDamage(trailCells, BoardGridSize);
         }
 
         private void BuildInterface()
@@ -2596,77 +2611,35 @@ namespace NHN.TraceStrike
             damagePopup.gameObject.SetActive(false);
         }
 
-        private void BuildMainField(RectTransform root)
+        private void EnsureBattleGridCapacity(int size)
         {
-            RectTransform section = CreateRect("Main Field Section", root);
-            section.anchorMin = desktopLayout ? Vector2.zero : new Vector2(0.035f, 0.245f);
-            section.anchorMax = desktopLayout ? Vector2.one : new Vector2(0.965f, 0.835f);
-            section.offsetMin = Vector2.zero;
-            section.offsetMax = Vector2.zero;
+            if (size <= renderGridSize) return;
+            int previousSize = renderGridSize;
+            renderGridSize = size;
+            BuildBattleTiles(previousSize);
+            if (minimapGrid != null) BuildMinimapTiles(previousSize);
+            // Keep new floors below existing effects, crystals, hub objects and player.
+            for (int y = renderGridSize - 1; y >= 0; y--)
+            for (int x = renderGridSize - 1; x >= 0; x--)
+                mainTiles[x, y].transform.SetAsFirstSibling();
+            for (int y = renderGridSize - 1; y >= 0; y--)
+            for (int x = renderGridSize - 1; x >= 0; x--)
+                mainTileDepthRoots[x, y].SetAsFirstSibling();
+            for (int y = renderGridSize - 1; y >= 0; y--)
+            for (int x = renderGridSize - 1; x >= 0; x--)
+                arenaGroundTiles[x, y].transform.SetAsFirstSibling();
+        }
 
-            RectTransform titleBar = CreatePanel("Field Title", section, PanelLight,
-                new Vector2(0f, 0.91f), new Vector2(1f, 1f));
-            fieldTitleText = CreateText("Field Label", titleBar, "IVY TEMPLE", 30, FontStyle.Bold, White,
-                new Vector2(0.04f, 0f), new Vector2(0.45f, 1f), TextAnchor.MiddleLeft);
-            comboText = CreateText("Power", titleBar, "경로 1칸  ·  예상 피해 13", 25, FontStyle.Bold, Trail,
-                new Vector2(0.38f, 0f), new Vector2(0.96f, 1f), TextAnchor.MiddleRight);
-            if (desktopLayout)
-            {
-                titleBar.gameObject.SetActive(false);
-            }
-
-            RectTransform field = CreatePanel("Field Frame", section, desktopLayout ? ArenaVoid : Hex("0A1020"),
-                Vector2.zero, desktopLayout ? Vector2.one : new Vector2(1f, 0.89f));
-            fieldFrame = field.GetComponent<Image>();
-            Outline outline = field.gameObject.AddComponent<Outline>();
-            outline.effectColor = Hex("42D9EA");
-            outline.effectDistance = new Vector2(3f, -3f);
-            outline.enabled = !desktopLayout;
-
-            // Keep the playfield clean: no full-screen temple artwork or
-            // background motes behind the tilemap.
-
-            if (desktopLayout)
-            {
-                BuildHudlessArenaPresentation(field);
-            }
-
-            mainGrid = CreateRect("Main Grid", field);
-            mainGrid.anchorMin = new Vector2(0.5f, 0.5f);
-            mainGrid.anchorMax = new Vector2(0.5f, 0.5f);
-            mainGrid.pivot = new Vector2(0.5f, 0.5f);
-            // Enlarge the arena without shrinking its cells to fit the screen.
-            float legacyGridSize = desktopLayout ? LegacyDesktopGridSize : LegacyMobileGridSize;
-            float gridSize = legacyGridSize * TrailFieldModel.Size / LegacyFieldSize;
-            if (desktopLayout)
-            {
-                gridSize *= ActiveBattleCameraZoom;
-            }
-            mainGrid.sizeDelta = new Vector2(gridSize, gridSize);
-            mainGrid.anchoredPosition = Vector2.zero;
-            mainCellSize = gridSize / TrailFieldModel.Size;
-            LoadGolemTileSprites();
-            floorTileSprites = golemBaseTileSprite != null
-                ? new[] { golemBaseTileSprite }
-                : LoadFloorTileSprites();
-            floorTileSprite = floorTileSprites.Length > 0
-                ? floorTileSprites[0]
-                : LoadPixelSprite("Art/cave_floor_tile_v2", 128f);
-            RandomizeFloorTileLayout();
-            startMarkerSprite = LoadPixelSprite("Art/start_sword_retouch", 32f);
-            endMarkerSprite = LoadPixelSprite("Art/end_flag_retouch", 32f);
-            powerIconSprite = LoadPixelSprite("Art/special_plus", 32f);
-            amplifyIconSprite = LoadPixelSprite("Art/special_up", 32f);
-            mudIconSprite = LoadPixelSprite("Art/special_pause", 32f);
-            curseIconSprite = LoadPixelSprite("Art/special_down", 32f);
-
+        private void BuildBattleTiles(int previousSize = 0)
+        {
             // Slightly overlapping plates form one connected gray silhouette
             // behind only the playable cells, separating the arena from the temple.
             float groundExpansion = desktopLayout ? 18f : 14f;
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
+                    if (x < previousSize && y < previousSize) continue;
                     RectTransform ground = CreateRect("Arena Ground " + x + "," + y, mainGrid);
                     ground.anchorMin = ground.anchorMax = new Vector2(0.5f, 0.5f);
                     ground.sizeDelta = Vector2.one * (mainCellSize + groundExpansion);
@@ -2683,10 +2656,11 @@ namespace NHN.TraceStrike
 
             // Draw every extrusion before every top face so neighbouring tiles
             // naturally cover each other's depth and read as a raised 2.5D grid.
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
+                    if (x < previousSize && y < previousSize) continue;
                     RectTransform depthRoot = CreateRect("Tile Depth " + x + "," + y, mainGrid);
                     depthRoot.anchorMin = depthRoot.anchorMax = new Vector2(0.5f, 0.5f);
 
@@ -2717,10 +2691,11 @@ namespace NHN.TraceStrike
                 }
             }
 
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
+                    if (x < previousSize && y < previousSize) continue;
                     RectTransform tile = CreateRect("Tile " + x + "," + y, mainGrid);
                     tile.anchorMin = tile.anchorMax = new Vector2(0.5f, 0.5f);
                     tile.sizeDelta = Vector2.one * (UseIsometricArena
@@ -2800,6 +2775,92 @@ namespace NHN.TraceStrike
                     BuildAttackWarningVisual(tile, x, y);
                 }
             }
+        }
+
+        private void BuildMinimapTiles(int previousSize = 0)
+        {
+            for (int y = 0; y < renderGridSize; y++)
+            {
+                for (int x = 0; x < renderGridSize; x++)
+                {
+                    if (x < previousSize && y < previousSize) continue;
+                    RectTransform tile = CreateRect("Minimap Tile " + x + "," + y, minimapGrid);
+                    tile.anchorMin = tile.anchorMax = new Vector2(0.5f, 0.5f);
+                    tile.sizeDelta = Vector2.one * (MinimapCellSize - 1.5f);
+                    tile.anchoredPosition = GridPosition(x, y, MinimapCellSize);
+                    Image image = tile.gameObject.AddComponent<Image>();
+                    image.color = Floor;
+                    image.raycastTarget = false;
+                    minimapTiles[x, y] = image;
+                }
+            }
+        }
+
+        private void BuildMainField(RectTransform root)
+        {
+            RectTransform section = CreateRect("Main Field Section", root);
+            section.anchorMin = desktopLayout ? Vector2.zero : new Vector2(0.035f, 0.245f);
+            section.anchorMax = desktopLayout ? Vector2.one : new Vector2(0.965f, 0.835f);
+            section.offsetMin = Vector2.zero;
+            section.offsetMax = Vector2.zero;
+
+            RectTransform titleBar = CreatePanel("Field Title", section, PanelLight,
+                new Vector2(0f, 0.91f), new Vector2(1f, 1f));
+            fieldTitleText = CreateText("Field Label", titleBar, "IVY TEMPLE", 30, FontStyle.Bold, White,
+                new Vector2(0.04f, 0f), new Vector2(0.45f, 1f), TextAnchor.MiddleLeft);
+            comboText = CreateText("Power", titleBar, "경로 1칸  ·  예상 피해 13", 25, FontStyle.Bold, Trail,
+                new Vector2(0.38f, 0f), new Vector2(0.96f, 1f), TextAnchor.MiddleRight);
+            if (desktopLayout)
+            {
+                titleBar.gameObject.SetActive(false);
+            }
+
+            RectTransform field = CreatePanel("Field Frame", section, desktopLayout ? ArenaVoid : Hex("0A1020"),
+                Vector2.zero, desktopLayout ? Vector2.one : new Vector2(1f, 0.89f));
+            fieldFrame = field.GetComponent<Image>();
+            Outline outline = field.gameObject.AddComponent<Outline>();
+            outline.effectColor = Hex("42D9EA");
+            outline.effectDistance = new Vector2(3f, -3f);
+            outline.enabled = !desktopLayout;
+
+            // Keep the playfield clean: no full-screen temple artwork or
+            // background motes behind the tilemap.
+
+            if (desktopLayout)
+            {
+                BuildHudlessArenaPresentation(field);
+            }
+
+            mainGrid = CreateRect("Main Grid", field);
+            mainGrid.anchorMin = new Vector2(0.5f, 0.5f);
+            mainGrid.anchorMax = new Vector2(0.5f, 0.5f);
+            mainGrid.pivot = new Vector2(0.5f, 0.5f);
+            // Enlarge the arena without shrinking its cells to fit the screen.
+            float legacyGridSize = desktopLayout ? LegacyDesktopGridSize : LegacyMobileGridSize;
+            float gridSize = legacyGridSize * BoardGridSize / LegacyFieldSize;
+            if (desktopLayout)
+            {
+                gridSize *= ActiveBattleCameraZoom;
+            }
+            mainGrid.sizeDelta = new Vector2(gridSize, gridSize);
+            mainGrid.anchoredPosition = Vector2.zero;
+            mainCellSize = gridSize / BoardGridSize;
+            LoadGolemTileSprites();
+            floorTileSprites = golemBaseTileSprite != null
+                ? new[] { golemBaseTileSprite }
+                : LoadFloorTileSprites();
+            floorTileSprite = floorTileSprites.Length > 0
+                ? floorTileSprites[0]
+                : LoadPixelSprite("Art/cave_floor_tile_v2", 128f);
+            RandomizeFloorTileLayout();
+            startMarkerSprite = LoadPixelSprite("Art/start_sword_retouch", 32f);
+            endMarkerSprite = LoadPixelSprite("Art/end_flag_retouch", 32f);
+            powerIconSprite = LoadPixelSprite("Art/special_plus", 32f);
+            amplifyIconSprite = LoadPixelSprite("Art/special_up", 32f);
+            mudIconSprite = LoadPixelSprite("Art/special_pause", 32f);
+            curseIconSprite = LoadPixelSprite("Art/special_down", 32f);
+
+            BuildBattleTiles();
 
             hubCampZone = CreateRect("Hub Campfire Zone", mainGrid);
             hubCampZone.anchorMin = hubCampZone.anchorMax = new Vector2(0.5f, 0.5f);
@@ -2914,7 +2975,7 @@ namespace NHN.TraceStrike
             {
                 for (int diagonal = (TrailFieldModel.Size - 1) * 2; diagonal >= 0; diagonal--)
                 {
-                    for (int x = 0; x < TrailFieldModel.Size; x++)
+                    for (int x = 0; x < renderGridSize; x++)
                     {
                         int y = diagonal - x;
                         if (y >= 0 && y < TrailFieldModel.Size)
@@ -3175,20 +3236,7 @@ namespace NHN.TraceStrike
             minimapGrid.sizeDelta = Vector2.one * miniGridSize;
             minimapGrid.anchoredPosition = Vector2.zero;
 
-            for (int y = 0; y < TrailFieldModel.Size; y++)
-            {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
-                {
-                    RectTransform tile = CreateRect("Minimap Tile " + x + "," + y, minimapGrid);
-                    tile.anchorMin = tile.anchorMax = new Vector2(0.5f, 0.5f);
-                    tile.sizeDelta = Vector2.one * (MinimapCellSize - 1.5f);
-                    tile.anchoredPosition = GridPosition(x, y, MinimapCellSize);
-                    Image image = tile.gameObject.AddComponent<Image>();
-                    image.color = Floor;
-                    image.raycastTarget = false;
-                    minimapTiles[x, y] = image;
-                }
-            }
+            BuildMinimapTiles();
 
             minimapPlayer = CreateRect("Minimap Player", minimapGrid);
             minimapPlayer.anchorMin = minimapPlayer.anchorMax = new Vector2(0.5f, 0.5f);
@@ -3210,10 +3258,12 @@ namespace NHN.TraceStrike
                 return;
             }
 
+            minimapGrid.sizeDelta = Vector2.one * (MinimapCellSize * BoardGridSize);
+            minimapGrid.localScale = Vector3.one * ((float)TrailFieldModel.Size / BoardGridSize);
             int tutorialOffset = (TrailFieldModel.Size - TutorialRules.Size) / 2;
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
                     Image tile = minimapTiles[x, y];
                     if (tile == null)
@@ -3221,6 +3271,7 @@ namespace NHN.TraceStrike
                         continue;
                     }
 
+                    tile.rectTransform.anchoredPosition = GridPosition(x, y, MinimapCellSize);
                     if (tutorialActive)
                     {
                         bool active = x >= tutorialOffset && x < tutorialOffset + TutorialRules.Size &&
@@ -3248,7 +3299,7 @@ namespace NHN.TraceStrike
                         continue;
                     }
 
-                    Color boardColor = CombatBalanceRules.IsCenterDamageCell(boardCell, TrailFieldModel.Size)
+                    Color boardColor = CombatBalanceRules.IsCenterDamageCell(boardCell, BoardGridSize)
                         ? new Color(0.90f, 0.55f, 0.24f, 0.65f)
                         : new Color(0.65f, 0.62f, 0.53f, 0.48f);
                     if (model.IsTrail(boardCell))
@@ -3319,9 +3370,9 @@ namespace NHN.TraceStrike
         private void RefreshBoard()
         {
             HideHubWorldVisuals();
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
                     var cell = new Vector2Int(x, y);
                     bool active = model.IsWalkable(cell);
@@ -3808,7 +3859,7 @@ namespace NHN.TraceStrike
 
             var shuffleBag = new List<int>(floorTileSprites.Length);
             int cellIndex = 0;
-            int cellCount = TrailFieldModel.Size * TrailFieldModel.Size;
+            int cellCount = renderGridSize * renderGridSize;
             while (cellIndex < cellCount)
             {
                 shuffleBag.Clear();
@@ -3827,8 +3878,8 @@ namespace NHN.TraceStrike
 
                 for (int i = 0; i < shuffleBag.Count && cellIndex < cellCount; i++, cellIndex++)
                 {
-                    int x = cellIndex % TrailFieldModel.Size;
-                    int y = cellIndex / TrailFieldModel.Size;
+                    int x = cellIndex % renderGridSize;
+                    int y = cellIndex / renderGridSize;
                     floorTileVariantIndices[x, y] = shuffleBag[i];
                 }
             }
@@ -3836,9 +3887,9 @@ namespace NHN.TraceStrike
 
         private void ApplyFloorTileLayout()
         {
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
                     if (mainTiles[x, y] != null)
                     {
@@ -3919,7 +3970,7 @@ namespace NHN.TraceStrike
             if (floorTileSprite != null)
             {
                 Color textureTint = CombatBalanceRules.IsCenterDamageCell(
-                    new Vector2Int(x, y), TrailFieldModel.MaxSize)
+                    new Vector2Int(x, y), BoardGridSize)
                     ? CenterDamageTileTint
                     : ArenaTileTextureTint;
                 textureTint.a = StandardTileOpacity;
@@ -4081,9 +4132,9 @@ namespace NHN.TraceStrike
 
         private void AnimateAttackWarnings()
         {
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
                     RectTransform warning = attackWarningVisuals[x, y];
                     Image fillImage = attackWarningFillImages[x, y];
@@ -4139,9 +4190,9 @@ namespace NHN.TraceStrike
         {
             float pulse = (Mathf.Sin(Time.unscaledTime * 6f) + 1f) * 0.5f;
             float scale = PixelStep(0.90f + pulse * 0.16f, 0.04f);
-            for (int y = 0; y < TrailFieldModel.Size; y++)
+            for (int y = 0; y < renderGridSize; y++)
             {
-                for (int x = 0; x < TrailFieldModel.Size; x++)
+                for (int x = 0; x < renderGridSize; x++)
                 {
                     RectTransform item = specialItemVisuals[x, y];
                     if (item != null && item.gameObject.activeInHierarchy)
@@ -4577,7 +4628,7 @@ namespace NHN.TraceStrike
             Application.runInBackground = true;
             if (System.Array.IndexOf(arguments, "-captureMinimap") >= 0)
             {
-                model.TryPlacePlayer(new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2));
+                model.TryPlacePlayer(model.CenterCell);
                 battleCameraInitialized = false;
                 RefreshBoard();
                 yield return null;
@@ -4610,7 +4661,7 @@ namespace NHN.TraceStrike
                 System.Array.IndexOf(arguments, "-captureObjectiveEnd") >= 0)
             {
                 bool endTarget = System.Array.IndexOf(arguments, "-captureObjectiveEnd") >= 0;
-                var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+                var center = model.CenterCell;
                 if (endTarget)
                 {
                     Vector2Int start = model.Start;
@@ -4640,7 +4691,7 @@ namespace NHN.TraceStrike
             }
             else if (System.Array.IndexOf(arguments, "-captureCameraFollow") >= 0)
             {
-                var center = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+                var center = model.CenterCell;
                 model.TryPlacePlayer(center);
                 battleCameraInitialized = false;
                 RefreshBoard();
@@ -4709,7 +4760,7 @@ namespace NHN.TraceStrike
                 bossHealthFill.fillAmount = 1f;
                 bossHealthText.text = bossHealth + " / " + bossMaxHealth;
                 warnedCells.Clear();
-                var captureCenter = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+                var captureCenter = model.CenterCell;
                 warnedCells.UnionWith(BossPatternRules.CreateHorizontalGrid(model.Traversable, captureCenter));
                 hazardTelegraphProgress = 0.62f;
                 UpdatePhaseLabel();
@@ -4725,7 +4776,7 @@ namespace NHN.TraceStrike
                 bossHealthFill.fillAmount = 1f;
                 bossHealthText.text = bossHealth + " / " + bossMaxHealth;
                 warnedCells.Clear();
-                var captureCenter = new Vector2Int(TrailFieldModel.Size / 2, TrailFieldModel.Size / 2);
+                var captureCenter = model.CenterCell;
                 warnedCells.UnionWith(BossPatternRules.CreateHorizontalGrid(model.Traversable, captureCenter));
                 targetedCells.Clear();
                 targetedCells.Add(model.Player);
@@ -4836,9 +4887,9 @@ namespace NHN.TraceStrike
                 (shouldShow ? "full map and navigation markers." : "hidden on title/hub."));
         }
 
-        private static Vector2 GridPosition(int x, int y, float size)
+        private Vector2 GridPosition(int x, int y, float size)
         {
-            float center = (TrailFieldModel.Size - 1) * 0.5f;
+            float center = (BoardGridSize - 1) * 0.5f;
             if (UseIsometricArena)
             {
                 return new Vector2(

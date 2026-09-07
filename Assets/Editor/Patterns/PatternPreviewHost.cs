@@ -19,8 +19,10 @@ namespace NHN.TraceStrike.Editor
         {
             model.CreateField((int)shape, size);
         }
+        public PatternPreviewHost(BossArenaDefinition arena)
+        { arena.ApplyTo(model); player = arena.overridePlayerStart ? arena.playerStart : model.CenterCell; }
         public Vector2Int PlayerCell => player;
-        public Vector2Int CenterCell => new Vector2Int(8, 8);
+        public Vector2Int CenterCell => model.CenterCell;
         public IReadOnlyCollection<Vector2Int> Walkable => model.Walkable;
         public IReadOnlyCollection<Vector2Int> Traversable => model.Traversable;
         public bool IsAlive => true;

@@ -171,6 +171,81 @@ namespace NHN.TraceStrike.Tests
             Assert.IsNotEmpty(PatternValidation.Errors(attack, id => patterns[id]));
         }
         [Test]
+        public void PaintedArenaMatchesPreviewAndLimitsEventTargets()
+        {
+            var arena = new BossArenaDefinition { size = 7, shape = ArenaShape.Custom };
+            var a = new Vector2Int(8, 8);
+            var b = new Vector2Int(9, 8);
+            arena.floorCells.AddRange(new[] { a, b, new Vector2Int(9, 9), a, Vector2Int.zero });
+            var model = new TrailFieldModel();
+            arena.ApplyTo(model);
+            var preview = new Editor.PatternPreviewHost(arena);
+            CollectionAssert.AreEquivalent(new[] { a, b, new Vector2Int(9, 9) }, model.Walkable);
+            CollectionAssert.AreEquivalent(model.Walkable, preview.Walkable);
+            var selection = new TileSelection { shape = TileShape.All };
+            using (var context = new PatternContext(preview, preview.CenterCell))
+                CollectionAssert.AreEquivalent(model.Walkable, selection.Resolve(context));
+            for (int round = 0; round < 20; round++)
+            {
+                model.BeginRound(round);
+                Assert.AreNotEqual(model.Start, model.End);
+                Assert.IsTrue(model.IsWalkable(model.Player));
+            }
+            model.TryPlacePlayer(a);
+            Assert.AreEqual(MoveResult.Blocked, model.TryMove(Vector2Int.left));
+            Assert.AreEqual(MoveResult.Moved, model.TryMove(Vector2Int.right));
+        }
+
+        [Test]
+        public void PaintedArenaRejectsIslandsAndRetainsCroppedCells()
+        {
+            var arena = new BossArenaDefinition { size = 17, shape = ArenaShape.Custom };
+            arena.floorCells.AddRange(new[] { new Vector2Int(8, 8), new Vector2Int(10, 8) });
+            var errors = new List<string>();
+            arena.ValidateMap(errors);
+            Assert.IsNotEmpty(errors);
+            arena.floorCells.Add(new Vector2Int(9, 8));
+            errors.Clear();
+            arena.ValidateMap(errors);
+            Assert.IsEmpty(errors);
+            arena.floorCells.Add(new Vector2Int(16, 8));
+            arena.size = 5;
+            Assert.IsFalse(arena.GetCells().Contains(new Vector2Int(16, 8)));
+            arena.size = 17;
+            Assert.IsTrue(arena.GetCells().Contains(new Vector2Int(16, 8)));
+        }
+
+        [Test]
+        public void PresetToPaintedArenaPreservesPlayableCells()
+        {
+            var arena = new BossArenaDefinition { shape = ArenaShape.Triangle, size = 11 };
+            var before = arena.GetCells();
+            arena.MakeCustom();
+            Assert.AreEqual(ArenaShape.Custom, arena.shape);
+            CollectionAssert.AreEquivalent(before, arena.GetCells());
+        }
+
+        [Test]
+        public void FastBrushDragIncludesIntermediateCellsInBothDirections()
+        {
+            var forward = new List<Vector2Int>();
+            var backward = new List<Vector2Int>();
+            Editor.TilePaintStroke.RasterLine(new Vector2Int(2, 8), new Vector2Int(14, 8), forward.Add);
+            Editor.TilePaintStroke.RasterLine(new Vector2Int(14, 8), new Vector2Int(2, 8), backward.Add);
+            Assert.AreEqual(13, forward.Count);
+            backward.Reverse();
+            CollectionAssert.AreEqual(forward, backward);
+            var diagonal = new List<Vector2Int>();
+            Editor.TilePaintStroke.RasterLine(new Vector2Int(1, 1), new Vector2Int(15, 10), diagonal.Add);
+            Assert.AreEqual(new Vector2Int(15, 10), diagonal[diagonal.Count - 1]);
+            for (int i = 1; i < diagonal.Count; i++)
+            {
+                Assert.LessOrEqual(Mathf.Abs(diagonal[i].x - diagonal[i - 1].x), 1);
+                Assert.LessOrEqual(Mathf.Abs(diagonal[i].y - diagonal[i - 1].y), 1);
+            }
+        }
+
+        [Test]
         public void CompactArenaStaysWithinRequestedSquare()
         {
             foreach (int size in new[] { 5, 7, 9, 11, 13, 15, 17 }) for (int shape = 0; shape < 3; shape++)

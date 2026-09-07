@@ -8,13 +8,16 @@ public static class PatternHeadlessTests
     public static int Main()
     {
         var assembly = Assembly.LoadFrom("Assembly-CSharp-Editor.dll");
-        var type = assembly.GetType("NHN.TraceStrike.Tests.PatternRunnerTests", true);
         int passed = 0, failed = 0;
+        foreach (string fixture in new[] { "PatternRunnerTests", "ArenaConfigurationTests" })
+        {
+        var type = assembly.GetType("NHN.TraceStrike.Tests." + fixture, true);
         foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
         {
             if (method.GetParameters().Length != 0) continue;
             try { method.Invoke(Activator.CreateInstance(type), null); Console.WriteLine("PASS " + method.Name); passed++; }
             catch (Exception e) { Console.WriteLine("FAIL " + method.Name + ": " + (e.InnerException ?? e)); failed++; }
+        }
         }
         Console.WriteLine("Passed=" + passed + " Failed=" + failed);
         return failed == 0 ? 0 : 1;
