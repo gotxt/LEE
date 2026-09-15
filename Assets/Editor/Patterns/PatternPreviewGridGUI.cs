@@ -8,6 +8,24 @@ namespace NHN.TraceStrike.Editor
     {
         private static readonly Color GridColor = new Color(0.22f, 0.23f, 0.26f, 1f);
 
+        // Returns true while Unity is preparing the atlas-safe asset preview.
+        public static bool DrawTileSprite(Rect rect, Sprite sprite)
+        {
+            if (sprite == null) return false;
+            if (sprite.packed)
+            {
+                Texture2D preview = AssetPreview.GetAssetPreview(sprite);
+                if (preview != null) GUI.DrawTexture(rect, preview, ScaleMode.StretchToFill, true);
+                return preview == null && AssetPreview.IsLoadingAssetPreview(sprite.GetEntityId());
+            }
+            // textureRect selects the correct sub-sprite from a sliced spritesheet.
+            Rect source = sprite.textureRect;
+            Texture2D texture = sprite.texture;
+            GUI.DrawTextureWithTexCoords(rect, texture, new Rect(source.x / texture.width,
+                source.y / texture.height, source.width / texture.width, source.height / texture.height), true);
+            return false;
+        }
+
         public static Rect CellRect(Rect board, int x, int y, int gridSize)
         {
             int row = gridSize - 1 - y;

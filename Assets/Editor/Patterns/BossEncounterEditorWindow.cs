@@ -29,6 +29,7 @@ namespace NHN.TraceStrike.Editor
         private bool resizingClip;
         private float dragStartX, originalStart, originalDuration;
         private PatternPreviewHost previewHost;
+        private BossRenderStage bossPreview;
         private PatternRunner previewRunner;
         private string previewError;
         private Vector2Int previewPlayer = new Vector2Int(8, 8);
@@ -374,6 +375,7 @@ namespace NHN.TraceStrike.Editor
                 EditorGUILayout.PropertyField(serialized.FindProperty("id"));
                 EditorGUILayout.PropertyField(serialized.FindProperty("displayName"));
                 EditorGUILayout.PropertyField(serialized.FindProperty("portrait"));
+                EditorGUILayout.PropertyField(serialized.FindProperty("bossVisual"), true);
             }
             else if (node == NodeKind.Arena)
                 EditorGUILayout.PropertyField(serialized.FindProperty("arena"), true);
@@ -433,6 +435,8 @@ namespace NHN.TraceStrike.Editor
             }
             EditorGUILayout.Space(4f);
             foreach (string error in encounter.ValidateDefinition().Distinct())
+                EditorGUILayout.HelpBox(error, MessageType.Error);
+            foreach (string error in BossAnimatorOptions.Validate(encounter))
                 EditorGUILayout.HelpBox(error, MessageType.Error);
             EditorGUILayout.EndScrollView();
         }
@@ -505,6 +509,7 @@ namespace NHN.TraceStrike.Editor
                 ? new HashSet<Vector2Int>(selectedTiles.cells) : null;
             float edge = Mathf.Max(Mathf.Min(300f, position.width * 0.32f), encounter.arena.GridSize * 14f);
             Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
+            var tileSprites = encounter.arena.BuildTileSpriteLookup();
             for (int y = 0; y < encounter.arena.GridSize; y++)
             for (int x = 0; x < encounter.arena.GridSize; x++)
             {
@@ -513,15 +518,22 @@ namespace NHN.TraceStrike.Editor
                     board, x, y, encounter.arena.GridSize);
                 Color color = previewHost != null && previewHost.Walkable.Contains(cell)
                     ? new Color(0.27f, 0.3f, 0.35f) : new Color(0.12f, 0.13f, 0.15f);
+                EditorGUI.DrawRect(rect, color);
+                if (previewHost != null && previewHost.Walkable.Contains(cell) &&
+                    PatternPreviewGridGUI.DrawTileSprite(rect, encounter.arena.ResolveTileSprite(cell, tileSprites))) Repaint();
                 if (previewHost != null)
                     foreach (var mark in previewHost.marks.Values)
-                        if (mark.Item1.Contains(cell)) color = Color.Lerp(color, mark.Item2, mark.Item2.a);
+                        if (mark.Item1.Contains(cell)) EditorGUI.DrawRect(rect, mark.Item2);
                 if (paintedCells != null && paintedCells.Contains(cell - PaintOrigin(selectedTiles)))
-                    color = Color.Lerp(color, Color.green, 0.55f);
-                EditorGUI.DrawRect(rect, color);
+                    EditorGUI.DrawRect(rect, new Color(0f, 1f, 0f, 0.55f));
                 if (cell == previewPlayer) GUI.Label(rect, "P", EditorStyles.whiteMiniLabel);
             }
             PatternPreviewGridGUI.DrawLines(board, encounter.arena.GridSize);
+            if (bossPreview != null && Event.current.type == EventType.Repaint)
+            {
+                bossPreview.Render();
+                GUI.DrawTexture(board, bossPreview.Texture, ScaleMode.StretchToFill, true);
+            }
             HandleEventPainting(board, selectedTiles);
             EditorGUILayout.LabelField("클릭·드래그: 칠하기 · 우클릭/Shift: 지우기 · 플레이어 이동: 위치 도구",
                 EditorStyles.wordWrappedMiniLabel);
@@ -572,6 +584,7 @@ namespace NHN.TraceStrike.Editor
 
         private static string EventCategory(Type type)
         {
+            if (typeof(BossEvent).IsAssignableFrom(type)) return "Boss";
             if (type == typeof(WarningEvent) || type == typeof(DamageEvent) ||
                 type == typeof(HazardEvent) || type == typeof(ObstacleEvent)) return "Tiles";
             if (type == typeof(VfxEvent) || type == typeof(SfxEvent) ||
@@ -788,6 +801,11 @@ namespace NHN.TraceStrike.Editor
             try
             {
                 previewHost = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
+                if (encounter.bossVisual?.prefab != null)
+                {
+                    bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true);
+                    previewHost.boss = bossPreview.Presentation;
+                }
                 previewRunner = new PatternRunner(pattern, new PatternContext(previewHost,
                     previewHost.CenterCell, 0, encounter.FindPattern));
                 previewRunner.Advance(0f);
@@ -795,6 +813,7 @@ namespace NHN.TraceStrike.Editor
                 while (remaining > 0f && !previewRunner.IsComplete)
                 {
                     float step = Mathf.Min(1f / 60f, remaining);
+                    bossPreview?.Presentation.Advance(step);
                     previewRunner.Advance(step);
                     remaining -= step;
                 }
@@ -811,6 +830,8 @@ namespace NHN.TraceStrike.Editor
             try { previewRunner?.Dispose(); }
             catch { }
             previewRunner = null;
+            bossPreview?.Dispose();
+            bossPreview = null;
             previewHost = null;
         }
 
@@ -824,7 +845,13 @@ namespace NHN.TraceStrike.Editor
             try
             {
                 if (previewRunner == null) RebuildPreview();
-                previewRunner?.Advance(delta);
+                while (delta > 0 && previewRunner != null && !previewRunner.IsComplete)
+                {
+                    float step = Mathf.Min(delta, 1f / 60f);
+                    bossPreview?.Presentation.Advance(step);
+                    previewRunner.Advance(step);
+                    delta -= step;
+                }
                 playhead = previewRunner != null ? previewRunner.Time : 0f;
             }
             catch (Exception error)

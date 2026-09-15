@@ -7,8 +7,13 @@ using UnityEngine;
 namespace NHN.TraceStrike.Editor
 {
     // A sandbox model: editor scrubbing never changes the scene or plays prefabs/audio.
-    public sealed class PatternPreviewHost : IPatternHost
+    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost
     {
+        public BossPresentation boss;
+        private BossPresentation Boss => boss ?? throw new InvalidOperationException("Select an encounter with a BossActor prefab to preview boss events.");
+        public IPatternLease BossAnimation(BossAnimationEvent action) => Boss.BossAnimation(action);
+        public IPatternLease BossVfx(BossVfxEvent action) => Boss.BossVfx(action);
+        public IPatternLease BossMotion(BossMotionEvent action, float duration) => Boss.BossMotion(action, duration);
         public Vector2Int player = new Vector2Int(8, 8);
         public readonly Dictionary<int, Tuple<HashSet<Vector2Int>, Color>> marks = new Dictionary<int, Tuple<HashSet<Vector2Int>, Color>>();
         public readonly List<string> log = new List<string>();

@@ -13,6 +13,8 @@ namespace NHN.TraceStrike.Editor
         private readonly TilePaintStroke eventStroke = new TilePaintStroke();
         [SerializeField] private int mapBrush, eventBrush;
         [SerializeField] private float mapZoom = 1f;
+        [SerializeField] private Sprite tileImageBrush;
+        [SerializeField] private bool showMapRegions = true;
         private Vector2 mapScroll, tilePreviewScroll;
         private Vector2Int strokeOrigin;
 
@@ -31,21 +33,44 @@ namespace NHN.TraceStrike.Editor
             serialized.Update();
             var arenaProperty = serialized.FindProperty("arena");
             EditorGUI.BeginChangeCheck();
+            using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.LabelField("맵 기본 이미지", EditorStyles.boldLabel);
+                EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("defaultTileSprite"),
+                    new GUIContent("기본 베이스 타일 이미지", "따로 칠하지 않은 모든 바닥 타일에 적용합니다. 개별 이미지가 있으면 개별 이미지가 우선합니다."));
+                EditorGUILayout.LabelField("칠하지 않은 바닥 → 베이스 이미지 · 따로 칠한 바닥 → 칠한 이미지\n베이스를 바꿔도 따로 칠한 이미지는 유지됩니다. 이미지 지우개로 지우면 현재 베이스로 돌아갑니다.",
+                    EditorStyles.wordWrappedMiniLabel);
+            }
             int size = EditorGUILayout.IntSlider("전장 크기", encounter.arena.size, 5, TrailFieldModel.MaxSize);
             EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("cameraZoom"));
             EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("playerSizeRatio"));
+            EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("tilePalette"), new GUIContent("타일 이미지 팔레트"), true);
             EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("overridePlayerStart"), new GUIContent("플레이어 시작 위치 고정"));
             if (arenaProperty.FindPropertyRelative("overridePlayerStart").boolValue)
                 EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("playerStart"), new GUIContent("시작 좌표"));
             EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("restrictStartCells"), new GUIContent("START 생성 영역 제한"));
             EditorGUILayout.PropertyField(arenaProperty.FindPropertyRelative("restrictEndCells"), new GUIContent("END 생성 영역 제한"));
+            EditorGUILayout.PropertyField(serialized.FindProperty("bossVisual"), new GUIContent("보스 외형 / 배치"), true);
             if (EditorGUI.EndChangeCheck())
             {
                 arenaProperty.FindPropertyRelative("size").intValue = size;
                 serialized.ApplyModifiedProperties();
+                // Keep the Arena view and the initial pattern preview aligned
+                // when the persisted encounter spawn is edited in the inspector.
+                previewPlayer = encounter.arena.overridePlayerStart
+                    ? encounter.arena.playerStart : encounter.arena.CenterCell;
                 Changed();
             }
-            mapBrush = GUILayout.Toolbar(mapBrush, new[] { "바닥 칠하기", "바닥 지우개", "플레이어 시작", "START 영역", "END 영역" });
+            int geometryBrush = GUILayout.Toolbar(mapBrush < 6 ? mapBrush : -1,
+                new[] { "바닥 칠하기", "바닥 지우개", "플레이어 시작", "START 영역", "END 영역", "보스 배치" });
+            if (geometryBrush >= 0) mapBrush = geometryBrush;
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Toggle(mapBrush == 6, "이미지 칠하기", EditorStyles.miniButton)) mapBrush = 6;
+                if (GUILayout.Toggle(mapBrush == 7, "이미지 지우개", EditorStyles.miniButton)) mapBrush = 7;
+                showMapRegions = GUILayout.Toggle(showMapRegions, "START/END 영역 표시");
+            }
+            if (mapBrush >= 6) DrawTileImagePalette();
             EditorGUILayout.HelpBox("P: 플레이어 시작 · 초록: START · 주황: END · 노랑: 겹친 영역\nSTART/END 도구로 칠하면 해당 제한이 켜집니다. 우클릭/Shift로 선택 영역만 지웁니다. 제한을 끄면 전체 바닥에서 생성합니다.", MessageType.None);
             using (new EditorGUILayout.HorizontalScope())
             {
@@ -54,11 +79,12 @@ namespace NHN.TraceStrike.Editor
                 if (GUILayout.Button("비우기", GUILayout.Width(70))) SetArenaCells(false);
                 mapZoom = EditorGUILayout.Slider("확대", mapZoom, 0.6f, 4f);
             }
-            EditorGUILayout.LabelField("현재 형태: " + encounter.arena.shape + " · 크기를 줄여 가려진 타일은 다시 확대하면 복원됩니다.", EditorStyles.miniLabel);
+            EditorGUILayout.LabelField("현재 형태: " + encounter.arena.shape + " · P 위치는 전투 시작과 에디터 미리보기에 적용됩니다.", EditorStyles.miniLabel);
             mapScroll = EditorGUILayout.BeginScrollView(mapScroll);
             float edge = Mathf.Max(408f, encounter.arena.GridSize * 16f) * mapZoom;
             Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
             HashSet<Vector2Int> cells = encounter.arena.GetCells();
+            var tileSprites = encounter.arena.BuildTileSpriteLookup();
             var starts = new HashSet<Vector2Int>(encounter.arena.startCells);
             var ends = new HashSet<Vector2Int>(encounter.arena.endCells);
             for (int y = 0; y < encounter.arena.GridSize; y++)
@@ -70,21 +96,40 @@ namespace NHN.TraceStrike.Editor
                     cells.Contains(cell) ? new Color(0.32f, 0.46f, 0.53f) : new Color(0.16f, 0.17f, 0.19f);
                 bool start = encounter.arena.restrictStartCells && starts.Contains(cell);
                 bool end = encounter.arena.restrictEndCells && ends.Contains(cell);
-                if (cells.Contains(cell) && (start || end))
-                    color = start && end ? new Color(0.8f, 0.72f, 0.22f) : start ? new Color(0.2f, 0.65f, 0.35f) : new Color(0.85f, 0.45f, 0.16f);
                 EditorGUI.DrawRect(rect, color);
+                if (cells.Contains(cell))
+                {
+                    if (PatternPreviewGridGUI.DrawTileSprite(rect, encounter.arena.ResolveTileSprite(cell, tileSprites))) Repaint();
+                    if (showMapRegions && (start || end))
+                        EditorGUI.DrawRect(rect, start && end ? new Color(0.8f, 0.72f, 0.22f, 0.5f) :
+                            start ? new Color(0.2f, 0.65f, 0.35f, 0.5f) : new Color(0.85f, 0.45f, 0.16f, 0.5f));
+                }
                 if (encounter.arena.overridePlayerStart && encounter.arena.playerStart == cell)
                     GUI.Label(rect, "P", EditorStyles.whiteBoldLabel);
+                if (encounter.bossVisual?.prefab != null && Vector2Int.RoundToInt(encounter.bossVisual.position) == cell)
+                    GUI.Label(rect, "B", EditorStyles.whiteBoldLabel);
             }
             PatternPreviewGridGUI.DrawLines(board, encounter.arena.GridSize);
-            mapStroke.Handle(board, encounter.arena.GridSize, mapBrush == 1,
+            mapStroke.Handle(board, encounter.arena.GridSize, mapBrush == 1 || mapBrush == 7,
                 () => {
                     BeginPaint("Paint arena configuration");
                     if (mapBrush <= 1) encounter.arena.MakeCustom();
                 },
                 (cell, erase) =>
                 {
+                    if (mapBrush == 5)
+                    {
+                        if (!erase) encounter.bossVisual.position = cell;
+                        return; // Boss placement is independent of walkable floor cells.
+                    }
                     if (!encounter.arena.ContainsBounds(cell)) return;
+                    if (mapBrush >= 6)
+                    {
+                        if (erase) encounter.arena.SetTileSprite(cell, null);
+                        else if (cells.Contains(cell) && tileImageBrush != null)
+                            encounter.arena.SetTileSprite(cell, tileImageBrush);
+                        return;
+                    }
                     if (mapBrush <= 1) SetCell(encounter.arena.floorCells, cell, erase);
                     else if (mapBrush == 2)
                     {
@@ -106,6 +151,31 @@ namespace NHN.TraceStrike.Editor
             var errors = new List<string>();
             encounter.arena.ValidateMap(errors);
             foreach (string error in errors) EditorGUILayout.HelpBox(error, MessageType.Error);
+        }
+
+        private void DrawTileImagePalette()
+        {
+            tileImageBrush = (Sprite)EditorGUILayout.ObjectField("칠할 이미지", tileImageBrush, typeof(Sprite), false);
+            var palette = encounter.arena.tilePalette;
+            if (palette != null)
+                for (int first = 0; first < palette.Count; first += 8)
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        for (int i = first; i < Mathf.Min(first + 8, palette.Count); i++)
+                        {
+                            Sprite sprite = palette[i];
+                            if (sprite == null) continue;
+                            Rect rect = GUILayoutUtility.GetRect(48, 48, GUILayout.ExpandWidth(false));
+                            if (GUI.Toggle(rect, tileImageBrush == sprite && mapBrush == 6,
+                                new GUIContent("", sprite.name), GUI.skin.button))
+                            { tileImageBrush = sprite; mapBrush = 6; }
+                            Rect imageRect = new Rect(rect.x + 4, rect.y + 4, rect.width - 8, rect.height - 8);
+                            if (PatternPreviewGridGUI.DrawTileSprite(imageRect, sprite)) Repaint();
+                        }
+                    }
+            EditorGUILayout.HelpBox("Sprite 이미지를 선택한 뒤 바닥을 클릭·드래그하세요. 이미지 지우개/우클릭/Shift는 기본 이미지로 복원합니다.\n이미지는 바닥 생성·삭제와 별개입니다. 팔레트 순서 변경이나 맵 크기 변경으로 칠한 이미지가 사라지지 않습니다.", MessageType.None);
+            if (mapBrush == 6 && tileImageBrush == null)
+                EditorGUILayout.HelpBox("칠할 이미지를 지정하거나 팔레트에서 선택하세요. 텍스처의 Texture Type은 Sprite (2D and UI)여야 합니다.", MessageType.Info);
         }
 
         private void ShowArenaPresets()

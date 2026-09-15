@@ -7,11 +7,23 @@ namespace NHN.TraceStrike.Patterns
     public enum ArenaShape { Rounded, Triangle, Star, Custom }
 
     [Serializable]
+    public sealed class ArenaTileImage
+    {
+        public Vector2Int cell;
+        public Sprite sprite;
+    }
+
+    [Serializable]
     public sealed class BossArenaDefinition
     {
         [Range(5, TrailFieldModel.MaxSize)] public int size = 17;
         public ArenaShape shape = ArenaShape.Rounded;
         [HideInInspector] public List<Vector2Int> floorCells = new List<Vector2Int>();
+        [Tooltip("Unassigned tiles use this sprite. None preserves the existing game tiles.")]
+        public Sprite defaultTileSprite;
+        [Tooltip("Brush palette only. Reordering or removing entries does not change painted tiles.")]
+        public List<Sprite> tilePalette = new List<Sprite>();
+        [HideInInspector] public List<ArenaTileImage> tileImages = new List<ArenaTileImage>();
         [Range(0.5f, 3f)] public float cameraZoom = 2.05f;
         [Range(0.25f, 1.5f)] public float playerSizeRatio = 0.78f;
 
@@ -25,6 +37,32 @@ namespace NHN.TraceStrike.Patterns
         public int GridSize => Math.Max(TrailFieldModel.Size, size);
         public Vector2Int CenterCell => new Vector2Int(GridSize / 2, GridSize / 2);
         public bool ContainsBounds(Vector2Int cell) => TrailFieldModel.ContainsFieldBounds(cell, size);
+
+        public void SetTileSprite(Vector2Int cell, Sprite sprite)
+        {
+            if (tileImages == null) tileImages = new List<ArenaTileImage>();
+            tileImages.RemoveAll(entry => entry == null || entry.cell == cell);
+            if (sprite != null) tileImages.Add(new ArenaTileImage { cell = cell, sprite = sprite });
+        }
+
+        // Build once per board refresh, not once per rendered tile. Store sprite
+        // references rather than palette indices so palette edits remain safe.
+        public Dictionary<Vector2Int, Sprite> BuildTileSpriteLookup()
+        {
+            var result = new Dictionary<Vector2Int, Sprite>();
+            if (tileImages != null)
+                foreach (var entry in tileImages)
+                    if (entry != null && entry.sprite != null && ContainsBounds(entry.cell))
+                        result[entry.cell] = entry.sprite;
+            return result;
+        }
+
+        public Sprite ResolveTileSprite(Vector2Int cell, IReadOnlyDictionary<Vector2Int, Sprite> lookup)
+        {
+            if (!ContainsBounds(cell)) return null;
+            return lookup != null && lookup.TryGetValue(cell, out var sprite) && sprite != null
+                ? sprite : defaultTileSprite;
+        }
 
         public void ApplyTo(TrailFieldModel model)
         {
@@ -106,6 +144,7 @@ namespace NHN.TraceStrike.Patterns
         public string id = "boss";
         public string displayName = "Boss";
         public Sprite portrait;
+        public BossVisualDefinition bossVisual = new BossVisualDefinition();
         public BossArenaDefinition arena = new BossArenaDefinition();
         [Tooltip("Reusable helper timelines owned by this encounter and callable from phase patterns.")]
         public List<EncounterPattern> libraryPatterns = new List<EncounterPattern>();
@@ -165,6 +204,9 @@ namespace NHN.TraceStrike.Patterns
                 arena.ValidateMap(errors);
             }
             if (phases == null || phases.Count == 0) errors.Add("Boss requires at least one phase.");
+            bossVisual?.Validate(errors, arena);
+            var inspected = new HashSet<IPatternTimeline>();
+            foreach (var pattern in AllPatterns()) ValidateBossEvents(pattern, inspected, errors);
 
             var ids = new HashSet<string>();
             foreach (EncounterPattern pattern in AllPatterns())
@@ -198,6 +240,18 @@ namespace NHN.TraceStrike.Patterns
                 }
             }
             return errors;
+        }
+
+        private void ValidateBossEvents(IPatternTimeline timeline, HashSet<IPatternTimeline> inspected, List<string> errors)
+        {
+            if (timeline == null || !inspected.Add(timeline)) return;
+            foreach (var clip in timeline.Clips)
+            {
+                if (clip == null || !clip.enabled) continue;
+                if (clip.action is BossEvent action) action.ValidateBoss(bossVisual, errors);
+                if (clip.action is CallPatternEvent shared) ValidateBossEvents(shared.pattern, inspected, errors);
+                if (clip.action is CallEncounterPatternEvent local) ValidateBossEvents(FindPattern(local.patternId), inspected, errors);
+            }
         }
 
         private static bool FinitePositive(float value) => value > 0f &&

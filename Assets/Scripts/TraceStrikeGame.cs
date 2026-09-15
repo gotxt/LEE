@@ -196,6 +196,7 @@ namespace NHN.TraceStrike
         private Sprite playerCharacterSprite;
         private Sprite floorTileSprite;
         private Sprite[] floorTileSprites;
+        private Dictionary<Vector2Int, Sprite> arenaTileSprites = new Dictionary<Vector2Int, Sprite>();
         private Sprite golemBaseTileSprite;
         private Sprite golemEdgeTileSprite;
 
@@ -330,6 +331,7 @@ namespace NHN.TraceStrike
         private void OnDestroy()
         {
             CancelTimeline();
+            DisposeBossVisual();
             if (titleBlindMaterial != null)
             {
                 Destroy(titleBlindMaterial);
@@ -633,6 +635,7 @@ namespace NHN.TraceStrike
             specialTiles.Clear();
             hubModel.Reset(hubModel.CurrentCharacter);
             ApplyEncounterArenaLayout();
+            ApplyFloorTileLayout();
             for (int y = 0; y < renderGridSize; y++)
             for (int x = 0; x < renderGridSize; x++)
             {
@@ -804,15 +807,17 @@ namespace NHN.TraceStrike
         private void PrepareTitleScreen()
         {
             StartStage(StartingBoss());
-            var center = model.CenterCell;
-            model.TryPlacePlayer(center);
+            // StartStage has already applied the encounter's configured spawn.
+            // The title scene used to replace it with the geometric centre,
+            // which made the Arena editor's player-start setting appear ignored.
+            var playerStart = model.Player;
             battleCameraInitialized = false;
             GenerateSpecialTiles();
-            specialTiles.Remove(center);
-            specialTiles.Remove(center + Vector2Int.up);
-            specialTiles.Remove(center + Vector2Int.right);
-            specialTiles.Remove(center + Vector2Int.down);
-            specialTiles.Remove(center + Vector2Int.left);
+            specialTiles.Remove(playerStart);
+            specialTiles.Remove(playerStart + Vector2Int.up);
+            specialTiles.Remove(playerStart + Vector2Int.right);
+            specialTiles.Remove(playerStart + Vector2Int.down);
+            specialTiles.Remove(playerStart + Vector2Int.left);
             RefreshBoard();
             ShowTitleScreen();
         }
@@ -1041,6 +1046,7 @@ namespace NHN.TraceStrike
             }
             tutorialVersion++;
             tutorialActive = true;
+            ApplyFloorTileLayout();
             tutorialTransitioning = false;
             tutorialStep = 0;
             tutorialPlayer = TutorialRules.Start;
@@ -1707,6 +1713,7 @@ namespace NHN.TraceStrike
             ApplyFloorTileLayout();
             model.SetBlockedCells(crystalCells);
             model.BeginRound(round, true, activeBoss.arena.overridePlayerStart ? (Vector2Int?)activeBoss.arena.playerStart : null);
+            BuildEncounterBossVisual();
             GenerateSpecialTiles();
             RefreshCrystalVisuals();
             SetWorldBossVisible(true);
@@ -1737,9 +1744,10 @@ namespace NHN.TraceStrike
 
         private void SetWorldBossVisible(bool visible)
         {
+            if (bossVisualImage != null) bossVisualImage.gameObject.SetActive(visible);
             if (arenaBossCore != null)
             {
-                arenaBossCore.gameObject.SetActive(visible);
+                arenaBossCore.gameObject.SetActive(visible && bossRenderStage == null);
             }
             if (arenaBossHealthRoot != null)
             {
@@ -3403,7 +3411,8 @@ namespace NHN.TraceStrike
                     if (model.IsTrail(cell)) color = Trail;
                     if (cell == model.Start) color = StartColor;
                     if (cell == model.End) color = EndColor;
-                    color.a = model.IsTrail(cell) ? 1f : StandardTileOpacity;
+                    float tileOpacity = GetArenaTileSprite(x, y) != null ? 1f : StandardTileOpacity;
+                    color.a = model.IsTrail(cell) ? 1f : tileOpacity;
                     if (warnedCells.Contains(cell))
                     {
                         if (hazardFiring)
@@ -3423,7 +3432,7 @@ namespace NHN.TraceStrike
                     }
                     if (crystalWarned)
                     {
-                        color.a = StandardTileOpacity;
+                        color.a = tileOpacity;
                     }
                     if (crystalFiring)
                     {
@@ -3510,6 +3519,7 @@ namespace NHN.TraceStrike
 
         private void LateUpdate()
         {
+            UpdateBossVisual();
             AnimateBattleCamera();
             UpdateObjectiveArrow();
             UpdateMinimapPlayer();
@@ -3841,6 +3851,8 @@ namespace NHN.TraceStrike
 
         private Sprite GetFloorTileSprite(int x, int y)
         {
+            Sprite configured = GetArenaTileSprite(x, y);
+            if (configured != null) return configured;
             if (floorTileSprites == null || floorTileSprites.Length == 0)
             {
                 return floorTileSprite;
@@ -3848,6 +3860,12 @@ namespace NHN.TraceStrike
 
             int index = floorTileVariantIndices[x, y] % floorTileSprites.Length;
             return floorTileSprites[index];
+        }
+
+        private Sprite GetArenaTileSprite(int x, int y)
+        {
+            if (hubActive || tutorialActive || activeBoss?.arena == null) return null;
+            return activeBoss.arena.ResolveTileSprite(new Vector2Int(x, y), arenaTileSprites);
         }
 
         private void RandomizeFloorTileLayout()
@@ -3887,6 +3905,8 @@ namespace NHN.TraceStrike
 
         private void ApplyFloorTileLayout()
         {
+            arenaTileSprites = !hubActive && !tutorialActive && activeBoss?.arena != null
+                ? activeBoss.arena.BuildTileSpriteLookup() : new Dictionary<Vector2Int, Sprite>();
             for (int y = 0; y < renderGridSize; y++)
             {
                 for (int x = 0; x < renderGridSize; x++)
@@ -3897,9 +3917,8 @@ namespace NHN.TraceStrike
                     }
                     if (mainTileDepthImages[x, y] != null)
                     {
-                        mainTileDepthImages[x, y].sprite = golemEdgeTileSprite != null
-                            ? golemEdgeTileSprite
-                            : GetFloorTileSprite(x, y);
+                        mainTileDepthImages[x, y].sprite = GetArenaTileSprite(x, y) ??
+                            (golemEdgeTileSprite != null ? golemEdgeTileSprite : GetFloorTileSprite(x, y));
                     }
                 }
             }
@@ -3967,6 +3986,9 @@ namespace NHN.TraceStrike
 
         private Color GetFloorColor(int x, int y)
         {
+            if (GetArenaTileSprite(x, y) != null)
+                return CombatBalanceRules.IsCenterDamageCell(new Vector2Int(x, y), BoardGridSize)
+                    ? CenterDamageTileTint : Color.white;
             if (floorTileSprite != null)
             {
                 Color textureTint = CombatBalanceRules.IsCenterDamageCell(

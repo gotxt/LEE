@@ -304,6 +304,8 @@ namespace NHN.TraceStrike
         private readonly Dictionary<Transform, Vector3> motionBases = new Dictionary<Transform, Vector3>();
         IPatternLease IPatternHost.Motion(string key, Vector2Int target)
         {
+            if (key == "$boss" && bossRenderStage != null)
+                throw new InvalidOperationException("Use BossMotionEvent for the prefab boss. Legacy $boss movement targets the old UI portrait.");
             Transform obj = key == "$boss" ? arenaBossCore : timelineObjects.TryGetValue(key, out var found) ? found : null;
             if (obj == null) { Debug.LogWarning("Missing pattern movement target: " + key); return new Lease(() => { }); }
             if (!motions.TryGetValue(obj, out var list))
