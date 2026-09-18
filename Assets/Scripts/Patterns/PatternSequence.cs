@@ -62,6 +62,11 @@ namespace NHN.TraceStrike.Patterns
         [Min(0)] public float start;
         [Min(0)] public float duration = 1;
         [SerializeReference] public PatternEvent action;
+        // Authoring-only ownership for sounds/camera cues in the simple attack UI.
+        // Runtime execution still uses the existing event timeline unchanged.
+        [HideInInspector] public string attackGroupKey;
+        [HideInInspector] public bool attackAtImpact;
+        [HideInInspector] public string attackName;
     }
 
     // Add a serializable subclass to extend both the runtime and editor menu.

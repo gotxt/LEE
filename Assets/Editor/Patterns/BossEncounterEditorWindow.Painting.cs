@@ -225,8 +225,8 @@ namespace NHN.TraceStrike.Editor
             }
             if (tiles.shape != TileShape.Cells)
             {
-                EditorGUILayout.HelpBox("현재 영역은 " + tiles.shape + "입니다. 타일 편집으로 변환하면 현재 기준 위치의 영역을 고정해 칠할 수 있습니다.", MessageType.None);
-                if (GUILayout.Button("현재 영역을 타일 편집으로 변환"))
+                EditorGUILayout.HelpBox("현재는 모양으로 영역을 지정하고 있습니다. 직접 칠하기로 전환하면 현재 모양을 유지한 채 타일을 추가하거나 지울 수 있습니다.", MessageType.None);
+                if (GUILayout.Button("현재 모양을 유지하고 직접 칠하기"))
                 {
                     BeginPaint("Convert event area to cells");
                     var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
@@ -236,7 +236,7 @@ namespace NHN.TraceStrike.Editor
                     Changed();
                 }
             }
-            else if (GUILayout.Button("선택 이벤트 영역 비우기"))
+            else if (GUILayout.Button(attackEditorMode == 0 ? "선택 공격 영역 비우기" : "선택 이벤트 영역 비우기"))
             {
                 BeginPaint("Clear event tiles");
                 tiles.cells.Clear();

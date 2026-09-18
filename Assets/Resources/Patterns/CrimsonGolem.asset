@@ -17,7 +17,7 @@ MonoBehaviour:
   portrait: {fileID: 0}
   bossVisual:
     prefab: {fileID: 0}
-    position: {x: 8, y: 8}
+    position: {x: 19, y: 8}
     size: 1
     animationLayer: 0
     idleState: 
@@ -1784,18 +1784,27 @@ MonoBehaviour:
       duration: 0.65
       action:
         rid: 1
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
     - enabled: 1
       label: Target hit
       start: 0.65
       duration: 0.2
       action:
         rid: 2
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
     - enabled: 1
       label: SFX
       start: 0.65
       duration: 0.2
       action:
         rid: 3
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
   - id: example-devices
     name: Example_Devices
     enabled: 1
@@ -1807,36 +1816,54 @@ MonoBehaviour:
       duration: 0
       action:
         rid: 4
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
     - enabled: 1
       label: Wall
       start: 1
       duration: 2
       action:
         rid: 5
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
     - enabled: 1
       label: Hazard
       start: 2
       duration: 0
       action:
         rid: 6
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
     - enabled: 1
       label: Remove hazard
       start: 4
       duration: 0
       action:
         rid: 7
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
     - enabled: 1
       label: Remove device
       start: 5
       duration: 0
       action:
         rid: 8
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
     - enabled: 1
       label: Signal
       start: 5.5
       duration: 0
       action:
         rid: 9
+      attackGroupKey: 
+      attackAtImpact: 0
+      attackName: 
   phases:
   - name: PHASE 1
     health: 150
@@ -1857,77 +1884,126 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 10
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 2
         action:
           rid: 11
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 2
         duration: 0.3
         action:
           rid: 12
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 2
         duration: 0.3
         action:
           rid: 13
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 2
         duration: 0.3
         action:
           rid: 14
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 2
         duration: 0.3
         action:
           rid: 15
-    - id: p1-cross-1
-      name: P1_Cross_1
-      enabled: 1
-      minimumDuration: 2.3
-      clips:
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning
-        start: 0
+        start: 2.55
         duration: 2
         action:
-          rid: 16
-      - enabled: 1
-        label: Warning SFX
-        start: 0
-        duration: 2
-        action:
-          rid: 17
+          rid: 5560175741650337870
+        attackGroupKey: attack_020f4cb4ef184521ba5682cee5125056
+        attackAtImpact: 0
+        attackName: "\uACF5\uACA9 \uBCF5\uC0AC"
       - enabled: 1
         label: Damage
-        start: 2
+        start: 4.55
         duration: 0.3
         action:
-          rid: 18
-      - enabled: 1
-        label: Impact SFX
-        start: 2
-        duration: 0.3
-        action:
-          rid: 19
+          rid: 5560175741650337871
+        attackGroupKey: attack_020f4cb4ef184521ba5682cee5125056
+        attackAtImpact: 1
+        attackName: 
       - enabled: 1
         label: Impact VFX
-        start: 2
+        start: 4.55
         duration: 0.3
         action:
-          rid: 20
+          rid: 5560175741650337872
+        attackGroupKey: attack_020f4cb4ef184521ba5682cee5125056
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: Warning SFX
+        start: 2.55
+        duration: 2
+        action:
+          rid: 5560175741650337873
+        attackGroupKey: attack_020f4cb4ef184521ba5682cee5125056
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: Impact SFX
+        start: 4.55
+        duration: 0.3
+        action:
+          rid: 5560175741650337874
+        attackGroupKey: attack_020f4cb4ef184521ba5682cee5125056
+        attackAtImpact: 1
+        attackName: 
       - enabled: 1
         label: Camera
-        start: 2
+        start: 4.55
         duration: 0.3
         action:
-          rid: 21
+          rid: 5560175741650337875
+        attackGroupKey: attack_020f4cb4ef184521ba5682cee5125056
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uACBD\uACE0"
+        start: 5.1000004
+        duration: 1
+        action:
+          rid: 5560175741650337876
+        attackGroupKey: attack_a7605c4fd3a1473fb851392ef5ca7601
+        attackAtImpact: 0
+        attackName: "3\uCC28 \uACF5\uACA9"
+      - enabled: 1
+        label: "\uD0C0\uACA9"
+        start: 6.1000004
+        duration: 0.3
+        action:
+          rid: 5560175741650337877
+        attackGroupKey: attack_a7605c4fd3a1473fb851392ef5ca7601
+        attackAtImpact: 1
+        attackName: 
     - id: p1-diagonal-0
       name: P1_Diagonal_0
       enabled: 1
@@ -1939,36 +2015,54 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 22
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 2
         action:
           rid: 23
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 2
         duration: 0.3
         action:
           rid: 24
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 2
         duration: 0.3
         action:
           rid: 25
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 2
         duration: 0.3
         action:
           rid: 26
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 2
         duration: 0.3
         action:
           rid: 27
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p1-diagonal-1
       name: P1_Diagonal_1
       enabled: 1
@@ -1980,36 +2074,54 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 28
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 2
         action:
           rid: 29
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 2
         duration: 0.3
         action:
           rid: 30
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 2
         duration: 0.3
         action:
           rid: 31
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 2
         duration: 0.3
         action:
           rid: 32
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 2
         duration: 0.3
         action:
           rid: 33
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p1-diamond-0
       name: P1_Diamond_0
       enabled: 1
@@ -2021,36 +2133,54 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 34
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 2
         action:
           rid: 35
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 2
         duration: 0.3
         action:
           rid: 36
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 2
         duration: 0.3
         action:
           rid: 37
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 2
         duration: 0.3
         action:
           rid: 38
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 2
         duration: 0.3
         action:
           rid: 39
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p1-diamond-1
       name: P1_Diamond_1
       enabled: 1
@@ -2062,39 +2192,57 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 40
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 2
         action:
           rid: 41
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 2
         duration: 0.3
         action:
           rid: 42
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 2
         duration: 0.3
         action:
           rid: 43
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 2
         duration: 0.3
         action:
           rid: 44
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 2
         duration: 0.3
         action:
           rid: 45
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     backgroundEnabled: 0
     background:
-      id: phase-1-background
+      id: 082aa40bdcaa4fa389d71300e18faaa2
       name: Background
       enabled: 1
       minimumDuration: 1
@@ -2119,42 +2267,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 46
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 47
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 48
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 49
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 50
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 51
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 52
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-combined-1
       name: P2_Combined_1
       enabled: 1
@@ -2166,42 +2335,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 53
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 54
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 55
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 56
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 57
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 58
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 59
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-cross-0
       name: P2_Cross_0
       enabled: 1
@@ -2213,42 +2403,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 60
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 61
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 62
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 63
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 64
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 65
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 66
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-cross-1
       name: P2_Cross_1
       enabled: 1
@@ -2260,42 +2471,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 67
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 68
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 69
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 70
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 71
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 72
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 73
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-diagonal-0
       name: P2_Diagonal_0
       enabled: 1
@@ -2307,42 +2539,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 74
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 75
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 76
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 77
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 78
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 79
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 80
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-diagonal-1
       name: P2_Diagonal_1
       enabled: 1
@@ -2354,42 +2607,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 81
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 82
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 83
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 84
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 85
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 86
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 87
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-diamond-0
       name: P2_Diamond_0
       enabled: 1
@@ -2401,42 +2675,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 88
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 89
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 90
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 91
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 92
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 93
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 94
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-diamond-1
       name: P2_Diamond_1
       enabled: 1
@@ -2448,42 +2743,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 95
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 96
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 97
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 98
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 99
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 100
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 101
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-horizontal-0
       name: P2_Horizontal_0
       enabled: 1
@@ -2495,42 +2811,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 102
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 103
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 104
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 105
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 106
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 107
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 108
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-horizontal-1
       name: P2_Horizontal_1
       enabled: 1
@@ -2542,42 +2879,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 109
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 110
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 111
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 112
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 113
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 114
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 115
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-vertical-0
       name: P2_Vertical_0
       enabled: 1
@@ -2589,42 +2947,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 116
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 117
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 118
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 119
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 120
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 121
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 122
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     - id: p2-vertical-1
       name: P2_Vertical_1
       enabled: 1
@@ -2636,42 +3015,63 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 123
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Warning SFX
         start: 0
         duration: 1
         action:
           rid: 124
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Damage
         start: 1
         duration: 0.3
         action:
           rid: 125
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact SFX
         start: 1
         duration: 0.3
         action:
           rid: 126
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Impact VFX
         start: 1
         duration: 0.3
         action:
           rid: 127
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Camera
         start: 1
         duration: 0.3
         action:
           rid: 128
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
       - enabled: 1
         label: Targeted subpattern
         start: 0.15
         duration: 0.85
         action:
           rid: 129
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
     backgroundEnabled: 0
     background:
       id: phase-2-background
@@ -2772,12 +3172,63 @@ MonoBehaviour:
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
         tiles:
-          shape: 2
+          shape: 0
           anchor: 0
           offset: {x: 0, y: 0}
           radius: 5
           cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -7, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -5}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: 0, y: -9}
+          - {x: 0, y: -8}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
           - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -3}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -13}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -15}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
           snapshotKey: glyph
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
@@ -2790,12 +3241,59 @@ MonoBehaviour:
       type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
         tiles:
-          shape: 2
+          shape: 0
           anchor: 0
           offset: {x: 0, y: 0}
           radius: 5
           cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -7, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -5}
+          - {x: 0, y: -7}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
           - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -3}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -13}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -15}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
           snapshotKey: glyph
           ensureEscape: 1
         escapeGrace: 0.18
@@ -2812,72 +3310,65 @@ MonoBehaviour:
         sprite: {fileID: 0}
         color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
         tiles:
-          shape: 2
+          shape: 0
           anchor: 0
           offset: {x: 0, y: 0}
           radius: 5
           cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -7, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -5}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: 0, y: -8}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
           - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -3}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -13}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -15}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
           snapshotKey: glyph
           ensureEscape: 1
     - rid: 15
-      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        offset: {x: 0, y: 0}
-        shake: 12
-    - rid: 16
-      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 2
-          anchor: 0
-          offset: {x: 0, y: 0}
-          radius: 5
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: glyph
-          ensureEscape: 1
-        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
-    - rid: 17
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
-        volume: 0.7
-    - rid: 18
-      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 2
-          anchor: 0
-          offset: {x: 0, y: 0}
-          radius: 5
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: glyph
-          ensureEscape: 1
-        escapeGrace: 0.18
-        reason: Cross
-    - rid: 19
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
-        volume: 0.7
-    - rid: 20
-      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 0}
-        sprite: {fileID: 0}
-        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
-        tiles:
-          shape: 2
-          anchor: 0
-          offset: {x: 0, y: 0}
-          radius: 5
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: glyph
-          ensureEscape: 1
-    - rid: 21
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
         offset: {x: 0, y: 0}
@@ -3866,3 +4357,328 @@ MonoBehaviour:
         patternId: targeted
         originOffset: {x: 0, y: 0}
         anchorToPlayer: 1
+    - rid: 5560175741650337870
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -7, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -5}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: 0, y: -9}
+          - {x: 0, y: -8}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -3}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -13}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -15}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
+          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 5560175741650337871
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -7, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -5}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: 0, y: -9}
+          - {x: 0, y: -8}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -3}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -13}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -15}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
+          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Cross
+    - rid: 5560175741650337872
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -7, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -5}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: 0, y: -9}
+          - {x: 0, y: -8}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -3}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -13}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -15}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
+          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
+          ensureEscape: 1
+    - rid: 5560175741650337873
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 5560175741650337874
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 5560175741650337875
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 5560175741650337876
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 16, y: 9}
+          - {x: 18, y: 14}
+          - {x: 24, y: 11}
+          - {x: 23, y: 11}
+          - {x: 22, y: 11}
+          - {x: 21, y: 11}
+          - {x: 20, y: 12}
+          - {x: 19, y: 12}
+          - {x: 18, y: 12}
+          - {x: 17, y: 12}
+          - {x: 16, y: 12}
+          - {x: 15, y: 12}
+          - {x: 14, y: 12}
+          - {x: 13, y: 12}
+          - {x: 12, y: 12}
+          - {x: 11, y: 11}
+          - {x: 10, y: 11}
+          - {x: 10, y: 10}
+          - {x: 10, y: 9}
+          - {x: 10, y: 8}
+          - {x: 9, y: 8}
+          - {x: 9, y: 7}
+          - {x: 9, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 27, y: 14}
+          - {x: 28, y: 13}
+          - {x: 28, y: 12}
+          - {x: 28, y: 11}
+          snapshotKey: attack_a7605c4fd3a1473fb851392ef5ca7601
+          ensureEscape: 0
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 5560175741650337877
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 16, y: 9}
+          - {x: 18, y: 14}
+          - {x: 24, y: 11}
+          - {x: 23, y: 11}
+          - {x: 22, y: 11}
+          - {x: 21, y: 11}
+          - {x: 20, y: 12}
+          - {x: 19, y: 12}
+          - {x: 18, y: 12}
+          - {x: 17, y: 12}
+          - {x: 16, y: 12}
+          - {x: 15, y: 12}
+          - {x: 14, y: 12}
+          - {x: 13, y: 12}
+          - {x: 12, y: 12}
+          - {x: 11, y: 11}
+          - {x: 10, y: 11}
+          - {x: 10, y: 10}
+          - {x: 10, y: 9}
+          - {x: 10, y: 8}
+          - {x: 9, y: 8}
+          - {x: 9, y: 7}
+          - {x: 9, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 27, y: 14}
+          - {x: 28, y: 13}
+          - {x: 28, y: 12}
+          - {x: 28, y: 11}
+          snapshotKey: attack_a7605c4fd3a1473fb851392ef5ca7601
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "\uACF5\uACA9"

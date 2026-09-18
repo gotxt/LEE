@@ -101,7 +101,7 @@ namespace NHN.TraceStrike.Editor
             DrawToolbar();
             if (encounter == null)
             {
-                EditorGUILayout.HelpBox("Create or select a Boss Encounter Definition. One asset owns the arena, phases, and every boss pattern.", MessageType.Info);
+                EditorGUILayout.HelpBox("상단에서 보스 데이터를 선택하거나 ‘새 보스’를 누르세요. 보스 하나의 전장과 모든 공격 패턴을 한곳에서 편집합니다.", MessageType.Info);
                 return;
             }
 
@@ -117,9 +117,16 @@ namespace NHN.TraceStrike.Editor
                     }
                     else
                     {
-                        if (pattern != null) DrawTimeline(pattern);
-                        else DrawOverview();
-                        DrawLowerPanel(pattern);
+                        if (pattern != null)
+                            attackEditorMode = GUILayout.Toolbar(attackEditorMode,
+                                new[] { "간편 공격 설계", "고급 이벤트 편집" });
+                        if (pattern != null && attackEditorMode == 0) DrawAttackDesigner(pattern);
+                        else
+                        {
+                            if (pattern != null) DrawTimeline(pattern);
+                            else DrawOverview();
+                            DrawLowerPanel(pattern);
+                        }
                     }
                 }
             }
@@ -132,15 +139,15 @@ namespace NHN.TraceStrike.Editor
                 BossEncounterDefinition next = (BossEncounterDefinition)EditorGUILayout.ObjectField(
                     encounter, typeof(BossEncounterDefinition), false, GUILayout.Width(310f));
                 if (next != encounter) SelectEncounter(next);
-                if (GUILayout.Button("New Encounter", EditorStyles.toolbarButton)) CreateEncounter();
+                if (GUILayout.Button("새 보스", EditorStyles.toolbarButton)) CreateEncounter();
                 EditorGUI.BeginDisabledGroup(encounter == null);
-                if (GUILayout.Button("Save", EditorStyles.toolbarButton)) AssetDatabase.SaveAssets();
-                if (GUILayout.Button("Locate", EditorStyles.toolbarButton)) EditorGUIUtility.PingObject(encounter);
+                if (GUILayout.Button("저장", EditorStyles.toolbarButton)) AssetDatabase.SaveAssets();
+                if (GUILayout.Button("에셋 찾기", EditorStyles.toolbarButton)) EditorGUIUtility.PingObject(encounter);
                 EditorGUI.EndDisabledGroup();
                 GUILayout.FlexibleSpace();
-                GUILayout.Label("Zoom");
+                GUILayout.Label("시간축 확대");
                 pixelsPerSecond = GUILayout.HorizontalSlider(pixelsPerSecond, 35f, 250f, GUILayout.Width(100f));
-                GUILayout.Label("Snap");
+                GUILayout.Label("시간 간격");
                 snap = Mathf.Max(0f, EditorGUILayout.FloatField(snap, GUILayout.Width(50f)));
             }
         }
@@ -165,12 +172,12 @@ namespace NHN.TraceStrike.Editor
                 EditorGUILayout.LabelField("BOSS ENCOUNTER", EditorStyles.boldLabel);
                 treeScroll = EditorGUILayout.BeginScrollView(treeScroll);
                 TreeButton("● " + encounter.displayName, NodeKind.Encounter, -1, -1);
-                TreeButton("  ▣ Arena", NodeKind.Arena, -1, -1);
+                TreeButton("  ▣ 전장 (Arena)", NodeKind.Arena, -1, -1);
 
                 EditorGUILayout.Space(5f);
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField("HELPER PATTERNS", EditorStyles.miniBoldLabel);
+                    EditorGUILayout.LabelField("재사용 패턴 (고급)", EditorStyles.miniBoldLabel);
                     if (GUILayout.Button("+", EditorStyles.miniButton, GUILayout.Width(24f)))
                         AddPattern(true, -1);
                 }
@@ -187,12 +194,12 @@ namespace NHN.TraceStrike.Editor
                         if (GUILayout.Toggle(node == NodeKind.Phase && phaseIndex == p,
                                 "▼ " + phase.name, EditorStyles.miniButtonLeft))
                             SelectNode(NodeKind.Phase, p, -1);
-                        if (GUILayout.Button("+", EditorStyles.miniButtonRight, GUILayout.Width(24f)))
+                        if (GUILayout.Button(new GUIContent("+", "이 페이즈에 새 패턴 추가"), EditorStyles.miniButtonRight, GUILayout.Width(24f)))
                             AddPattern(false, p);
                     }
                     if (phase.backgroundEnabled && phase.background != null)
                         TreeButton("  ↻ " + phase.background.name, NodeKind.Background, p, -1);
-                    else if (GUILayout.Button("  + Background timeline", EditorStyles.miniButton))
+                    else if (GUILayout.Button("  + 반복 배경 패턴 (고급)", EditorStyles.miniButton))
                     {
                         Record("Add background timeline");
                         phase.backgroundEnabled = true;
@@ -204,7 +211,7 @@ namespace NHN.TraceStrike.Editor
                         TreeButton("  ▶ " + phase.patterns[i].name, NodeKind.Pattern, p, i);
                 }
                 EditorGUILayout.Space(8f);
-                if (GUILayout.Button("+ Add Phase")) AddPhase();
+                if (GUILayout.Button("+ 보스 페이즈 추가")) AddPhase();
                 EditorGUILayout.EndScrollView();
             }
         }
@@ -474,20 +481,20 @@ namespace NHN.TraceStrike.Editor
             }
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (GUILayout.Button(playing ? "Pause" : "Play"))
+                if (GUILayout.Button(playing ? "일시정지" : "미리보기 재생"))
                 {
                     playing = !playing;
                     if (playhead >= pattern.Duration) { playhead = 0f; RebuildPreview(); }
                     lastPreviewTime = EditorApplication.timeSinceStartup;
                 }
-                if (GUILayout.Button("Reset")) { playing = false; playhead = 0f; RebuildPreview(); }
+                if (GUILayout.Button("처음으로")) { playing = false; playhead = 0f; RebuildPreview(); }
                 EditorGUI.BeginDisabledGroup(!EditorApplication.isPlaying);
-                if (GUILayout.Button("Run in Game"))
+                if (GUILayout.Button("게임에서 실행"))
                 {
                     TraceStrikeGame game = FindAnyObjectByType<TraceStrikeGame>();
                     if (game != null) game.PreviewPattern(encounter, pattern);
                 }
-                if (GUILayout.Button("Stop"))
+                if (GUILayout.Button("게임 실행 중지"))
                 {
                     TraceStrikeGame game = FindAnyObjectByType<TraceStrikeGame>();
                     if (game != null && game.IsPatternPreview) game.StopPatternPreview();
@@ -505,8 +512,7 @@ namespace NHN.TraceStrike.Editor
                 " · " + encounter.arena.shape, EditorStyles.miniBoldLabel);
             TileSelection selectedTiles = SelectedTiles(pattern);
             DrawEventPaintTools(selectedTiles);
-            var paintedCells = selectedTiles != null && selectedTiles.shape == TileShape.Cells
-                ? new HashSet<Vector2Int>(selectedTiles.cells) : null;
+            var paintedCells = SelectionOverlay(selectedTiles);
             float edge = Mathf.Max(Mathf.Min(300f, position.width * 0.32f), encounter.arena.GridSize * 14f);
             Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
             var tileSprites = encounter.arena.BuildTileSpriteLookup();
@@ -524,7 +530,7 @@ namespace NHN.TraceStrike.Editor
                 if (previewHost != null)
                     foreach (var mark in previewHost.marks.Values)
                         if (mark.Item1.Contains(cell)) EditorGUI.DrawRect(rect, mark.Item2);
-                if (paintedCells != null && paintedCells.Contains(cell - PaintOrigin(selectedTiles)))
+                if (showSelectedAttackArea && paintedCells != null && paintedCells.Contains(cell))
                     EditorGUI.DrawRect(rect, new Color(0f, 1f, 0f, 0.55f));
                 if (cell == previewPlayer) GUI.Label(rect, "P", EditorStyles.whiteMiniLabel);
             }
@@ -731,18 +737,21 @@ namespace NHN.TraceStrike.Editor
                 enabled = source.enabled,
                 minimumDuration = source.minimumDuration
             };
-            foreach (PatternClip clip in source.clips) copy.clips.Add(CloneClip(clip));
+            foreach (PatternClip clip in source.clips) copy.clips.Add(CloneClip(clip, true));
             return copy;
         }
 
-        private static PatternClip CloneClip(PatternClip source)
+        private static PatternClip CloneClip(PatternClip source, bool preserveAttackGroup = false)
         {
             return new PatternClip
             {
                 enabled = source.enabled,
-                label = source.label + " Copy",
+                label = source.label + (preserveAttackGroup ? "" : " Copy"),
                 start = source.start,
                 duration = source.duration,
+                attackGroupKey = preserveAttackGroup ? source.attackGroupKey : null,
+                attackAtImpact = source.attackAtImpact,
+                attackName = source.attackName,
                 action = source.action == null ? null : (PatternEvent)JsonUtility.FromJson(
                     JsonUtility.ToJson(source.action), source.action.GetType())
             };
@@ -755,6 +764,7 @@ namespace NHN.TraceStrike.Editor
 
         private void Changed(bool rebuildPreview = true)
         {
+            SynchronizeSimpleAttack();
             EditorUtility.SetDirty(encounter);
             serialized = new SerializedObject(encounter);
             if (rebuildPreview) RebuildPreview();
