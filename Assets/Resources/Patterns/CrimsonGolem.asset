@@ -2591,7 +2591,7 @@ MonoBehaviour:
           rid: 1017
         attackGroupKey: rockfall_b
         attackAtImpact: 1
-        attackName:
+        attackName: 
     backgroundEnabled: 0
     background:
       id: 082aa40bdcaa4fa389d71300e18faaa2
@@ -4714,505 +4714,6 @@ MonoBehaviour:
         patternId: targeted
         originOffset: {x: 0, y: 0}
         anchorToPlayer: 1
-    - rid: 5560175741650337870
-      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 0
-          anchor: 0
-          offset: {x: 0, y: 0}
-          radius: 5
-          cells:
-          - {x: -4, y: 0}
-          - {x: -5, y: 0}
-          - {x: -6, y: 0}
-          - {x: -8, y: 0}
-          - {x: 0, y: -4}
-          - {x: 0, y: -6}
-          - {x: 0, y: -7}
-          - {x: -9, y: 0}
-          - {x: -10, y: 0}
-          - {x: -11, y: 0}
-          - {x: -12, y: 0}
-          - {x: -13, y: 0}
-          - {x: -14, y: 0}
-          - {x: -15, y: 0}
-          - {x: -16, y: 0}
-          - {x: -3, y: 0}
-          - {x: -2, y: 0}
-          - {x: -1, y: 0}
-          - {x: 0, y: 0}
-          - {x: 1, y: 0}
-          - {x: 2, y: 0}
-          - {x: 3, y: 0}
-          - {x: 4, y: 0}
-          - {x: 5, y: 0}
-          - {x: 6, y: 0}
-          - {x: 7, y: 0}
-          - {x: 8, y: 0}
-          - {x: 9, y: 0}
-          - {x: 11, y: 0}
-          - {x: 12, y: 0}
-          - {x: 13, y: 0}
-          - {x: 14, y: 0}
-          - {x: 0, y: -18}
-          - {x: 0, y: -1}
-          - {x: 15, y: 0}
-          - {x: 16, y: 0}
-          - {x: 0, y: -2}
-          - {x: 0, y: -11}
-          - {x: 0, y: -12}
-          - {x: 0, y: -10}
-          - {x: 0, y: -14}
-          - {x: 0, y: -16}
-          - {x: 0, y: -17}
-          - {x: 0, y: -19}
-          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
-          ensureEscape: 1
-        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
-    - rid: 5560175741650337871
-      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 0
-          anchor: 0
-          offset: {x: 0, y: 0}
-          radius: 5
-          cells:
-          - {x: -4, y: 0}
-          - {x: -5, y: 0}
-          - {x: -6, y: 0}
-          - {x: -8, y: 0}
-          - {x: 0, y: -4}
-          - {x: 0, y: -6}
-          - {x: 0, y: -7}
-          - {x: -9, y: 0}
-          - {x: -10, y: 0}
-          - {x: -11, y: 0}
-          - {x: -12, y: 0}
-          - {x: -13, y: 0}
-          - {x: -14, y: 0}
-          - {x: -15, y: 0}
-          - {x: -16, y: 0}
-          - {x: -3, y: 0}
-          - {x: -2, y: 0}
-          - {x: -1, y: 0}
-          - {x: 0, y: 0}
-          - {x: 1, y: 0}
-          - {x: 2, y: 0}
-          - {x: 3, y: 0}
-          - {x: 4, y: 0}
-          - {x: 5, y: 0}
-          - {x: 6, y: 0}
-          - {x: 7, y: 0}
-          - {x: 8, y: 0}
-          - {x: 9, y: 0}
-          - {x: 11, y: 0}
-          - {x: 12, y: 0}
-          - {x: 13, y: 0}
-          - {x: 14, y: 0}
-          - {x: 0, y: -18}
-          - {x: 0, y: -1}
-          - {x: 15, y: 0}
-          - {x: 16, y: 0}
-          - {x: 0, y: -2}
-          - {x: 0, y: -11}
-          - {x: 0, y: -12}
-          - {x: 0, y: -10}
-          - {x: 0, y: -14}
-          - {x: 0, y: -16}
-          - {x: 0, y: -17}
-          - {x: 0, y: -19}
-          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
-          ensureEscape: 1
-        escapeGrace: 0.18
-        reason: Cross
-    - rid: 5560175741650337872
-      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 0}
-        sprite: {fileID: 0}
-        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
-        tiles:
-          shape: 0
-          anchor: 0
-          offset: {x: 0, y: 0}
-          radius: 5
-          cells:
-          - {x: -4, y: 0}
-          - {x: -5, y: 0}
-          - {x: -6, y: 0}
-          - {x: -8, y: 0}
-          - {x: 0, y: -4}
-          - {x: 0, y: -6}
-          - {x: 0, y: -7}
-          - {x: -9, y: 0}
-          - {x: -10, y: 0}
-          - {x: -11, y: 0}
-          - {x: -12, y: 0}
-          - {x: -13, y: 0}
-          - {x: -14, y: 0}
-          - {x: -15, y: 0}
-          - {x: -16, y: 0}
-          - {x: -3, y: 0}
-          - {x: -2, y: 0}
-          - {x: -1, y: 0}
-          - {x: 0, y: 0}
-          - {x: 1, y: 0}
-          - {x: 2, y: 0}
-          - {x: 3, y: 0}
-          - {x: 4, y: 0}
-          - {x: 5, y: 0}
-          - {x: 6, y: 0}
-          - {x: 7, y: 0}
-          - {x: 8, y: 0}
-          - {x: 9, y: 0}
-          - {x: 11, y: 0}
-          - {x: 12, y: 0}
-          - {x: 13, y: 0}
-          - {x: 14, y: 0}
-          - {x: 0, y: -18}
-          - {x: 0, y: -1}
-          - {x: 15, y: 0}
-          - {x: 16, y: 0}
-          - {x: 0, y: -2}
-          - {x: 0, y: -11}
-          - {x: 0, y: -12}
-          - {x: 0, y: -10}
-          - {x: 0, y: -14}
-          - {x: 0, y: -16}
-          - {x: 0, y: -17}
-          - {x: 0, y: -19}
-          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
-          ensureEscape: 1
-    - rid: 5560175741650337873
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
-        volume: 0.7
-    - rid: 5560175741650337874
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
-        volume: 0.7
-    - rid: 5560175741650337875
-      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        offset: {x: 0, y: 0}
-        shake: 12
-    - rid: 5560175741650337876
-      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 0
-          anchor: 3
-          offset: {x: 0, y: 0}
-          radius: 2
-          cells:
-          - {x: 16, y: 9}
-          - {x: 18, y: 14}
-          - {x: 24, y: 11}
-          - {x: 23, y: 11}
-          - {x: 22, y: 11}
-          - {x: 21, y: 11}
-          - {x: 20, y: 12}
-          - {x: 19, y: 12}
-          - {x: 18, y: 12}
-          - {x: 17, y: 12}
-          - {x: 16, y: 12}
-          - {x: 15, y: 12}
-          - {x: 14, y: 12}
-          - {x: 13, y: 12}
-          - {x: 12, y: 12}
-          - {x: 11, y: 11}
-          - {x: 10, y: 11}
-          - {x: 10, y: 10}
-          - {x: 10, y: 9}
-          - {x: 10, y: 8}
-          - {x: 9, y: 8}
-          - {x: 9, y: 7}
-          - {x: 9, y: 6}
-          - {x: 10, y: 6}
-          - {x: 11, y: 5}
-          - {x: 12, y: 5}
-          - {x: 13, y: 5}
-          - {x: 14, y: 5}
-          - {x: 15, y: 5}
-          - {x: 16, y: 5}
-          - {x: 17, y: 5}
-          - {x: 18, y: 5}
-          - {x: 19, y: 5}
-          - {x: 20, y: 5}
-          - {x: 21, y: 5}
-          - {x: 22, y: 5}
-          - {x: 23, y: 5}
-          - {x: 24, y: 5}
-          - {x: 25, y: 5}
-          - {x: 26, y: 5}
-          - {x: 27, y: 5}
-          - {x: 27, y: 14}
-          - {x: 28, y: 13}
-          - {x: 28, y: 12}
-          - {x: 28, y: 11}
-          snapshotKey: attack_a7605c4fd3a1473fb851392ef5ca7601
-          ensureEscape: 0
-        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
-    - rid: 5560175741650337877
-      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 0
-          anchor: 3
-          offset: {x: 0, y: 0}
-          radius: 2
-          cells:
-          - {x: 16, y: 9}
-          - {x: 18, y: 14}
-          - {x: 24, y: 11}
-          - {x: 23, y: 11}
-          - {x: 22, y: 11}
-          - {x: 21, y: 11}
-          - {x: 20, y: 12}
-          - {x: 19, y: 12}
-          - {x: 18, y: 12}
-          - {x: 17, y: 12}
-          - {x: 16, y: 12}
-          - {x: 15, y: 12}
-          - {x: 14, y: 12}
-          - {x: 13, y: 12}
-          - {x: 12, y: 12}
-          - {x: 11, y: 11}
-          - {x: 10, y: 11}
-          - {x: 10, y: 10}
-          - {x: 10, y: 9}
-          - {x: 10, y: 8}
-          - {x: 9, y: 8}
-          - {x: 9, y: 7}
-          - {x: 9, y: 6}
-          - {x: 10, y: 6}
-          - {x: 11, y: 5}
-          - {x: 12, y: 5}
-          - {x: 13, y: 5}
-          - {x: 14, y: 5}
-          - {x: 15, y: 5}
-          - {x: 16, y: 5}
-          - {x: 17, y: 5}
-          - {x: 18, y: 5}
-          - {x: 19, y: 5}
-          - {x: 20, y: 5}
-          - {x: 21, y: 5}
-          - {x: 22, y: 5}
-          - {x: 23, y: 5}
-          - {x: 24, y: 5}
-          - {x: 25, y: 5}
-          - {x: 26, y: 5}
-          - {x: 27, y: 5}
-          - {x: 27, y: 14}
-          - {x: 28, y: 13}
-          - {x: 28, y: 12}
-          - {x: 28, y: 11}
-          snapshotKey: attack_a7605c4fd3a1473fb851392ef5ca7601
-          ensureEscape: 0
-        escapeGrace: 0.18
-        reason: "\uACF5\uACA9"
-    - rid: 5560175782844694528
-      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        state: Base Layer.FistWindup
-        transition: 0
-        speed: 1
-    - rid: 5560175782844694529
-      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        state: Base Layer.FistContact
-        transition: 0
-        speed: 1
-    - rid: 5560175782844694530
-      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 2
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_1
-          ensureEscape: 0
-        color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
-    - rid: 5560175782844694531
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
-        volume: 0.35
-    - rid: 5560175782844694532
-      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 2
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_1
-          ensureEscape: 0
-        escapeGrace: 0.18
-        reason: "1 \xB7 \uBD89\uC740 \uB0B4\uCE21 \uD30C\uB3D9"
-    - rid: 5560175782844694533
-      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 4108739889981512538, guid: be8c67243922fa54aa5a3bd812eec3dd, type: 3}
-        sprite: {fileID: 0}
-        color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 2
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_1
-          ensureEscape: 0
-    - rid: 5560175782844694534
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
-        volume: 0.65
-    - rid: 5560175782844694535
-      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        offset: {x: 0, y: 0}
-        shake: 9
-    - rid: 5560175782844694536
-      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 3
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_2
-          ensureEscape: 0
-        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.95}
-    - rid: 5560175782844694537
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
-        volume: 0.35
-    - rid: 5560175782844694538
-      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 3
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_2
-          ensureEscape: 0
-        escapeGrace: 0.18
-        reason: "2 \xB7 \uC790\uC8FC\uC0C9 \uC911\uAC04 \uD30C\uB3D9"
-    - rid: 5560175782844694539
-      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 5920576768218912452, guid: 3af803520efc8984f90bcd2fe56f44f4, type: 3}
-        sprite: {fileID: 0}
-        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.95}
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 3
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_2
-          ensureEscape: 0
-    - rid: 5560175782844694540
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
-        volume: 0.54999995
-    - rid: 5560175782844694541
-      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        offset: {x: 0, y: 0}
-        shake: 7
-    - rid: 5560175782844694542
-      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 4
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_3
-          ensureEscape: 0
-        color: {r: 0.52, g: 0.2, b: 1, a: 0.95}
-    - rid: 5560175782844694543
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
-        volume: 0.35
-    - rid: 5560175782844694544
-      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 4
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_3
-          ensureEscape: 0
-        escapeGrace: 0.18
-        reason: "3 \xB7 \uBCF4\uB77C\uC0C9 \uC678\uCE21 \uD30C\uB3D9"
-    - rid: 5560175782844694545
-      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 6851860645864629351, guid: 410236a6d67577d4b9199381a79f999e, type: 3}
-        sprite: {fileID: 0}
-        color: {r: 0.52, g: 0.2, b: 1, a: 0.95}
-        tiles:
-          shape: 3
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 4
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_ripple_3
-          ensureEscape: 0
-    - rid: 5560175782844694546
-      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
-        volume: 0.45
-    - rid: 5560175782844694547
-      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        offset: {x: 0, y: 0}
-        shake: 5
-    - rid: 5560175782844694548
-      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
-      data:
-        prefab: {fileID: 100000, guid: ad75267d72b74bdc9aef895000000023, type: 3}
-        sprite: {fileID: 0}
-        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
-        tiles:
-          shape: 0
-          anchor: 3
-          offset: {x: 19, y: 8}
-          radius: 2
-          cells:
-          - {x: 0, y: 0}
-          snapshotKey: fist_contact_visual
-          ensureEscape: 0
     - rid: 1000
       type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
@@ -8361,3 +7862,502 @@ MonoBehaviour:
       data:
         offset: {x: 0, y: 0}
         shake: 7
+    - rid: 5560175741650337870
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
+          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
+          ensureEscape: 1
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 5560175741650337871
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
+          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
+          ensureEscape: 1
+        escapeGrace: 0.18
+        reason: Cross
+    - rid: 5560175741650337872
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 0}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 0
+          offset: {x: 0, y: 0}
+          radius: 5
+          cells:
+          - {x: -4, y: 0}
+          - {x: -5, y: 0}
+          - {x: -6, y: 0}
+          - {x: -8, y: 0}
+          - {x: 0, y: -4}
+          - {x: 0, y: -6}
+          - {x: 0, y: -7}
+          - {x: -9, y: 0}
+          - {x: -10, y: 0}
+          - {x: -11, y: 0}
+          - {x: -12, y: 0}
+          - {x: -13, y: 0}
+          - {x: -14, y: 0}
+          - {x: -15, y: 0}
+          - {x: -16, y: 0}
+          - {x: -3, y: 0}
+          - {x: -2, y: 0}
+          - {x: -1, y: 0}
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 2, y: 0}
+          - {x: 3, y: 0}
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 11, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 14, y: 0}
+          - {x: 0, y: -18}
+          - {x: 0, y: -1}
+          - {x: 15, y: 0}
+          - {x: 16, y: 0}
+          - {x: 0, y: -2}
+          - {x: 0, y: -11}
+          - {x: 0, y: -12}
+          - {x: 0, y: -10}
+          - {x: 0, y: -14}
+          - {x: 0, y: -16}
+          - {x: 0, y: -17}
+          - {x: 0, y: -19}
+          snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
+          ensureEscape: 1
+    - rid: 5560175741650337873
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.7
+    - rid: 5560175741650337874
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.7
+    - rid: 5560175741650337875
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 12
+    - rid: 5560175741650337876
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 16, y: 9}
+          - {x: 18, y: 14}
+          - {x: 24, y: 11}
+          - {x: 23, y: 11}
+          - {x: 22, y: 11}
+          - {x: 21, y: 11}
+          - {x: 20, y: 12}
+          - {x: 19, y: 12}
+          - {x: 18, y: 12}
+          - {x: 17, y: 12}
+          - {x: 16, y: 12}
+          - {x: 15, y: 12}
+          - {x: 14, y: 12}
+          - {x: 13, y: 12}
+          - {x: 12, y: 12}
+          - {x: 11, y: 11}
+          - {x: 10, y: 11}
+          - {x: 10, y: 10}
+          - {x: 10, y: 9}
+          - {x: 10, y: 8}
+          - {x: 9, y: 8}
+          - {x: 9, y: 7}
+          - {x: 9, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 27, y: 14}
+          - {x: 28, y: 13}
+          - {x: 28, y: 12}
+          - {x: 28, y: 11}
+          snapshotKey: attack_a7605c4fd3a1473fb851392ef5ca7601
+          ensureEscape: 0
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 5560175741650337877
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 16, y: 9}
+          - {x: 18, y: 14}
+          - {x: 24, y: 11}
+          - {x: 23, y: 11}
+          - {x: 22, y: 11}
+          - {x: 21, y: 11}
+          - {x: 20, y: 12}
+          - {x: 19, y: 12}
+          - {x: 18, y: 12}
+          - {x: 17, y: 12}
+          - {x: 16, y: 12}
+          - {x: 15, y: 12}
+          - {x: 14, y: 12}
+          - {x: 13, y: 12}
+          - {x: 12, y: 12}
+          - {x: 11, y: 11}
+          - {x: 10, y: 11}
+          - {x: 10, y: 10}
+          - {x: 10, y: 9}
+          - {x: 10, y: 8}
+          - {x: 9, y: 8}
+          - {x: 9, y: 7}
+          - {x: 9, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 27, y: 14}
+          - {x: 28, y: 13}
+          - {x: 28, y: 12}
+          - {x: 28, y: 11}
+          snapshotKey: attack_a7605c4fd3a1473fb851392ef5ca7601
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "\uACF5\uACA9"
+    - rid: 5560175782844694528
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistWindup
+        transition: 0
+        speed: 1
+    - rid: 5560175782844694529
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistContact
+        transition: 0
+        speed: 1
+    - rid: 5560175782844694530
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_1
+          ensureEscape: 0
+        color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
+    - rid: 5560175782844694531
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 5560175782844694532
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_1
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "1 \xB7 \uBD89\uC740 \uB0B4\uCE21 \uD30C\uB3D9"
+    - rid: 5560175782844694533
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 4108739889981512538, guid: be8c67243922fa54aa5a3bd812eec3dd, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_1
+          ensureEscape: 0
+    - rid: 5560175782844694534
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.65
+    - rid: 5560175782844694535
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 9
+    - rid: 5560175782844694536
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 3
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_2
+          ensureEscape: 0
+        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.95}
+    - rid: 5560175782844694537
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 5560175782844694538
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 3
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_2
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "2 \xB7 \uC790\uC8FC\uC0C9 \uC911\uAC04 \uD30C\uB3D9"
+    - rid: 5560175782844694539
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 5920576768218912452, guid: 3af803520efc8984f90bcd2fe56f44f4, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.95}
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 3
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_2
+          ensureEscape: 0
+    - rid: 5560175782844694540
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.54999995
+    - rid: 5560175782844694541
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 7
+    - rid: 5560175782844694542
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 4
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_3
+          ensureEscape: 0
+        color: {r: 0.52, g: 0.2, b: 1, a: 0.95}
+    - rid: 5560175782844694543
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 5560175782844694544
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 4
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_3
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "3 \xB7 \uBCF4\uB77C\uC0C9 \uC678\uCE21 \uD30C\uB3D9"
+    - rid: 5560175782844694545
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 6851860645864629351, guid: 410236a6d67577d4b9199381a79f999e, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 0.52, g: 0.2, b: 1, a: 0.95}
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 4
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_3
+          ensureEscape: 0
+    - rid: 5560175782844694546
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.45
+    - rid: 5560175782844694547
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 5
+    - rid: 5560175782844694548
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 100000, guid: ad75267d72b74bdc9aef895000000023, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_contact_visual
+          ensureEscape: 0

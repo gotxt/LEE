@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using NHN.TraceStrike.Patterns;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,30 @@ namespace NHN.TraceStrike.Editor
     internal static class PatternPreviewGridGUI
     {
         private static readonly Color GridColor = new Color(0.22f, 0.23f, 0.26f, 1f);
+
+        // Visual centre of the configured bounds, not the floor's centroid or
+        // the runtime anchor tile. Small maps retain the legacy 17-cell canvas.
+        public static RectInt ArenaCenterCells(BossArenaDefinition arena)
+        {
+            int offset = (arena.GridSize - arena.size) / 2;
+            int first = offset + (arena.size - 1) / 2;
+            int width = arena.size % 2 == 0 ? 2 : 1;
+            return new RectInt(first, first, width, width);
+        }
+
+        public static void DrawCenterHighlight(Rect rect)
+        {
+            EditorGUI.DrawRect(rect, new Color(0.2f, 0.85f, 1f, 0.3f));
+            float inset = 1f / EditorGUIUtility.pixelsPerPoint;
+            rect = Rect.MinMaxRect(rect.xMin + inset, rect.yMin + inset,
+                rect.xMax - inset, rect.yMax - inset);
+            float thickness = Mathf.Min(2f, rect.width * 0.2f, rect.height * 0.2f);
+            var outline = new Color(0.35f, 0.9f, 1f, 1f);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, thickness), outline);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), outline);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, thickness, rect.height), outline);
+            EditorGUI.DrawRect(new Rect(rect.xMax - thickness, rect.y, thickness, rect.height), outline);
+        }
 
         // Returns true while Unity is preparing the atlas-safe asset preview.
         public static bool DrawTileSprite(Rect rect, Sprite sprite)

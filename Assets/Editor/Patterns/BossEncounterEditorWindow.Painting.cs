@@ -15,6 +15,7 @@ namespace NHN.TraceStrike.Editor
         [SerializeField] private float mapZoom = 1f;
         [SerializeField] private Sprite tileImageBrush;
         [SerializeField] private bool showMapRegions = true;
+        [SerializeField] private bool showArenaCenter;
         private Vector2 mapScroll, tilePreviewScroll;
         private Vector2Int strokeOrigin;
 
@@ -61,6 +62,21 @@ namespace NHN.TraceStrike.Editor
                     ? encounter.arena.playerStart : encounter.arena.CenterCell;
                 Changed();
             }
+            RectInt centerCells = PatternPreviewGridGUI.ArenaCenterCells(encounter.arena);
+            // Display-only control: keep it outside the encounter change check.
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                showArenaCenter = GUILayout.Toggle(showArenaCenter,
+                    new GUIContent("전장 중앙 표시", "전장 크기의 정중앙을 강조합니다. 홀수: 1칸 · 짝수: 2×2의 4칸. 다시 누르면 표시를 끕니다."),
+                    GUI.skin.button, GUILayout.Width(130));
+                if (showArenaCenter)
+                    EditorGUILayout.LabelField(centerCells.width == 1
+                        ? $"중앙 1칸: ({centerCells.xMin}, {centerCells.yMin})"
+                        : $"중앙 2×2 · 4칸: X {centerCells.xMin}~{centerCells.xMax - 1}, Y {centerCells.yMin}~{centerCells.yMax - 1}",
+                        EditorStyles.miniLabel);
+                else
+                    EditorGUILayout.LabelField("홀수: 가운데 1칸 · 짝수: 가운데 4칸 · 빈칸에도 표시", EditorStyles.miniLabel);
+            }
             int geometryBrush = GUILayout.Toolbar(mapBrush < 6 ? mapBrush : -1,
                 new[] { "바닥 칠하기", "바닥 지우개", "플레이어 시작", "START 영역", "END 영역", "보스 배치" });
             if (geometryBrush >= 0) mapBrush = geometryBrush;
@@ -104,6 +120,8 @@ namespace NHN.TraceStrike.Editor
                         EditorGUI.DrawRect(rect, start && end ? new Color(0.8f, 0.72f, 0.22f, 0.5f) :
                             start ? new Color(0.2f, 0.65f, 0.35f, 0.5f) : new Color(0.85f, 0.45f, 0.16f, 0.5f));
                 }
+                if (showArenaCenter && centerCells.Contains(cell))
+                    PatternPreviewGridGUI.DrawCenterHighlight(rect);
                 if (encounter.arena.overridePlayerStart && encounter.arena.playerStart == cell)
                     GUI.Label(rect, "P", EditorStyles.whiteBoldLabel);
                 if (encounter.bossVisual?.prefab != null && Vector2Int.RoundToInt(encounter.bossVisual.position) == cell)
