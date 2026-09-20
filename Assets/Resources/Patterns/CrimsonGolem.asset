@@ -19422,12 +19422,12 @@ MonoBehaviour:
           overrideTiming: 0
           initialDelay: 5
           interval: 5
-        - cell: {x: 10, y: 27}
+        - cell: {x: 6, y: 13}
           patternId: 
           overrideTiming: 0
           initialDelay: 5
           interval: 5
-        - cell: {x: 6, y: 13}
+        - cell: {x: 10, y: 27}
           patternId: 
           overrideTiming: 0
           initialDelay: 5
