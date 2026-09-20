@@ -79,7 +79,7 @@ namespace NHN.TraceStrike.Editor
                 {
                     tilePreviewScroll = EditorGUILayout.BeginScrollView(tilePreviewScroll);
                     EditorGUILayout.LabelField(selected == null ? "패턴 미리보기" : "편집 중: " + selected.Name, EditorStyles.boldLabel);
-                    showSelectedAttackArea = EditorGUILayout.ToggleLeft("선택한 공격 영역을 초록색으로 표시", showSelectedAttackArea);
+            showSelectedAttackArea = EditorGUILayout.ToggleLeft("선택한 공격 영역을 초록색 테두리로 표시", showSelectedAttackArea);
                     DrawPreview(pattern);
                     EditorGUILayout.EndScrollView();
                 }
