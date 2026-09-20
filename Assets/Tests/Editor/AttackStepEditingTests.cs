@@ -26,13 +26,14 @@ namespace NHN.TraceStrike.Tests
             var pattern = existing.AllPatterns().First(p => p.name == "P1_Cross_0");
             string before = EditorJsonUtility.ToJson(existing);
             var steps = AttackStepEditing.Find(pattern);
-            Assert.AreEqual(1, steps.Count);
-            Assert.AreEqual(6, steps[0].Members.Count);
-            Assert.AreEqual("glyph", steps[0].Key);
+            // The shipped encounter can be edited by designers; extra attacks
+            // must not invalidate this test of the original legacy group.
+            var legacy = steps.Single(s => s.Key == "glyph");
+            Assert.AreEqual(6, legacy.Members.Count);
             Assert.AreEqual(before, EditorJsonUtility.ToJson(existing), "Opening simple mode must not migrate or dirty assets");
             var cloned = (EncounterPattern)typeof(BossEncounterEditorWindow)
                 .GetMethod("ClonePattern", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { pattern });
-            Assert.AreEqual(6, AttackStepEditing.Find(cloned).Single().Members.Count,
+            Assert.AreEqual(6, AttackStepEditing.Find(cloned).Single(s => s.Key == "glyph").Members.Count,
                 "Duplicating the whole legacy pattern must also preserve cue connections");
         }
 

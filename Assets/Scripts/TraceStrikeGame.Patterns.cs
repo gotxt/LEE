@@ -203,20 +203,32 @@ namespace NHN.TraceStrike
         {
             int id = ++leaseId;
             timelineDanger[id] = new HashSet<Vector2Int>(cells);
-            var objects = new List<Image>();
+            var objects = new List<RectTransform>();
+            var warnings = new List<TileWarningVisual>();
             foreach (var cell in cells)
             {
-                var rect = CreateRect(warning ? "Timeline Warning" : "Timeline Damage", mainGrid);
+                RectTransform rect;
+                if (warning)
+                {
+                    var view = CreateTileWarning(mainGrid, "Timeline Warning");
+                    view.SetColor(color);
+                    view.SetProgress(0.15f);
+                    warnings.Add(view);
+                    rect = (RectTransform)view.transform;
+                }
+                else
+                {
+                    rect = CreateRect("Timeline Damage", mainGrid);
+                    var graphic = rect.gameObject.AddComponent<Image>();
+                    graphic.color = color;
+                    graphic.raycastTarget = false;
+                }
                 rect.anchoredPosition = GridPosition(cell.x, cell.y, mainCellSize);
                 rect.sizeDelta = Vector2.one * (mainCellSize - 10);
-                var graphic = rect.gameObject.AddComponent<Image>();
-                graphic.color = color;
-                graphic.raycastTarget = false;
-                objects.Add(graphic);
+                objects.Add(rect);
             }
-            return new Lease(() => { timelineDanger.Remove(id); foreach (var graphic in objects) if (graphic != null) Destroy(graphic.gameObject); },
-                t => { if (warning) foreach (var graphic in objects) if (graphic != null)
-                    graphic.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.15f, 1, t); });
+            return new Lease(() => { timelineDanger.Remove(id); foreach (var rect in objects) if (rect != null) Destroy(rect.gameObject); },
+                t => { foreach (var view in warnings) if (view != null) view.SetProgress(Mathf.Lerp(0.15f, 1, t)); });
         }
 
         IPatternLease IPatternHost.Hazard(IReadOnlyCollection<Vector2Int> cells, string reason)
@@ -278,6 +290,10 @@ namespace NHN.TraceStrike
             {
                 instance = Instantiate(prefab, mainGrid, false);
                 instance.transform.localPosition = GridPosition(cell.x, cell.y, mainCellSize);
+                // Only our UI effect prefabs opt into tile-relative sizing.
+                // Unrelated user prefabs retain their own transforms and behaviour.
+                var uiEffect = instance.GetComponent<Effects.UiEffectPlayer>();
+                if (uiEffect != null) uiEffect.Play(mainCellSize);
             }
             else
             {

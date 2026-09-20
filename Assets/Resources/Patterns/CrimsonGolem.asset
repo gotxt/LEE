@@ -16,11 +16,11 @@ MonoBehaviour:
   displayName: "\uD06C\uB9BC\uC2A8 \uACE8\uB818"
   portrait: {fileID: 0}
   bossVisual:
-    prefab: {fileID: 0}
+    prefab: {fileID: 1568566570725851640, guid: 721b81301a9ed324e9c14035f9f8c65d, type: 3}
     position: {x: 19, y: 8}
     size: 1
     animationLayer: 0
-    idleState: 
+    idleState: Base Layer.Idle
   arena:
     size: 39
     shape: 3
@@ -292,7 +292,6 @@ MonoBehaviour:
     - {x: 19, y: 14}
     - {x: 19, y: 13}
     - {x: 19, y: 12}
-    - {x: 19, y: 10}
     - {x: 19, y: 11}
     - {x: 20, y: 14}
     - {x: 20, y: 16}
@@ -312,8 +311,6 @@ MonoBehaviour:
     - {x: 16, y: 8}
     - {x: 16, y: 13}
     - {x: 16, y: 16}
-    - {x: 18, y: 10}
-    - {x: 18, y: 9}
     - {x: 17, y: 8}
     - {x: 16, y: 7}
     - {x: 16, y: 5}
@@ -531,9 +528,6 @@ MonoBehaviour:
     - {x: 23, y: 9}
     - {x: 22, y: 9}
     - {x: 21, y: 8}
-    - {x: 20, y: 8}
-    - {x: 19, y: 8}
-    - {x: 18, y: 8}
     - {x: 27, y: 11}
     - {x: 26, y: 9}
     - {x: 24, y: 8}
@@ -544,7 +538,6 @@ MonoBehaviour:
     - {x: 19, y: 7}
     - {x: 18, y: 7}
     - {x: 17, y: 7}
-    - {x: 20, y: 10}
     - {x: 21, y: 10}
     - {x: 22, y: 10}
     - {x: 23, y: 10}
@@ -569,8 +562,6 @@ MonoBehaviour:
     - {x: 26, y: 11}
     - {x: 31, y: 12}
     - {x: 21, y: 9}
-    - {x: 20, y: 9}
-    - {x: 19, y: 9}
     - {x: 22, y: 8}
     - {x: 17, y: 6}
     - {x: 19, y: 6}
@@ -787,7 +778,7 @@ MonoBehaviour:
     cameraZoom: 2.019
     playerSizeRatio: 0.78
     overridePlayerStart: 1
-    playerStart: {x: 19, y: 9}
+    playerStart: {x: 19, y: 2}
     restrictStartCells: 1
     startCells:
     - {x: 8, y: 14}
@@ -1875,7 +1866,7 @@ MonoBehaviour:
     patterns:
     - id: p1-cross-0
       name: P1_Cross_0
-      enabled: 1
+      enabled: 0
       minimumDuration: 2.3
       clips:
       - enabled: 1
@@ -1884,7 +1875,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 10
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -1893,7 +1884,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 11
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -1902,8 +1893,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 12
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact SFX
@@ -1911,8 +1902,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 13
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact VFX
@@ -1920,8 +1911,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 14
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Camera
@@ -1929,8 +1920,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 15
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Warning
@@ -2006,7 +1997,7 @@ MonoBehaviour:
         attackName: 
     - id: p1-diagonal-0
       name: P1_Diagonal_0
-      enabled: 1
+      enabled: 0
       minimumDuration: 2.3
       clips:
       - enabled: 1
@@ -2015,7 +2006,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 22
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2024,7 +2015,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 23
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2033,8 +2024,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 24
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact SFX
@@ -2042,8 +2033,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 25
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact VFX
@@ -2051,8 +2042,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 26
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Camera
@@ -2060,12 +2051,12 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 27
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
     - id: p1-diagonal-1
       name: P1_Diagonal_1
-      enabled: 1
+      enabled: 0
       minimumDuration: 2.3
       clips:
       - enabled: 1
@@ -2074,7 +2065,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 28
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2083,7 +2074,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 29
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2092,8 +2083,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 30
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact SFX
@@ -2101,8 +2092,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 31
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact VFX
@@ -2110,8 +2101,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 32
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Camera
@@ -2119,12 +2110,12 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 33
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
     - id: p1-diamond-0
       name: P1_Diamond_0
-      enabled: 1
+      enabled: 0
       minimumDuration: 2.3
       clips:
       - enabled: 1
@@ -2133,7 +2124,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 34
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2142,7 +2133,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 35
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2151,8 +2142,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 36
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact SFX
@@ -2160,8 +2151,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 37
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact VFX
@@ -2169,8 +2160,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 38
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Camera
@@ -2178,12 +2169,12 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 39
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
     - id: p1-diamond-1
       name: P1_Diamond_1
-      enabled: 1
+      enabled: 0
       minimumDuration: 2.3
       clips:
       - enabled: 1
@@ -2192,7 +2183,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 40
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2201,7 +2192,7 @@ MonoBehaviour:
         duration: 2
         action:
           rid: 41
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -2210,8 +2201,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 42
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact SFX
@@ -2219,8 +2210,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 43
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact VFX
@@ -2228,8 +2219,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 44
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Camera
@@ -2237,9 +2228,370 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 45
+        attackGroupKey: glyph
+        attackAtImpact: 1
+        attackName: 
+    - id: p1-fist-ripple
+      name: "\uC8FC\uBA39 \uB0B4\uB824\uCE58\uAE30 \xB7 Fist Ripple"
+      enabled: 1
+      minimumDuration: 3.2
+      clips:
+      - enabled: 1
+        label: "\uC8FC\uBA39 \uB4E4\uC5B4\uC62C\uB9AC\uAE30"
+        start: 0
+        duration: 1.2
+        action:
+          rid: 5560175782844694528
         attackGroupKey: 
         attackAtImpact: 0
         attackName: 
+      - enabled: 1
+        label: "\uC8FC\uBA39 \uCC29\uC9C0 / \uD68C\uBCF5"
+        start: 1.2
+        duration: 2
+        action:
+          rid: 5560175782844694529
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uACBD\uACE0"
+        start: 0.20000005
+        duration: 1
+        action:
+          rid: 5560175782844694530
+        attackGroupKey: fist_ripple_1
+        attackAtImpact: 0
+        attackName: "1 \xB7 \uBD89\uC740 \uB0B4\uCE21 \uD30C\uB3D9"
+      - enabled: 1
+        label: "\uACBD\uACE0 \uC18C\uB9AC"
+        start: 0.20000005
+        duration: 1
+        action:
+          rid: 5560175782844694531
+        attackGroupKey: fist_ripple_1
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 5560175782844694532
+        attackGroupKey: fist_ripple_1
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD30C\uB3D9 VFX"
+        start: 1.2
+        duration: 0.35
+        action:
+          rid: 5560175782844694533
+        attackGroupKey: fist_ripple_1
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9 \uC18C\uB9AC"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 5560175782844694534
+        attackGroupKey: fist_ripple_1
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uCE74\uBA54\uB77C"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 5560175782844694535
+        attackGroupKey: fist_ripple_1
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uACBD\uACE0"
+        start: 0.75
+        duration: 1
+        action:
+          rid: 5560175782844694536
+        attackGroupKey: fist_ripple_2
+        attackAtImpact: 0
+        attackName: "2 \xB7 \uC790\uC8FC\uC0C9 \uC911\uAC04 \uD30C\uB3D9"
+      - enabled: 1
+        label: "\uACBD\uACE0 \uC18C\uB9AC"
+        start: 0.75
+        duration: 1
+        action:
+          rid: 5560175782844694537
+        attackGroupKey: fist_ripple_2
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9"
+        start: 1.75
+        duration: 0.3
+        action:
+          rid: 5560175782844694538
+        attackGroupKey: fist_ripple_2
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD30C\uB3D9 VFX"
+        start: 1.75
+        duration: 0.35
+        action:
+          rid: 5560175782844694539
+        attackGroupKey: fist_ripple_2
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9 \uC18C\uB9AC"
+        start: 1.75
+        duration: 0.3
+        action:
+          rid: 5560175782844694540
+        attackGroupKey: fist_ripple_2
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uCE74\uBA54\uB77C"
+        start: 1.75
+        duration: 0.3
+        action:
+          rid: 5560175782844694541
+        attackGroupKey: fist_ripple_2
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uACBD\uACE0"
+        start: 1.3000002
+        duration: 1
+        action:
+          rid: 5560175782844694542
+        attackGroupKey: fist_ripple_3
+        attackAtImpact: 0
+        attackName: "3 \xB7 \uBCF4\uB77C\uC0C9 \uC678\uCE21 \uD30C\uB3D9"
+      - enabled: 1
+        label: "\uACBD\uACE0 \uC18C\uB9AC"
+        start: 1.3000002
+        duration: 1
+        action:
+          rid: 5560175782844694543
+        attackGroupKey: fist_ripple_3
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9"
+        start: 2.3000002
+        duration: 0.3
+        action:
+          rid: 5560175782844694544
+        attackGroupKey: fist_ripple_3
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD30C\uB3D9 VFX"
+        start: 2.3000002
+        duration: 0.35
+        action:
+          rid: 5560175782844694545
+        attackGroupKey: fist_ripple_3
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9 \uC18C\uB9AC"
+        start: 2.3000002
+        duration: 0.3
+        action:
+          rid: 5560175782844694546
+        attackGroupKey: fist_ripple_3
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uCE74\uBA54\uB77C"
+        start: 2.3000002
+        duration: 0.3
+        action:
+          rid: 5560175782844694547
+        attackGroupKey: fist_ripple_3
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uCC29\uC9C0 \uBA3C\uC9C0 (\uC2DC\uAC01 \uD6A8\uACFC\uB9CC)"
+        start: 1.2
+        duration: 0.5
+        action:
+          rid: 5560175782844694548
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+    - id: p1-alternating-rockfall
+      name: "\uAD50\uCC28 \uB099\uC11D \xB7 Alternating Rockfall"
+      enabled: 1
+      minimumDuration: 4.6
+      clips:
+      - enabled: 1
+        label: "1 \xB7 \uBE68\uAC04 \uBB36\uC74C \uB099\uC11D \uC900\uBE44"
+        start: 0
+        duration: 1.2
+        action:
+          rid: 1000
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uBE68\uAC04 \uBB36\uC74C \uB099\uC11D \uCC29\uC9C0"
+        start: 1.2
+        duration: 1.2
+        action:
+          rid: 1001
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uACBD\uACE0"
+        start: 0
+        duration: 1.2
+        action:
+          rid: 1002
+        attackGroupKey: rockfall_a
+        attackAtImpact: 0
+        attackName: "1 \xB7 \uBE68\uAC04 \uBB36\uC74C \uB099\uC11D"
+      - enabled: 1
+        label: "\uACBD\uACE0 \uC18C\uB9AC"
+        start: 0
+        duration: 1.2
+        action:
+          rid: 1003
+        attackGroupKey: rockfall_a
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uB099\uC11D \uD558\uAC15 VFX"
+        start: 0.85
+        duration: 0.35
+        action:
+          rid: 1004
+        attackGroupKey: rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 1005
+        attackGroupKey: rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uB099\uC11D \uCC29\uC9C0 VFX"
+        start: 1.2
+        duration: 0.4
+        action:
+          rid: 1006
+        attackGroupKey: rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9 \uC18C\uB9AC"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 1007
+        attackGroupKey: rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uCE74\uBA54\uB77C"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 1008
+        attackGroupKey: rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uBE48 \uBB36\uC74C \uBC18\uC804 \uB099\uC11D \uC900\uBE44"
+        start: 2.2
+        duration: 1.2
+        action:
+          rid: 1009
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uBE48 \uBB36\uC74C \uBC18\uC804 \uB099\uC11D \uCC29\uC9C0"
+        start: 3.4
+        duration: 1.2
+        action:
+          rid: 1010
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uACBD\uACE0"
+        start: 2.2
+        duration: 1.2
+        action:
+          rid: 1011
+        attackGroupKey: rockfall_b
+        attackAtImpact: 0
+        attackName: "2 \xB7 \uBE48 \uBB36\uC74C \uBC18\uC804 \uB099\uC11D"
+      - enabled: 1
+        label: "\uACBD\uACE0 \uC18C\uB9AC"
+        start: 2.2
+        duration: 1.2
+        action:
+          rid: 1012
+        attackGroupKey: rockfall_b
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "\uB099\uC11D \uD558\uAC15 VFX"
+        start: 3.0500002
+        duration: 0.35
+        action:
+          rid: 1013
+        attackGroupKey: rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9"
+        start: 3.4
+        duration: 0.3
+        action:
+          rid: 1014
+        attackGroupKey: rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uB099\uC11D \uCC29\uC9C0 VFX"
+        start: 3.4
+        duration: 0.4
+        action:
+          rid: 1015
+        attackGroupKey: rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uD0C0\uACA9 \uC18C\uB9AC"
+        start: 3.4
+        duration: 0.3
+        action:
+          rid: 1016
+        attackGroupKey: rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "\uCE74\uBA54\uB77C"
+        start: 3.4
+        duration: 0.3
+        action:
+          rid: 1017
+        attackGroupKey: rockfall_b
+        attackAtImpact: 1
+        attackName:
     backgroundEnabled: 0
     background:
       id: 082aa40bdcaa4fa389d71300e18faaa2
@@ -3253,7 +3605,10 @@ MonoBehaviour:
           - {x: -8, y: 0}
           - {x: 0, y: -4}
           - {x: 0, y: -5}
+          - {x: 0, y: -6}
           - {x: 0, y: -7}
+          - {x: 0, y: -9}
+          - {x: 0, y: -8}
           - {x: -9, y: 0}
           - {x: -10, y: 0}
           - {x: -11, y: 0}
@@ -3288,6 +3643,7 @@ MonoBehaviour:
           - {x: 0, y: -2}
           - {x: 0, y: -11}
           - {x: 0, y: -12}
+          - {x: 0, y: -10}
           - {x: 0, y: -13}
           - {x: 0, y: -14}
           - {x: 0, y: -16}
@@ -3306,7 +3662,7 @@ MonoBehaviour:
     - rid: 14
       type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
-        prefab: {fileID: 0}
+        prefab: {fileID: 100000, guid: ad75267d72b74bdc9aef895000000023, type: 3}
         sprite: {fileID: 0}
         color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
         tiles:
@@ -3324,6 +3680,7 @@ MonoBehaviour:
           - {x: 0, y: -5}
           - {x: 0, y: -6}
           - {x: 0, y: -7}
+          - {x: 0, y: -9}
           - {x: 0, y: -8}
           - {x: -9, y: 0}
           - {x: -10, y: 0}
@@ -4369,14 +4726,10 @@ MonoBehaviour:
           - {x: -4, y: 0}
           - {x: -5, y: 0}
           - {x: -6, y: 0}
-          - {x: -7, y: 0}
           - {x: -8, y: 0}
           - {x: 0, y: -4}
-          - {x: 0, y: -5}
           - {x: 0, y: -6}
           - {x: 0, y: -7}
-          - {x: 0, y: -9}
-          - {x: 0, y: -8}
           - {x: -9, y: 0}
           - {x: -10, y: 0}
           - {x: -11, y: 0}
@@ -4398,7 +4751,6 @@ MonoBehaviour:
           - {x: 7, y: 0}
           - {x: 8, y: 0}
           - {x: 9, y: 0}
-          - {x: 10, y: 0}
           - {x: 11, y: 0}
           - {x: 12, y: 0}
           - {x: 13, y: 0}
@@ -4407,15 +4759,12 @@ MonoBehaviour:
           - {x: 0, y: -1}
           - {x: 15, y: 0}
           - {x: 16, y: 0}
-          - {x: 0, y: -3}
           - {x: 0, y: -2}
           - {x: 0, y: -11}
           - {x: 0, y: -12}
           - {x: 0, y: -10}
-          - {x: 0, y: -13}
           - {x: 0, y: -14}
           - {x: 0, y: -16}
-          - {x: 0, y: -15}
           - {x: 0, y: -17}
           - {x: 0, y: -19}
           snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
@@ -4433,14 +4782,10 @@ MonoBehaviour:
           - {x: -4, y: 0}
           - {x: -5, y: 0}
           - {x: -6, y: 0}
-          - {x: -7, y: 0}
           - {x: -8, y: 0}
           - {x: 0, y: -4}
-          - {x: 0, y: -5}
           - {x: 0, y: -6}
           - {x: 0, y: -7}
-          - {x: 0, y: -9}
-          - {x: 0, y: -8}
           - {x: -9, y: 0}
           - {x: -10, y: 0}
           - {x: -11, y: 0}
@@ -4462,7 +4807,6 @@ MonoBehaviour:
           - {x: 7, y: 0}
           - {x: 8, y: 0}
           - {x: 9, y: 0}
-          - {x: 10, y: 0}
           - {x: 11, y: 0}
           - {x: 12, y: 0}
           - {x: 13, y: 0}
@@ -4471,15 +4815,12 @@ MonoBehaviour:
           - {x: 0, y: -1}
           - {x: 15, y: 0}
           - {x: 16, y: 0}
-          - {x: 0, y: -3}
           - {x: 0, y: -2}
           - {x: 0, y: -11}
           - {x: 0, y: -12}
           - {x: 0, y: -10}
-          - {x: 0, y: -13}
           - {x: 0, y: -14}
           - {x: 0, y: -16}
-          - {x: 0, y: -15}
           - {x: 0, y: -17}
           - {x: 0, y: -19}
           snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
@@ -4501,14 +4842,10 @@ MonoBehaviour:
           - {x: -4, y: 0}
           - {x: -5, y: 0}
           - {x: -6, y: 0}
-          - {x: -7, y: 0}
           - {x: -8, y: 0}
           - {x: 0, y: -4}
-          - {x: 0, y: -5}
           - {x: 0, y: -6}
           - {x: 0, y: -7}
-          - {x: 0, y: -9}
-          - {x: 0, y: -8}
           - {x: -9, y: 0}
           - {x: -10, y: 0}
           - {x: -11, y: 0}
@@ -4530,7 +4867,6 @@ MonoBehaviour:
           - {x: 7, y: 0}
           - {x: 8, y: 0}
           - {x: 9, y: 0}
-          - {x: 10, y: 0}
           - {x: 11, y: 0}
           - {x: 12, y: 0}
           - {x: 13, y: 0}
@@ -4539,15 +4875,12 @@ MonoBehaviour:
           - {x: 0, y: -1}
           - {x: 15, y: 0}
           - {x: 16, y: 0}
-          - {x: 0, y: -3}
           - {x: 0, y: -2}
           - {x: 0, y: -11}
           - {x: 0, y: -12}
           - {x: 0, y: -10}
-          - {x: 0, y: -13}
           - {x: 0, y: -14}
           - {x: 0, y: -16}
-          - {x: 0, y: -15}
           - {x: 0, y: -17}
           - {x: 0, y: -19}
           snapshotKey: attack_020f4cb4ef184521ba5682cee5125056
@@ -4682,3 +5015,3349 @@ MonoBehaviour:
           ensureEscape: 0
         escapeGrace: 0.18
         reason: "\uACF5\uACA9"
+    - rid: 5560175782844694528
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistWindup
+        transition: 0
+        speed: 1
+    - rid: 5560175782844694529
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistContact
+        transition: 0
+        speed: 1
+    - rid: 5560175782844694530
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_1
+          ensureEscape: 0
+        color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
+    - rid: 5560175782844694531
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 5560175782844694532
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_1
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "1 \xB7 \uBD89\uC740 \uB0B4\uCE21 \uD30C\uB3D9"
+    - rid: 5560175782844694533
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 4108739889981512538, guid: be8c67243922fa54aa5a3bd812eec3dd, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_1
+          ensureEscape: 0
+    - rid: 5560175782844694534
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.65
+    - rid: 5560175782844694535
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 9
+    - rid: 5560175782844694536
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 3
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_2
+          ensureEscape: 0
+        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.95}
+    - rid: 5560175782844694537
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 5560175782844694538
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 3
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_2
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "2 \xB7 \uC790\uC8FC\uC0C9 \uC911\uAC04 \uD30C\uB3D9"
+    - rid: 5560175782844694539
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 5920576768218912452, guid: 3af803520efc8984f90bcd2fe56f44f4, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.95}
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 3
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_2
+          ensureEscape: 0
+    - rid: 5560175782844694540
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.54999995
+    - rid: 5560175782844694541
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 7
+    - rid: 5560175782844694542
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 4
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_3
+          ensureEscape: 0
+        color: {r: 0.52, g: 0.2, b: 1, a: 0.95}
+    - rid: 5560175782844694543
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 5560175782844694544
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 4
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_3
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "3 \xB7 \uBCF4\uB77C\uC0C9 \uC678\uCE21 \uD30C\uB3D9"
+    - rid: 5560175782844694545
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 6851860645864629351, guid: 410236a6d67577d4b9199381a79f999e, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 0.52, g: 0.2, b: 1, a: 0.95}
+        tiles:
+          shape: 3
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 4
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_ripple_3
+          ensureEscape: 0
+    - rid: 5560175782844694546
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.45
+    - rid: 5560175782844694547
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 5
+    - rid: 5560175782844694548
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 100000, guid: ad75267d72b74bdc9aef895000000023, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 19, y: 8}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: fist_contact_visual
+          ensureEscape: 0
+    - rid: 1000
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistWindup
+        transition: 0
+        speed: 1
+    - rid: 1001
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistContact
+        transition: 0
+        speed: 1
+    - rid: 1002
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 16, y: 0}
+          - {x: 17, y: 0}
+          - {x: 20, y: 0}
+          - {x: 21, y: 0}
+          - {x: 24, y: 0}
+          - {x: 25, y: 0}
+          - {x: 28, y: 0}
+          - {x: 29, y: 0}
+          - {x: 32, y: 0}
+          - {x: 33, y: 0}
+          - {x: 4, y: 1}
+          - {x: 5, y: 1}
+          - {x: 8, y: 1}
+          - {x: 9, y: 1}
+          - {x: 12, y: 1}
+          - {x: 13, y: 1}
+          - {x: 16, y: 1}
+          - {x: 17, y: 1}
+          - {x: 20, y: 1}
+          - {x: 21, y: 1}
+          - {x: 24, y: 1}
+          - {x: 25, y: 1}
+          - {x: 28, y: 1}
+          - {x: 29, y: 1}
+          - {x: 32, y: 1}
+          - {x: 33, y: 1}
+          - {x: 36, y: 1}
+          - {x: 2, y: 2}
+          - {x: 3, y: 2}
+          - {x: 6, y: 2}
+          - {x: 7, y: 2}
+          - {x: 10, y: 2}
+          - {x: 11, y: 2}
+          - {x: 14, y: 2}
+          - {x: 15, y: 2}
+          - {x: 18, y: 2}
+          - {x: 19, y: 2}
+          - {x: 22, y: 2}
+          - {x: 23, y: 2}
+          - {x: 26, y: 2}
+          - {x: 27, y: 2}
+          - {x: 30, y: 2}
+          - {x: 31, y: 2}
+          - {x: 34, y: 2}
+          - {x: 35, y: 2}
+          - {x: 2, y: 3}
+          - {x: 3, y: 3}
+          - {x: 6, y: 3}
+          - {x: 7, y: 3}
+          - {x: 10, y: 3}
+          - {x: 11, y: 3}
+          - {x: 14, y: 3}
+          - {x: 15, y: 3}
+          - {x: 18, y: 3}
+          - {x: 19, y: 3}
+          - {x: 22, y: 3}
+          - {x: 23, y: 3}
+          - {x: 26, y: 3}
+          - {x: 27, y: 3}
+          - {x: 30, y: 3}
+          - {x: 31, y: 3}
+          - {x: 34, y: 3}
+          - {x: 35, y: 3}
+          - {x: 38, y: 3}
+          - {x: 0, y: 4}
+          - {x: 1, y: 4}
+          - {x: 4, y: 4}
+          - {x: 5, y: 4}
+          - {x: 8, y: 4}
+          - {x: 9, y: 4}
+          - {x: 12, y: 4}
+          - {x: 13, y: 4}
+          - {x: 16, y: 4}
+          - {x: 17, y: 4}
+          - {x: 20, y: 4}
+          - {x: 21, y: 4}
+          - {x: 24, y: 4}
+          - {x: 25, y: 4}
+          - {x: 28, y: 4}
+          - {x: 29, y: 4}
+          - {x: 32, y: 4}
+          - {x: 33, y: 4}
+          - {x: 36, y: 4}
+          - {x: 37, y: 4}
+          - {x: 0, y: 5}
+          - {x: 1, y: 5}
+          - {x: 4, y: 5}
+          - {x: 5, y: 5}
+          - {x: 8, y: 5}
+          - {x: 9, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 28, y: 5}
+          - {x: 29, y: 5}
+          - {x: 32, y: 5}
+          - {x: 33, y: 5}
+          - {x: 36, y: 5}
+          - {x: 37, y: 5}
+          - {x: 2, y: 6}
+          - {x: 3, y: 6}
+          - {x: 6, y: 6}
+          - {x: 7, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 6}
+          - {x: 14, y: 6}
+          - {x: 15, y: 6}
+          - {x: 18, y: 6}
+          - {x: 19, y: 6}
+          - {x: 22, y: 6}
+          - {x: 23, y: 6}
+          - {x: 26, y: 6}
+          - {x: 27, y: 6}
+          - {x: 30, y: 6}
+          - {x: 31, y: 6}
+          - {x: 34, y: 6}
+          - {x: 35, y: 6}
+          - {x: 38, y: 6}
+          - {x: 2, y: 7}
+          - {x: 3, y: 7}
+          - {x: 6, y: 7}
+          - {x: 7, y: 7}
+          - {x: 10, y: 7}
+          - {x: 11, y: 7}
+          - {x: 14, y: 7}
+          - {x: 15, y: 7}
+          - {x: 18, y: 7}
+          - {x: 19, y: 7}
+          - {x: 22, y: 7}
+          - {x: 23, y: 7}
+          - {x: 26, y: 7}
+          - {x: 27, y: 7}
+          - {x: 30, y: 7}
+          - {x: 31, y: 7}
+          - {x: 34, y: 7}
+          - {x: 35, y: 7}
+          - {x: 38, y: 7}
+          - {x: 0, y: 8}
+          - {x: 1, y: 8}
+          - {x: 4, y: 8}
+          - {x: 5, y: 8}
+          - {x: 8, y: 8}
+          - {x: 9, y: 8}
+          - {x: 12, y: 8}
+          - {x: 13, y: 8}
+          - {x: 16, y: 8}
+          - {x: 17, y: 8}
+          - {x: 21, y: 8}
+          - {x: 24, y: 8}
+          - {x: 25, y: 8}
+          - {x: 28, y: 8}
+          - {x: 29, y: 8}
+          - {x: 32, y: 8}
+          - {x: 33, y: 8}
+          - {x: 36, y: 8}
+          - {x: 37, y: 8}
+          - {x: 0, y: 9}
+          - {x: 1, y: 9}
+          - {x: 4, y: 9}
+          - {x: 5, y: 9}
+          - {x: 8, y: 9}
+          - {x: 9, y: 9}
+          - {x: 12, y: 9}
+          - {x: 13, y: 9}
+          - {x: 16, y: 9}
+          - {x: 17, y: 9}
+          - {x: 21, y: 9}
+          - {x: 24, y: 9}
+          - {x: 25, y: 9}
+          - {x: 28, y: 9}
+          - {x: 29, y: 9}
+          - {x: 32, y: 9}
+          - {x: 33, y: 9}
+          - {x: 36, y: 9}
+          - {x: 37, y: 9}
+          - {x: 2, y: 10}
+          - {x: 3, y: 10}
+          - {x: 6, y: 10}
+          - {x: 7, y: 10}
+          - {x: 10, y: 10}
+          - {x: 11, y: 10}
+          - {x: 14, y: 10}
+          - {x: 15, y: 10}
+          - {x: 22, y: 10}
+          - {x: 23, y: 10}
+          - {x: 26, y: 10}
+          - {x: 27, y: 10}
+          - {x: 30, y: 10}
+          - {x: 31, y: 10}
+          - {x: 34, y: 10}
+          - {x: 35, y: 10}
+          - {x: 38, y: 10}
+          - {x: 2, y: 11}
+          - {x: 3, y: 11}
+          - {x: 6, y: 11}
+          - {x: 7, y: 11}
+          - {x: 10, y: 11}
+          - {x: 11, y: 11}
+          - {x: 14, y: 11}
+          - {x: 15, y: 11}
+          - {x: 18, y: 11}
+          - {x: 19, y: 11}
+          - {x: 22, y: 11}
+          - {x: 23, y: 11}
+          - {x: 26, y: 11}
+          - {x: 27, y: 11}
+          - {x: 30, y: 11}
+          - {x: 31, y: 11}
+          - {x: 34, y: 11}
+          - {x: 35, y: 11}
+          - {x: 38, y: 11}
+          - {x: 0, y: 12}
+          - {x: 1, y: 12}
+          - {x: 4, y: 12}
+          - {x: 5, y: 12}
+          - {x: 8, y: 12}
+          - {x: 9, y: 12}
+          - {x: 12, y: 12}
+          - {x: 13, y: 12}
+          - {x: 16, y: 12}
+          - {x: 17, y: 12}
+          - {x: 20, y: 12}
+          - {x: 21, y: 12}
+          - {x: 24, y: 12}
+          - {x: 25, y: 12}
+          - {x: 28, y: 12}
+          - {x: 29, y: 12}
+          - {x: 32, y: 12}
+          - {x: 33, y: 12}
+          - {x: 36, y: 12}
+          - {x: 37, y: 12}
+          - {x: 0, y: 13}
+          - {x: 1, y: 13}
+          - {x: 4, y: 13}
+          - {x: 5, y: 13}
+          - {x: 8, y: 13}
+          - {x: 9, y: 13}
+          - {x: 12, y: 13}
+          - {x: 13, y: 13}
+          - {x: 16, y: 13}
+          - {x: 17, y: 13}
+          - {x: 20, y: 13}
+          - {x: 21, y: 13}
+          - {x: 24, y: 13}
+          - {x: 25, y: 13}
+          - {x: 28, y: 13}
+          - {x: 29, y: 13}
+          - {x: 32, y: 13}
+          - {x: 33, y: 13}
+          - {x: 36, y: 13}
+          - {x: 37, y: 13}
+          - {x: 2, y: 14}
+          - {x: 3, y: 14}
+          - {x: 6, y: 14}
+          - {x: 7, y: 14}
+          - {x: 10, y: 14}
+          - {x: 11, y: 14}
+          - {x: 14, y: 14}
+          - {x: 15, y: 14}
+          - {x: 18, y: 14}
+          - {x: 19, y: 14}
+          - {x: 22, y: 14}
+          - {x: 23, y: 14}
+          - {x: 26, y: 14}
+          - {x: 27, y: 14}
+          - {x: 30, y: 14}
+          - {x: 31, y: 14}
+          - {x: 34, y: 14}
+          - {x: 35, y: 14}
+          - {x: 38, y: 14}
+          - {x: 2, y: 15}
+          - {x: 3, y: 15}
+          - {x: 6, y: 15}
+          - {x: 7, y: 15}
+          - {x: 10, y: 15}
+          - {x: 11, y: 15}
+          - {x: 14, y: 15}
+          - {x: 15, y: 15}
+          - {x: 18, y: 15}
+          - {x: 19, y: 15}
+          - {x: 22, y: 15}
+          - {x: 23, y: 15}
+          - {x: 26, y: 15}
+          - {x: 27, y: 15}
+          - {x: 30, y: 15}
+          - {x: 31, y: 15}
+          - {x: 34, y: 15}
+          - {x: 35, y: 15}
+          - {x: 38, y: 15}
+          - {x: 0, y: 16}
+          - {x: 1, y: 16}
+          - {x: 4, y: 16}
+          - {x: 5, y: 16}
+          - {x: 8, y: 16}
+          - {x: 9, y: 16}
+          - {x: 12, y: 16}
+          - {x: 13, y: 16}
+          - {x: 16, y: 16}
+          - {x: 17, y: 16}
+          - {x: 20, y: 16}
+          - {x: 21, y: 16}
+          - {x: 24, y: 16}
+          - {x: 25, y: 16}
+          - {x: 28, y: 16}
+          - {x: 29, y: 16}
+          - {x: 32, y: 16}
+          - {x: 33, y: 16}
+          - {x: 36, y: 16}
+          - {x: 37, y: 16}
+          - {x: 1, y: 17}
+          - {x: 4, y: 17}
+          - {x: 5, y: 17}
+          - {x: 8, y: 17}
+          - {x: 9, y: 17}
+          - {x: 12, y: 17}
+          - {x: 13, y: 17}
+          - {x: 16, y: 17}
+          - {x: 17, y: 17}
+          - {x: 20, y: 17}
+          - {x: 21, y: 17}
+          - {x: 24, y: 17}
+          - {x: 25, y: 17}
+          - {x: 28, y: 17}
+          - {x: 29, y: 17}
+          - {x: 32, y: 17}
+          - {x: 33, y: 17}
+          - {x: 36, y: 17}
+          - {x: 37, y: 17}
+          - {x: 2, y: 18}
+          - {x: 3, y: 18}
+          - {x: 6, y: 18}
+          - {x: 7, y: 18}
+          - {x: 10, y: 18}
+          - {x: 11, y: 18}
+          - {x: 14, y: 18}
+          - {x: 15, y: 18}
+          - {x: 18, y: 18}
+          - {x: 19, y: 18}
+          - {x: 22, y: 18}
+          - {x: 23, y: 18}
+          - {x: 26, y: 18}
+          - {x: 27, y: 18}
+          - {x: 30, y: 18}
+          - {x: 31, y: 18}
+          - {x: 34, y: 18}
+          - {x: 35, y: 18}
+          - {x: 3, y: 19}
+          - {x: 6, y: 19}
+          - {x: 7, y: 19}
+          - {x: 10, y: 19}
+          - {x: 11, y: 19}
+          - {x: 14, y: 19}
+          - {x: 15, y: 19}
+          - {x: 18, y: 19}
+          - {x: 19, y: 19}
+          - {x: 22, y: 19}
+          - {x: 23, y: 19}
+          - {x: 26, y: 19}
+          - {x: 27, y: 19}
+          - {x: 30, y: 19}
+          - {x: 31, y: 19}
+          - {x: 34, y: 19}
+          - {x: 35, y: 19}
+          snapshotKey: rockfall_a
+          ensureEscape: 0
+        color: {r: 1, g: 0.18, b: 0.24, a: 0.6}
+    - rid: 1003
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.4
+    - rid: 1004
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 5286838586219272981, guid: 9c5e92d094a41af44b4391668ec32517, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 16, y: 0}
+          - {x: 17, y: 0}
+          - {x: 20, y: 0}
+          - {x: 21, y: 0}
+          - {x: 24, y: 0}
+          - {x: 25, y: 0}
+          - {x: 28, y: 0}
+          - {x: 29, y: 0}
+          - {x: 32, y: 0}
+          - {x: 33, y: 0}
+          - {x: 4, y: 1}
+          - {x: 5, y: 1}
+          - {x: 8, y: 1}
+          - {x: 9, y: 1}
+          - {x: 12, y: 1}
+          - {x: 13, y: 1}
+          - {x: 16, y: 1}
+          - {x: 17, y: 1}
+          - {x: 20, y: 1}
+          - {x: 21, y: 1}
+          - {x: 24, y: 1}
+          - {x: 25, y: 1}
+          - {x: 28, y: 1}
+          - {x: 29, y: 1}
+          - {x: 32, y: 1}
+          - {x: 33, y: 1}
+          - {x: 36, y: 1}
+          - {x: 2, y: 2}
+          - {x: 3, y: 2}
+          - {x: 6, y: 2}
+          - {x: 7, y: 2}
+          - {x: 10, y: 2}
+          - {x: 11, y: 2}
+          - {x: 14, y: 2}
+          - {x: 15, y: 2}
+          - {x: 18, y: 2}
+          - {x: 19, y: 2}
+          - {x: 22, y: 2}
+          - {x: 23, y: 2}
+          - {x: 26, y: 2}
+          - {x: 27, y: 2}
+          - {x: 30, y: 2}
+          - {x: 31, y: 2}
+          - {x: 34, y: 2}
+          - {x: 35, y: 2}
+          - {x: 2, y: 3}
+          - {x: 3, y: 3}
+          - {x: 6, y: 3}
+          - {x: 7, y: 3}
+          - {x: 10, y: 3}
+          - {x: 11, y: 3}
+          - {x: 14, y: 3}
+          - {x: 15, y: 3}
+          - {x: 18, y: 3}
+          - {x: 19, y: 3}
+          - {x: 22, y: 3}
+          - {x: 23, y: 3}
+          - {x: 26, y: 3}
+          - {x: 27, y: 3}
+          - {x: 30, y: 3}
+          - {x: 31, y: 3}
+          - {x: 34, y: 3}
+          - {x: 35, y: 3}
+          - {x: 38, y: 3}
+          - {x: 0, y: 4}
+          - {x: 1, y: 4}
+          - {x: 4, y: 4}
+          - {x: 5, y: 4}
+          - {x: 8, y: 4}
+          - {x: 9, y: 4}
+          - {x: 12, y: 4}
+          - {x: 13, y: 4}
+          - {x: 16, y: 4}
+          - {x: 17, y: 4}
+          - {x: 20, y: 4}
+          - {x: 21, y: 4}
+          - {x: 24, y: 4}
+          - {x: 25, y: 4}
+          - {x: 28, y: 4}
+          - {x: 29, y: 4}
+          - {x: 32, y: 4}
+          - {x: 33, y: 4}
+          - {x: 36, y: 4}
+          - {x: 37, y: 4}
+          - {x: 0, y: 5}
+          - {x: 1, y: 5}
+          - {x: 4, y: 5}
+          - {x: 5, y: 5}
+          - {x: 8, y: 5}
+          - {x: 9, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 28, y: 5}
+          - {x: 29, y: 5}
+          - {x: 32, y: 5}
+          - {x: 33, y: 5}
+          - {x: 36, y: 5}
+          - {x: 37, y: 5}
+          - {x: 2, y: 6}
+          - {x: 3, y: 6}
+          - {x: 6, y: 6}
+          - {x: 7, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 6}
+          - {x: 14, y: 6}
+          - {x: 15, y: 6}
+          - {x: 18, y: 6}
+          - {x: 19, y: 6}
+          - {x: 22, y: 6}
+          - {x: 23, y: 6}
+          - {x: 26, y: 6}
+          - {x: 27, y: 6}
+          - {x: 30, y: 6}
+          - {x: 31, y: 6}
+          - {x: 34, y: 6}
+          - {x: 35, y: 6}
+          - {x: 38, y: 6}
+          - {x: 2, y: 7}
+          - {x: 3, y: 7}
+          - {x: 6, y: 7}
+          - {x: 7, y: 7}
+          - {x: 10, y: 7}
+          - {x: 11, y: 7}
+          - {x: 14, y: 7}
+          - {x: 15, y: 7}
+          - {x: 18, y: 7}
+          - {x: 19, y: 7}
+          - {x: 22, y: 7}
+          - {x: 23, y: 7}
+          - {x: 26, y: 7}
+          - {x: 27, y: 7}
+          - {x: 30, y: 7}
+          - {x: 31, y: 7}
+          - {x: 34, y: 7}
+          - {x: 35, y: 7}
+          - {x: 38, y: 7}
+          - {x: 0, y: 8}
+          - {x: 1, y: 8}
+          - {x: 4, y: 8}
+          - {x: 5, y: 8}
+          - {x: 8, y: 8}
+          - {x: 9, y: 8}
+          - {x: 12, y: 8}
+          - {x: 13, y: 8}
+          - {x: 16, y: 8}
+          - {x: 17, y: 8}
+          - {x: 21, y: 8}
+          - {x: 24, y: 8}
+          - {x: 25, y: 8}
+          - {x: 28, y: 8}
+          - {x: 29, y: 8}
+          - {x: 32, y: 8}
+          - {x: 33, y: 8}
+          - {x: 36, y: 8}
+          - {x: 37, y: 8}
+          - {x: 0, y: 9}
+          - {x: 1, y: 9}
+          - {x: 4, y: 9}
+          - {x: 5, y: 9}
+          - {x: 8, y: 9}
+          - {x: 9, y: 9}
+          - {x: 12, y: 9}
+          - {x: 13, y: 9}
+          - {x: 16, y: 9}
+          - {x: 17, y: 9}
+          - {x: 21, y: 9}
+          - {x: 24, y: 9}
+          - {x: 25, y: 9}
+          - {x: 28, y: 9}
+          - {x: 29, y: 9}
+          - {x: 32, y: 9}
+          - {x: 33, y: 9}
+          - {x: 36, y: 9}
+          - {x: 37, y: 9}
+          - {x: 2, y: 10}
+          - {x: 3, y: 10}
+          - {x: 6, y: 10}
+          - {x: 7, y: 10}
+          - {x: 10, y: 10}
+          - {x: 11, y: 10}
+          - {x: 14, y: 10}
+          - {x: 15, y: 10}
+          - {x: 22, y: 10}
+          - {x: 23, y: 10}
+          - {x: 26, y: 10}
+          - {x: 27, y: 10}
+          - {x: 30, y: 10}
+          - {x: 31, y: 10}
+          - {x: 34, y: 10}
+          - {x: 35, y: 10}
+          - {x: 38, y: 10}
+          - {x: 2, y: 11}
+          - {x: 3, y: 11}
+          - {x: 6, y: 11}
+          - {x: 7, y: 11}
+          - {x: 10, y: 11}
+          - {x: 11, y: 11}
+          - {x: 14, y: 11}
+          - {x: 15, y: 11}
+          - {x: 18, y: 11}
+          - {x: 19, y: 11}
+          - {x: 22, y: 11}
+          - {x: 23, y: 11}
+          - {x: 26, y: 11}
+          - {x: 27, y: 11}
+          - {x: 30, y: 11}
+          - {x: 31, y: 11}
+          - {x: 34, y: 11}
+          - {x: 35, y: 11}
+          - {x: 38, y: 11}
+          - {x: 0, y: 12}
+          - {x: 1, y: 12}
+          - {x: 4, y: 12}
+          - {x: 5, y: 12}
+          - {x: 8, y: 12}
+          - {x: 9, y: 12}
+          - {x: 12, y: 12}
+          - {x: 13, y: 12}
+          - {x: 16, y: 12}
+          - {x: 17, y: 12}
+          - {x: 20, y: 12}
+          - {x: 21, y: 12}
+          - {x: 24, y: 12}
+          - {x: 25, y: 12}
+          - {x: 28, y: 12}
+          - {x: 29, y: 12}
+          - {x: 32, y: 12}
+          - {x: 33, y: 12}
+          - {x: 36, y: 12}
+          - {x: 37, y: 12}
+          - {x: 0, y: 13}
+          - {x: 1, y: 13}
+          - {x: 4, y: 13}
+          - {x: 5, y: 13}
+          - {x: 8, y: 13}
+          - {x: 9, y: 13}
+          - {x: 12, y: 13}
+          - {x: 13, y: 13}
+          - {x: 16, y: 13}
+          - {x: 17, y: 13}
+          - {x: 20, y: 13}
+          - {x: 21, y: 13}
+          - {x: 24, y: 13}
+          - {x: 25, y: 13}
+          - {x: 28, y: 13}
+          - {x: 29, y: 13}
+          - {x: 32, y: 13}
+          - {x: 33, y: 13}
+          - {x: 36, y: 13}
+          - {x: 37, y: 13}
+          - {x: 2, y: 14}
+          - {x: 3, y: 14}
+          - {x: 6, y: 14}
+          - {x: 7, y: 14}
+          - {x: 10, y: 14}
+          - {x: 11, y: 14}
+          - {x: 14, y: 14}
+          - {x: 15, y: 14}
+          - {x: 18, y: 14}
+          - {x: 19, y: 14}
+          - {x: 22, y: 14}
+          - {x: 23, y: 14}
+          - {x: 26, y: 14}
+          - {x: 27, y: 14}
+          - {x: 30, y: 14}
+          - {x: 31, y: 14}
+          - {x: 34, y: 14}
+          - {x: 35, y: 14}
+          - {x: 38, y: 14}
+          - {x: 2, y: 15}
+          - {x: 3, y: 15}
+          - {x: 6, y: 15}
+          - {x: 7, y: 15}
+          - {x: 10, y: 15}
+          - {x: 11, y: 15}
+          - {x: 14, y: 15}
+          - {x: 15, y: 15}
+          - {x: 18, y: 15}
+          - {x: 19, y: 15}
+          - {x: 22, y: 15}
+          - {x: 23, y: 15}
+          - {x: 26, y: 15}
+          - {x: 27, y: 15}
+          - {x: 30, y: 15}
+          - {x: 31, y: 15}
+          - {x: 34, y: 15}
+          - {x: 35, y: 15}
+          - {x: 38, y: 15}
+          - {x: 0, y: 16}
+          - {x: 1, y: 16}
+          - {x: 4, y: 16}
+          - {x: 5, y: 16}
+          - {x: 8, y: 16}
+          - {x: 9, y: 16}
+          - {x: 12, y: 16}
+          - {x: 13, y: 16}
+          - {x: 16, y: 16}
+          - {x: 17, y: 16}
+          - {x: 20, y: 16}
+          - {x: 21, y: 16}
+          - {x: 24, y: 16}
+          - {x: 25, y: 16}
+          - {x: 28, y: 16}
+          - {x: 29, y: 16}
+          - {x: 32, y: 16}
+          - {x: 33, y: 16}
+          - {x: 36, y: 16}
+          - {x: 37, y: 16}
+          - {x: 1, y: 17}
+          - {x: 4, y: 17}
+          - {x: 5, y: 17}
+          - {x: 8, y: 17}
+          - {x: 9, y: 17}
+          - {x: 12, y: 17}
+          - {x: 13, y: 17}
+          - {x: 16, y: 17}
+          - {x: 17, y: 17}
+          - {x: 20, y: 17}
+          - {x: 21, y: 17}
+          - {x: 24, y: 17}
+          - {x: 25, y: 17}
+          - {x: 28, y: 17}
+          - {x: 29, y: 17}
+          - {x: 32, y: 17}
+          - {x: 33, y: 17}
+          - {x: 36, y: 17}
+          - {x: 37, y: 17}
+          - {x: 2, y: 18}
+          - {x: 3, y: 18}
+          - {x: 6, y: 18}
+          - {x: 7, y: 18}
+          - {x: 10, y: 18}
+          - {x: 11, y: 18}
+          - {x: 14, y: 18}
+          - {x: 15, y: 18}
+          - {x: 18, y: 18}
+          - {x: 19, y: 18}
+          - {x: 22, y: 18}
+          - {x: 23, y: 18}
+          - {x: 26, y: 18}
+          - {x: 27, y: 18}
+          - {x: 30, y: 18}
+          - {x: 31, y: 18}
+          - {x: 34, y: 18}
+          - {x: 35, y: 18}
+          - {x: 3, y: 19}
+          - {x: 6, y: 19}
+          - {x: 7, y: 19}
+          - {x: 10, y: 19}
+          - {x: 11, y: 19}
+          - {x: 14, y: 19}
+          - {x: 15, y: 19}
+          - {x: 18, y: 19}
+          - {x: 19, y: 19}
+          - {x: 22, y: 19}
+          - {x: 23, y: 19}
+          - {x: 26, y: 19}
+          - {x: 27, y: 19}
+          - {x: 30, y: 19}
+          - {x: 31, y: 19}
+          - {x: 34, y: 19}
+          - {x: 35, y: 19}
+          snapshotKey: rockfall_a
+          ensureEscape: 0
+    - rid: 1005
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 16, y: 0}
+          - {x: 17, y: 0}
+          - {x: 20, y: 0}
+          - {x: 21, y: 0}
+          - {x: 24, y: 0}
+          - {x: 25, y: 0}
+          - {x: 28, y: 0}
+          - {x: 29, y: 0}
+          - {x: 32, y: 0}
+          - {x: 33, y: 0}
+          - {x: 4, y: 1}
+          - {x: 5, y: 1}
+          - {x: 8, y: 1}
+          - {x: 9, y: 1}
+          - {x: 12, y: 1}
+          - {x: 13, y: 1}
+          - {x: 16, y: 1}
+          - {x: 17, y: 1}
+          - {x: 20, y: 1}
+          - {x: 21, y: 1}
+          - {x: 24, y: 1}
+          - {x: 25, y: 1}
+          - {x: 28, y: 1}
+          - {x: 29, y: 1}
+          - {x: 32, y: 1}
+          - {x: 33, y: 1}
+          - {x: 36, y: 1}
+          - {x: 2, y: 2}
+          - {x: 3, y: 2}
+          - {x: 6, y: 2}
+          - {x: 7, y: 2}
+          - {x: 10, y: 2}
+          - {x: 11, y: 2}
+          - {x: 14, y: 2}
+          - {x: 15, y: 2}
+          - {x: 18, y: 2}
+          - {x: 19, y: 2}
+          - {x: 22, y: 2}
+          - {x: 23, y: 2}
+          - {x: 26, y: 2}
+          - {x: 27, y: 2}
+          - {x: 30, y: 2}
+          - {x: 31, y: 2}
+          - {x: 34, y: 2}
+          - {x: 35, y: 2}
+          - {x: 2, y: 3}
+          - {x: 3, y: 3}
+          - {x: 6, y: 3}
+          - {x: 7, y: 3}
+          - {x: 10, y: 3}
+          - {x: 11, y: 3}
+          - {x: 14, y: 3}
+          - {x: 15, y: 3}
+          - {x: 18, y: 3}
+          - {x: 19, y: 3}
+          - {x: 22, y: 3}
+          - {x: 23, y: 3}
+          - {x: 26, y: 3}
+          - {x: 27, y: 3}
+          - {x: 30, y: 3}
+          - {x: 31, y: 3}
+          - {x: 34, y: 3}
+          - {x: 35, y: 3}
+          - {x: 38, y: 3}
+          - {x: 0, y: 4}
+          - {x: 1, y: 4}
+          - {x: 4, y: 4}
+          - {x: 5, y: 4}
+          - {x: 8, y: 4}
+          - {x: 9, y: 4}
+          - {x: 12, y: 4}
+          - {x: 13, y: 4}
+          - {x: 16, y: 4}
+          - {x: 17, y: 4}
+          - {x: 20, y: 4}
+          - {x: 21, y: 4}
+          - {x: 24, y: 4}
+          - {x: 25, y: 4}
+          - {x: 28, y: 4}
+          - {x: 29, y: 4}
+          - {x: 32, y: 4}
+          - {x: 33, y: 4}
+          - {x: 36, y: 4}
+          - {x: 37, y: 4}
+          - {x: 0, y: 5}
+          - {x: 1, y: 5}
+          - {x: 4, y: 5}
+          - {x: 5, y: 5}
+          - {x: 8, y: 5}
+          - {x: 9, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 28, y: 5}
+          - {x: 29, y: 5}
+          - {x: 32, y: 5}
+          - {x: 33, y: 5}
+          - {x: 36, y: 5}
+          - {x: 37, y: 5}
+          - {x: 2, y: 6}
+          - {x: 3, y: 6}
+          - {x: 6, y: 6}
+          - {x: 7, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 6}
+          - {x: 14, y: 6}
+          - {x: 15, y: 6}
+          - {x: 18, y: 6}
+          - {x: 19, y: 6}
+          - {x: 22, y: 6}
+          - {x: 23, y: 6}
+          - {x: 26, y: 6}
+          - {x: 27, y: 6}
+          - {x: 30, y: 6}
+          - {x: 31, y: 6}
+          - {x: 34, y: 6}
+          - {x: 35, y: 6}
+          - {x: 38, y: 6}
+          - {x: 2, y: 7}
+          - {x: 3, y: 7}
+          - {x: 6, y: 7}
+          - {x: 7, y: 7}
+          - {x: 10, y: 7}
+          - {x: 11, y: 7}
+          - {x: 14, y: 7}
+          - {x: 15, y: 7}
+          - {x: 18, y: 7}
+          - {x: 19, y: 7}
+          - {x: 22, y: 7}
+          - {x: 23, y: 7}
+          - {x: 26, y: 7}
+          - {x: 27, y: 7}
+          - {x: 30, y: 7}
+          - {x: 31, y: 7}
+          - {x: 34, y: 7}
+          - {x: 35, y: 7}
+          - {x: 38, y: 7}
+          - {x: 0, y: 8}
+          - {x: 1, y: 8}
+          - {x: 4, y: 8}
+          - {x: 5, y: 8}
+          - {x: 8, y: 8}
+          - {x: 9, y: 8}
+          - {x: 12, y: 8}
+          - {x: 13, y: 8}
+          - {x: 16, y: 8}
+          - {x: 17, y: 8}
+          - {x: 21, y: 8}
+          - {x: 24, y: 8}
+          - {x: 25, y: 8}
+          - {x: 28, y: 8}
+          - {x: 29, y: 8}
+          - {x: 32, y: 8}
+          - {x: 33, y: 8}
+          - {x: 36, y: 8}
+          - {x: 37, y: 8}
+          - {x: 0, y: 9}
+          - {x: 1, y: 9}
+          - {x: 4, y: 9}
+          - {x: 5, y: 9}
+          - {x: 8, y: 9}
+          - {x: 9, y: 9}
+          - {x: 12, y: 9}
+          - {x: 13, y: 9}
+          - {x: 16, y: 9}
+          - {x: 17, y: 9}
+          - {x: 21, y: 9}
+          - {x: 24, y: 9}
+          - {x: 25, y: 9}
+          - {x: 28, y: 9}
+          - {x: 29, y: 9}
+          - {x: 32, y: 9}
+          - {x: 33, y: 9}
+          - {x: 36, y: 9}
+          - {x: 37, y: 9}
+          - {x: 2, y: 10}
+          - {x: 3, y: 10}
+          - {x: 6, y: 10}
+          - {x: 7, y: 10}
+          - {x: 10, y: 10}
+          - {x: 11, y: 10}
+          - {x: 14, y: 10}
+          - {x: 15, y: 10}
+          - {x: 22, y: 10}
+          - {x: 23, y: 10}
+          - {x: 26, y: 10}
+          - {x: 27, y: 10}
+          - {x: 30, y: 10}
+          - {x: 31, y: 10}
+          - {x: 34, y: 10}
+          - {x: 35, y: 10}
+          - {x: 38, y: 10}
+          - {x: 2, y: 11}
+          - {x: 3, y: 11}
+          - {x: 6, y: 11}
+          - {x: 7, y: 11}
+          - {x: 10, y: 11}
+          - {x: 11, y: 11}
+          - {x: 14, y: 11}
+          - {x: 15, y: 11}
+          - {x: 18, y: 11}
+          - {x: 19, y: 11}
+          - {x: 22, y: 11}
+          - {x: 23, y: 11}
+          - {x: 26, y: 11}
+          - {x: 27, y: 11}
+          - {x: 30, y: 11}
+          - {x: 31, y: 11}
+          - {x: 34, y: 11}
+          - {x: 35, y: 11}
+          - {x: 38, y: 11}
+          - {x: 0, y: 12}
+          - {x: 1, y: 12}
+          - {x: 4, y: 12}
+          - {x: 5, y: 12}
+          - {x: 8, y: 12}
+          - {x: 9, y: 12}
+          - {x: 12, y: 12}
+          - {x: 13, y: 12}
+          - {x: 16, y: 12}
+          - {x: 17, y: 12}
+          - {x: 20, y: 12}
+          - {x: 21, y: 12}
+          - {x: 24, y: 12}
+          - {x: 25, y: 12}
+          - {x: 28, y: 12}
+          - {x: 29, y: 12}
+          - {x: 32, y: 12}
+          - {x: 33, y: 12}
+          - {x: 36, y: 12}
+          - {x: 37, y: 12}
+          - {x: 0, y: 13}
+          - {x: 1, y: 13}
+          - {x: 4, y: 13}
+          - {x: 5, y: 13}
+          - {x: 8, y: 13}
+          - {x: 9, y: 13}
+          - {x: 12, y: 13}
+          - {x: 13, y: 13}
+          - {x: 16, y: 13}
+          - {x: 17, y: 13}
+          - {x: 20, y: 13}
+          - {x: 21, y: 13}
+          - {x: 24, y: 13}
+          - {x: 25, y: 13}
+          - {x: 28, y: 13}
+          - {x: 29, y: 13}
+          - {x: 32, y: 13}
+          - {x: 33, y: 13}
+          - {x: 36, y: 13}
+          - {x: 37, y: 13}
+          - {x: 2, y: 14}
+          - {x: 3, y: 14}
+          - {x: 6, y: 14}
+          - {x: 7, y: 14}
+          - {x: 10, y: 14}
+          - {x: 11, y: 14}
+          - {x: 14, y: 14}
+          - {x: 15, y: 14}
+          - {x: 18, y: 14}
+          - {x: 19, y: 14}
+          - {x: 22, y: 14}
+          - {x: 23, y: 14}
+          - {x: 26, y: 14}
+          - {x: 27, y: 14}
+          - {x: 30, y: 14}
+          - {x: 31, y: 14}
+          - {x: 34, y: 14}
+          - {x: 35, y: 14}
+          - {x: 38, y: 14}
+          - {x: 2, y: 15}
+          - {x: 3, y: 15}
+          - {x: 6, y: 15}
+          - {x: 7, y: 15}
+          - {x: 10, y: 15}
+          - {x: 11, y: 15}
+          - {x: 14, y: 15}
+          - {x: 15, y: 15}
+          - {x: 18, y: 15}
+          - {x: 19, y: 15}
+          - {x: 22, y: 15}
+          - {x: 23, y: 15}
+          - {x: 26, y: 15}
+          - {x: 27, y: 15}
+          - {x: 30, y: 15}
+          - {x: 31, y: 15}
+          - {x: 34, y: 15}
+          - {x: 35, y: 15}
+          - {x: 38, y: 15}
+          - {x: 0, y: 16}
+          - {x: 1, y: 16}
+          - {x: 4, y: 16}
+          - {x: 5, y: 16}
+          - {x: 8, y: 16}
+          - {x: 9, y: 16}
+          - {x: 12, y: 16}
+          - {x: 13, y: 16}
+          - {x: 16, y: 16}
+          - {x: 17, y: 16}
+          - {x: 20, y: 16}
+          - {x: 21, y: 16}
+          - {x: 24, y: 16}
+          - {x: 25, y: 16}
+          - {x: 28, y: 16}
+          - {x: 29, y: 16}
+          - {x: 32, y: 16}
+          - {x: 33, y: 16}
+          - {x: 36, y: 16}
+          - {x: 37, y: 16}
+          - {x: 1, y: 17}
+          - {x: 4, y: 17}
+          - {x: 5, y: 17}
+          - {x: 8, y: 17}
+          - {x: 9, y: 17}
+          - {x: 12, y: 17}
+          - {x: 13, y: 17}
+          - {x: 16, y: 17}
+          - {x: 17, y: 17}
+          - {x: 20, y: 17}
+          - {x: 21, y: 17}
+          - {x: 24, y: 17}
+          - {x: 25, y: 17}
+          - {x: 28, y: 17}
+          - {x: 29, y: 17}
+          - {x: 32, y: 17}
+          - {x: 33, y: 17}
+          - {x: 36, y: 17}
+          - {x: 37, y: 17}
+          - {x: 2, y: 18}
+          - {x: 3, y: 18}
+          - {x: 6, y: 18}
+          - {x: 7, y: 18}
+          - {x: 10, y: 18}
+          - {x: 11, y: 18}
+          - {x: 14, y: 18}
+          - {x: 15, y: 18}
+          - {x: 18, y: 18}
+          - {x: 19, y: 18}
+          - {x: 22, y: 18}
+          - {x: 23, y: 18}
+          - {x: 26, y: 18}
+          - {x: 27, y: 18}
+          - {x: 30, y: 18}
+          - {x: 31, y: 18}
+          - {x: 34, y: 18}
+          - {x: 35, y: 18}
+          - {x: 3, y: 19}
+          - {x: 6, y: 19}
+          - {x: 7, y: 19}
+          - {x: 10, y: 19}
+          - {x: 11, y: 19}
+          - {x: 14, y: 19}
+          - {x: 15, y: 19}
+          - {x: 18, y: 19}
+          - {x: 19, y: 19}
+          - {x: 22, y: 19}
+          - {x: 23, y: 19}
+          - {x: 26, y: 19}
+          - {x: 27, y: 19}
+          - {x: 30, y: 19}
+          - {x: 31, y: 19}
+          - {x: 34, y: 19}
+          - {x: 35, y: 19}
+          snapshotKey: rockfall_a
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "1 \xB7 \uBE68\uAC04 \uBB36\uC74C \uB099\uC11D"
+    - rid: 1006
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 255086516629100043, guid: 7653b6835667c4548a08f14653ada6e7, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 4, y: 0}
+          - {x: 5, y: 0}
+          - {x: 8, y: 0}
+          - {x: 9, y: 0}
+          - {x: 12, y: 0}
+          - {x: 13, y: 0}
+          - {x: 16, y: 0}
+          - {x: 17, y: 0}
+          - {x: 20, y: 0}
+          - {x: 21, y: 0}
+          - {x: 24, y: 0}
+          - {x: 25, y: 0}
+          - {x: 28, y: 0}
+          - {x: 29, y: 0}
+          - {x: 32, y: 0}
+          - {x: 33, y: 0}
+          - {x: 4, y: 1}
+          - {x: 5, y: 1}
+          - {x: 8, y: 1}
+          - {x: 9, y: 1}
+          - {x: 12, y: 1}
+          - {x: 13, y: 1}
+          - {x: 16, y: 1}
+          - {x: 17, y: 1}
+          - {x: 20, y: 1}
+          - {x: 21, y: 1}
+          - {x: 24, y: 1}
+          - {x: 25, y: 1}
+          - {x: 28, y: 1}
+          - {x: 29, y: 1}
+          - {x: 32, y: 1}
+          - {x: 33, y: 1}
+          - {x: 36, y: 1}
+          - {x: 2, y: 2}
+          - {x: 3, y: 2}
+          - {x: 6, y: 2}
+          - {x: 7, y: 2}
+          - {x: 10, y: 2}
+          - {x: 11, y: 2}
+          - {x: 14, y: 2}
+          - {x: 15, y: 2}
+          - {x: 18, y: 2}
+          - {x: 19, y: 2}
+          - {x: 22, y: 2}
+          - {x: 23, y: 2}
+          - {x: 26, y: 2}
+          - {x: 27, y: 2}
+          - {x: 30, y: 2}
+          - {x: 31, y: 2}
+          - {x: 34, y: 2}
+          - {x: 35, y: 2}
+          - {x: 2, y: 3}
+          - {x: 3, y: 3}
+          - {x: 6, y: 3}
+          - {x: 7, y: 3}
+          - {x: 10, y: 3}
+          - {x: 11, y: 3}
+          - {x: 14, y: 3}
+          - {x: 15, y: 3}
+          - {x: 18, y: 3}
+          - {x: 19, y: 3}
+          - {x: 22, y: 3}
+          - {x: 23, y: 3}
+          - {x: 26, y: 3}
+          - {x: 27, y: 3}
+          - {x: 30, y: 3}
+          - {x: 31, y: 3}
+          - {x: 34, y: 3}
+          - {x: 35, y: 3}
+          - {x: 38, y: 3}
+          - {x: 0, y: 4}
+          - {x: 1, y: 4}
+          - {x: 4, y: 4}
+          - {x: 5, y: 4}
+          - {x: 8, y: 4}
+          - {x: 9, y: 4}
+          - {x: 12, y: 4}
+          - {x: 13, y: 4}
+          - {x: 16, y: 4}
+          - {x: 17, y: 4}
+          - {x: 20, y: 4}
+          - {x: 21, y: 4}
+          - {x: 24, y: 4}
+          - {x: 25, y: 4}
+          - {x: 28, y: 4}
+          - {x: 29, y: 4}
+          - {x: 32, y: 4}
+          - {x: 33, y: 4}
+          - {x: 36, y: 4}
+          - {x: 37, y: 4}
+          - {x: 0, y: 5}
+          - {x: 1, y: 5}
+          - {x: 4, y: 5}
+          - {x: 5, y: 5}
+          - {x: 8, y: 5}
+          - {x: 9, y: 5}
+          - {x: 12, y: 5}
+          - {x: 13, y: 5}
+          - {x: 16, y: 5}
+          - {x: 17, y: 5}
+          - {x: 20, y: 5}
+          - {x: 21, y: 5}
+          - {x: 24, y: 5}
+          - {x: 25, y: 5}
+          - {x: 28, y: 5}
+          - {x: 29, y: 5}
+          - {x: 32, y: 5}
+          - {x: 33, y: 5}
+          - {x: 36, y: 5}
+          - {x: 37, y: 5}
+          - {x: 2, y: 6}
+          - {x: 3, y: 6}
+          - {x: 6, y: 6}
+          - {x: 7, y: 6}
+          - {x: 10, y: 6}
+          - {x: 11, y: 6}
+          - {x: 14, y: 6}
+          - {x: 15, y: 6}
+          - {x: 18, y: 6}
+          - {x: 19, y: 6}
+          - {x: 22, y: 6}
+          - {x: 23, y: 6}
+          - {x: 26, y: 6}
+          - {x: 27, y: 6}
+          - {x: 30, y: 6}
+          - {x: 31, y: 6}
+          - {x: 34, y: 6}
+          - {x: 35, y: 6}
+          - {x: 38, y: 6}
+          - {x: 2, y: 7}
+          - {x: 3, y: 7}
+          - {x: 6, y: 7}
+          - {x: 7, y: 7}
+          - {x: 10, y: 7}
+          - {x: 11, y: 7}
+          - {x: 14, y: 7}
+          - {x: 15, y: 7}
+          - {x: 18, y: 7}
+          - {x: 19, y: 7}
+          - {x: 22, y: 7}
+          - {x: 23, y: 7}
+          - {x: 26, y: 7}
+          - {x: 27, y: 7}
+          - {x: 30, y: 7}
+          - {x: 31, y: 7}
+          - {x: 34, y: 7}
+          - {x: 35, y: 7}
+          - {x: 38, y: 7}
+          - {x: 0, y: 8}
+          - {x: 1, y: 8}
+          - {x: 4, y: 8}
+          - {x: 5, y: 8}
+          - {x: 8, y: 8}
+          - {x: 9, y: 8}
+          - {x: 12, y: 8}
+          - {x: 13, y: 8}
+          - {x: 16, y: 8}
+          - {x: 17, y: 8}
+          - {x: 21, y: 8}
+          - {x: 24, y: 8}
+          - {x: 25, y: 8}
+          - {x: 28, y: 8}
+          - {x: 29, y: 8}
+          - {x: 32, y: 8}
+          - {x: 33, y: 8}
+          - {x: 36, y: 8}
+          - {x: 37, y: 8}
+          - {x: 0, y: 9}
+          - {x: 1, y: 9}
+          - {x: 4, y: 9}
+          - {x: 5, y: 9}
+          - {x: 8, y: 9}
+          - {x: 9, y: 9}
+          - {x: 12, y: 9}
+          - {x: 13, y: 9}
+          - {x: 16, y: 9}
+          - {x: 17, y: 9}
+          - {x: 21, y: 9}
+          - {x: 24, y: 9}
+          - {x: 25, y: 9}
+          - {x: 28, y: 9}
+          - {x: 29, y: 9}
+          - {x: 32, y: 9}
+          - {x: 33, y: 9}
+          - {x: 36, y: 9}
+          - {x: 37, y: 9}
+          - {x: 2, y: 10}
+          - {x: 3, y: 10}
+          - {x: 6, y: 10}
+          - {x: 7, y: 10}
+          - {x: 10, y: 10}
+          - {x: 11, y: 10}
+          - {x: 14, y: 10}
+          - {x: 15, y: 10}
+          - {x: 22, y: 10}
+          - {x: 23, y: 10}
+          - {x: 26, y: 10}
+          - {x: 27, y: 10}
+          - {x: 30, y: 10}
+          - {x: 31, y: 10}
+          - {x: 34, y: 10}
+          - {x: 35, y: 10}
+          - {x: 38, y: 10}
+          - {x: 2, y: 11}
+          - {x: 3, y: 11}
+          - {x: 6, y: 11}
+          - {x: 7, y: 11}
+          - {x: 10, y: 11}
+          - {x: 11, y: 11}
+          - {x: 14, y: 11}
+          - {x: 15, y: 11}
+          - {x: 18, y: 11}
+          - {x: 19, y: 11}
+          - {x: 22, y: 11}
+          - {x: 23, y: 11}
+          - {x: 26, y: 11}
+          - {x: 27, y: 11}
+          - {x: 30, y: 11}
+          - {x: 31, y: 11}
+          - {x: 34, y: 11}
+          - {x: 35, y: 11}
+          - {x: 38, y: 11}
+          - {x: 0, y: 12}
+          - {x: 1, y: 12}
+          - {x: 4, y: 12}
+          - {x: 5, y: 12}
+          - {x: 8, y: 12}
+          - {x: 9, y: 12}
+          - {x: 12, y: 12}
+          - {x: 13, y: 12}
+          - {x: 16, y: 12}
+          - {x: 17, y: 12}
+          - {x: 20, y: 12}
+          - {x: 21, y: 12}
+          - {x: 24, y: 12}
+          - {x: 25, y: 12}
+          - {x: 28, y: 12}
+          - {x: 29, y: 12}
+          - {x: 32, y: 12}
+          - {x: 33, y: 12}
+          - {x: 36, y: 12}
+          - {x: 37, y: 12}
+          - {x: 0, y: 13}
+          - {x: 1, y: 13}
+          - {x: 4, y: 13}
+          - {x: 5, y: 13}
+          - {x: 8, y: 13}
+          - {x: 9, y: 13}
+          - {x: 12, y: 13}
+          - {x: 13, y: 13}
+          - {x: 16, y: 13}
+          - {x: 17, y: 13}
+          - {x: 20, y: 13}
+          - {x: 21, y: 13}
+          - {x: 24, y: 13}
+          - {x: 25, y: 13}
+          - {x: 28, y: 13}
+          - {x: 29, y: 13}
+          - {x: 32, y: 13}
+          - {x: 33, y: 13}
+          - {x: 36, y: 13}
+          - {x: 37, y: 13}
+          - {x: 2, y: 14}
+          - {x: 3, y: 14}
+          - {x: 6, y: 14}
+          - {x: 7, y: 14}
+          - {x: 10, y: 14}
+          - {x: 11, y: 14}
+          - {x: 14, y: 14}
+          - {x: 15, y: 14}
+          - {x: 18, y: 14}
+          - {x: 19, y: 14}
+          - {x: 22, y: 14}
+          - {x: 23, y: 14}
+          - {x: 26, y: 14}
+          - {x: 27, y: 14}
+          - {x: 30, y: 14}
+          - {x: 31, y: 14}
+          - {x: 34, y: 14}
+          - {x: 35, y: 14}
+          - {x: 38, y: 14}
+          - {x: 2, y: 15}
+          - {x: 3, y: 15}
+          - {x: 6, y: 15}
+          - {x: 7, y: 15}
+          - {x: 10, y: 15}
+          - {x: 11, y: 15}
+          - {x: 14, y: 15}
+          - {x: 15, y: 15}
+          - {x: 18, y: 15}
+          - {x: 19, y: 15}
+          - {x: 22, y: 15}
+          - {x: 23, y: 15}
+          - {x: 26, y: 15}
+          - {x: 27, y: 15}
+          - {x: 30, y: 15}
+          - {x: 31, y: 15}
+          - {x: 34, y: 15}
+          - {x: 35, y: 15}
+          - {x: 38, y: 15}
+          - {x: 0, y: 16}
+          - {x: 1, y: 16}
+          - {x: 4, y: 16}
+          - {x: 5, y: 16}
+          - {x: 8, y: 16}
+          - {x: 9, y: 16}
+          - {x: 12, y: 16}
+          - {x: 13, y: 16}
+          - {x: 16, y: 16}
+          - {x: 17, y: 16}
+          - {x: 20, y: 16}
+          - {x: 21, y: 16}
+          - {x: 24, y: 16}
+          - {x: 25, y: 16}
+          - {x: 28, y: 16}
+          - {x: 29, y: 16}
+          - {x: 32, y: 16}
+          - {x: 33, y: 16}
+          - {x: 36, y: 16}
+          - {x: 37, y: 16}
+          - {x: 1, y: 17}
+          - {x: 4, y: 17}
+          - {x: 5, y: 17}
+          - {x: 8, y: 17}
+          - {x: 9, y: 17}
+          - {x: 12, y: 17}
+          - {x: 13, y: 17}
+          - {x: 16, y: 17}
+          - {x: 17, y: 17}
+          - {x: 20, y: 17}
+          - {x: 21, y: 17}
+          - {x: 24, y: 17}
+          - {x: 25, y: 17}
+          - {x: 28, y: 17}
+          - {x: 29, y: 17}
+          - {x: 32, y: 17}
+          - {x: 33, y: 17}
+          - {x: 36, y: 17}
+          - {x: 37, y: 17}
+          - {x: 2, y: 18}
+          - {x: 3, y: 18}
+          - {x: 6, y: 18}
+          - {x: 7, y: 18}
+          - {x: 10, y: 18}
+          - {x: 11, y: 18}
+          - {x: 14, y: 18}
+          - {x: 15, y: 18}
+          - {x: 18, y: 18}
+          - {x: 19, y: 18}
+          - {x: 22, y: 18}
+          - {x: 23, y: 18}
+          - {x: 26, y: 18}
+          - {x: 27, y: 18}
+          - {x: 30, y: 18}
+          - {x: 31, y: 18}
+          - {x: 34, y: 18}
+          - {x: 35, y: 18}
+          - {x: 3, y: 19}
+          - {x: 6, y: 19}
+          - {x: 7, y: 19}
+          - {x: 10, y: 19}
+          - {x: 11, y: 19}
+          - {x: 14, y: 19}
+          - {x: 15, y: 19}
+          - {x: 18, y: 19}
+          - {x: 19, y: 19}
+          - {x: 22, y: 19}
+          - {x: 23, y: 19}
+          - {x: 26, y: 19}
+          - {x: 27, y: 19}
+          - {x: 30, y: 19}
+          - {x: 31, y: 19}
+          - {x: 34, y: 19}
+          - {x: 35, y: 19}
+          snapshotKey: rockfall_a
+          ensureEscape: 0
+    - rid: 1007
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.65
+    - rid: 1008
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 7
+    - rid: 1009
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistWindup
+        transition: 0
+        speed: 1
+    - rid: 1010
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistContact
+        transition: 0
+        speed: 1
+    - rid: 1011
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 3, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 14, y: 0}
+          - {x: 15, y: 0}
+          - {x: 18, y: 0}
+          - {x: 19, y: 0}
+          - {x: 22, y: 0}
+          - {x: 23, y: 0}
+          - {x: 26, y: 0}
+          - {x: 27, y: 0}
+          - {x: 30, y: 0}
+          - {x: 31, y: 0}
+          - {x: 34, y: 0}
+          - {x: 35, y: 0}
+          - {x: 2, y: 1}
+          - {x: 3, y: 1}
+          - {x: 6, y: 1}
+          - {x: 7, y: 1}
+          - {x: 10, y: 1}
+          - {x: 11, y: 1}
+          - {x: 14, y: 1}
+          - {x: 15, y: 1}
+          - {x: 18, y: 1}
+          - {x: 19, y: 1}
+          - {x: 22, y: 1}
+          - {x: 23, y: 1}
+          - {x: 26, y: 1}
+          - {x: 27, y: 1}
+          - {x: 30, y: 1}
+          - {x: 31, y: 1}
+          - {x: 34, y: 1}
+          - {x: 35, y: 1}
+          - {x: 1, y: 2}
+          - {x: 4, y: 2}
+          - {x: 5, y: 2}
+          - {x: 8, y: 2}
+          - {x: 9, y: 2}
+          - {x: 12, y: 2}
+          - {x: 13, y: 2}
+          - {x: 16, y: 2}
+          - {x: 17, y: 2}
+          - {x: 20, y: 2}
+          - {x: 21, y: 2}
+          - {x: 24, y: 2}
+          - {x: 25, y: 2}
+          - {x: 28, y: 2}
+          - {x: 29, y: 2}
+          - {x: 32, y: 2}
+          - {x: 33, y: 2}
+          - {x: 36, y: 2}
+          - {x: 37, y: 2}
+          - {x: 0, y: 3}
+          - {x: 1, y: 3}
+          - {x: 4, y: 3}
+          - {x: 5, y: 3}
+          - {x: 8, y: 3}
+          - {x: 9, y: 3}
+          - {x: 12, y: 3}
+          - {x: 13, y: 3}
+          - {x: 16, y: 3}
+          - {x: 17, y: 3}
+          - {x: 20, y: 3}
+          - {x: 21, y: 3}
+          - {x: 24, y: 3}
+          - {x: 25, y: 3}
+          - {x: 28, y: 3}
+          - {x: 29, y: 3}
+          - {x: 32, y: 3}
+          - {x: 33, y: 3}
+          - {x: 36, y: 3}
+          - {x: 37, y: 3}
+          - {x: 2, y: 4}
+          - {x: 3, y: 4}
+          - {x: 6, y: 4}
+          - {x: 7, y: 4}
+          - {x: 10, y: 4}
+          - {x: 11, y: 4}
+          - {x: 14, y: 4}
+          - {x: 15, y: 4}
+          - {x: 18, y: 4}
+          - {x: 19, y: 4}
+          - {x: 22, y: 4}
+          - {x: 23, y: 4}
+          - {x: 26, y: 4}
+          - {x: 27, y: 4}
+          - {x: 30, y: 4}
+          - {x: 31, y: 4}
+          - {x: 34, y: 4}
+          - {x: 35, y: 4}
+          - {x: 38, y: 4}
+          - {x: 2, y: 5}
+          - {x: 3, y: 5}
+          - {x: 6, y: 5}
+          - {x: 7, y: 5}
+          - {x: 10, y: 5}
+          - {x: 11, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 30, y: 5}
+          - {x: 31, y: 5}
+          - {x: 34, y: 5}
+          - {x: 35, y: 5}
+          - {x: 38, y: 5}
+          - {x: 0, y: 6}
+          - {x: 1, y: 6}
+          - {x: 4, y: 6}
+          - {x: 5, y: 6}
+          - {x: 8, y: 6}
+          - {x: 9, y: 6}
+          - {x: 12, y: 6}
+          - {x: 13, y: 6}
+          - {x: 16, y: 6}
+          - {x: 17, y: 6}
+          - {x: 20, y: 6}
+          - {x: 21, y: 6}
+          - {x: 24, y: 6}
+          - {x: 25, y: 6}
+          - {x: 28, y: 6}
+          - {x: 29, y: 6}
+          - {x: 32, y: 6}
+          - {x: 33, y: 6}
+          - {x: 36, y: 6}
+          - {x: 37, y: 6}
+          - {x: 0, y: 7}
+          - {x: 1, y: 7}
+          - {x: 4, y: 7}
+          - {x: 5, y: 7}
+          - {x: 8, y: 7}
+          - {x: 9, y: 7}
+          - {x: 12, y: 7}
+          - {x: 13, y: 7}
+          - {x: 16, y: 7}
+          - {x: 17, y: 7}
+          - {x: 20, y: 7}
+          - {x: 21, y: 7}
+          - {x: 24, y: 7}
+          - {x: 25, y: 7}
+          - {x: 28, y: 7}
+          - {x: 29, y: 7}
+          - {x: 32, y: 7}
+          - {x: 33, y: 7}
+          - {x: 36, y: 7}
+          - {x: 37, y: 7}
+          - {x: 2, y: 8}
+          - {x: 3, y: 8}
+          - {x: 6, y: 8}
+          - {x: 7, y: 8}
+          - {x: 10, y: 8}
+          - {x: 11, y: 8}
+          - {x: 14, y: 8}
+          - {x: 15, y: 8}
+          - {x: 22, y: 8}
+          - {x: 23, y: 8}
+          - {x: 26, y: 8}
+          - {x: 27, y: 8}
+          - {x: 30, y: 8}
+          - {x: 31, y: 8}
+          - {x: 34, y: 8}
+          - {x: 35, y: 8}
+          - {x: 38, y: 8}
+          - {x: 2, y: 9}
+          - {x: 3, y: 9}
+          - {x: 6, y: 9}
+          - {x: 7, y: 9}
+          - {x: 10, y: 9}
+          - {x: 11, y: 9}
+          - {x: 14, y: 9}
+          - {x: 15, y: 9}
+          - {x: 22, y: 9}
+          - {x: 23, y: 9}
+          - {x: 26, y: 9}
+          - {x: 27, y: 9}
+          - {x: 30, y: 9}
+          - {x: 31, y: 9}
+          - {x: 34, y: 9}
+          - {x: 35, y: 9}
+          - {x: 38, y: 9}
+          - {x: 0, y: 10}
+          - {x: 1, y: 10}
+          - {x: 4, y: 10}
+          - {x: 5, y: 10}
+          - {x: 8, y: 10}
+          - {x: 9, y: 10}
+          - {x: 12, y: 10}
+          - {x: 13, y: 10}
+          - {x: 16, y: 10}
+          - {x: 17, y: 10}
+          - {x: 21, y: 10}
+          - {x: 24, y: 10}
+          - {x: 25, y: 10}
+          - {x: 28, y: 10}
+          - {x: 29, y: 10}
+          - {x: 32, y: 10}
+          - {x: 33, y: 10}
+          - {x: 36, y: 10}
+          - {x: 37, y: 10}
+          - {x: 0, y: 11}
+          - {x: 1, y: 11}
+          - {x: 4, y: 11}
+          - {x: 5, y: 11}
+          - {x: 8, y: 11}
+          - {x: 9, y: 11}
+          - {x: 12, y: 11}
+          - {x: 13, y: 11}
+          - {x: 16, y: 11}
+          - {x: 17, y: 11}
+          - {x: 20, y: 11}
+          - {x: 21, y: 11}
+          - {x: 24, y: 11}
+          - {x: 25, y: 11}
+          - {x: 28, y: 11}
+          - {x: 29, y: 11}
+          - {x: 32, y: 11}
+          - {x: 33, y: 11}
+          - {x: 36, y: 11}
+          - {x: 37, y: 11}
+          - {x: 2, y: 12}
+          - {x: 3, y: 12}
+          - {x: 6, y: 12}
+          - {x: 7, y: 12}
+          - {x: 10, y: 12}
+          - {x: 11, y: 12}
+          - {x: 14, y: 12}
+          - {x: 15, y: 12}
+          - {x: 18, y: 12}
+          - {x: 19, y: 12}
+          - {x: 22, y: 12}
+          - {x: 23, y: 12}
+          - {x: 26, y: 12}
+          - {x: 27, y: 12}
+          - {x: 30, y: 12}
+          - {x: 31, y: 12}
+          - {x: 34, y: 12}
+          - {x: 35, y: 12}
+          - {x: 38, y: 12}
+          - {x: 2, y: 13}
+          - {x: 3, y: 13}
+          - {x: 6, y: 13}
+          - {x: 7, y: 13}
+          - {x: 10, y: 13}
+          - {x: 11, y: 13}
+          - {x: 14, y: 13}
+          - {x: 15, y: 13}
+          - {x: 18, y: 13}
+          - {x: 19, y: 13}
+          - {x: 22, y: 13}
+          - {x: 23, y: 13}
+          - {x: 26, y: 13}
+          - {x: 27, y: 13}
+          - {x: 30, y: 13}
+          - {x: 31, y: 13}
+          - {x: 34, y: 13}
+          - {x: 35, y: 13}
+          - {x: 38, y: 13}
+          - {x: 0, y: 14}
+          - {x: 1, y: 14}
+          - {x: 4, y: 14}
+          - {x: 5, y: 14}
+          - {x: 8, y: 14}
+          - {x: 9, y: 14}
+          - {x: 12, y: 14}
+          - {x: 13, y: 14}
+          - {x: 16, y: 14}
+          - {x: 17, y: 14}
+          - {x: 20, y: 14}
+          - {x: 21, y: 14}
+          - {x: 24, y: 14}
+          - {x: 25, y: 14}
+          - {x: 28, y: 14}
+          - {x: 29, y: 14}
+          - {x: 32, y: 14}
+          - {x: 33, y: 14}
+          - {x: 36, y: 14}
+          - {x: 37, y: 14}
+          - {x: 0, y: 15}
+          - {x: 1, y: 15}
+          - {x: 4, y: 15}
+          - {x: 5, y: 15}
+          - {x: 8, y: 15}
+          - {x: 9, y: 15}
+          - {x: 12, y: 15}
+          - {x: 13, y: 15}
+          - {x: 16, y: 15}
+          - {x: 17, y: 15}
+          - {x: 20, y: 15}
+          - {x: 21, y: 15}
+          - {x: 24, y: 15}
+          - {x: 25, y: 15}
+          - {x: 28, y: 15}
+          - {x: 29, y: 15}
+          - {x: 32, y: 15}
+          - {x: 33, y: 15}
+          - {x: 36, y: 15}
+          - {x: 37, y: 15}
+          - {x: 2, y: 16}
+          - {x: 3, y: 16}
+          - {x: 6, y: 16}
+          - {x: 7, y: 16}
+          - {x: 10, y: 16}
+          - {x: 11, y: 16}
+          - {x: 14, y: 16}
+          - {x: 15, y: 16}
+          - {x: 18, y: 16}
+          - {x: 19, y: 16}
+          - {x: 22, y: 16}
+          - {x: 23, y: 16}
+          - {x: 26, y: 16}
+          - {x: 27, y: 16}
+          - {x: 30, y: 16}
+          - {x: 31, y: 16}
+          - {x: 34, y: 16}
+          - {x: 35, y: 16}
+          - {x: 38, y: 16}
+          - {x: 2, y: 17}
+          - {x: 3, y: 17}
+          - {x: 6, y: 17}
+          - {x: 7, y: 17}
+          - {x: 10, y: 17}
+          - {x: 11, y: 17}
+          - {x: 14, y: 17}
+          - {x: 15, y: 17}
+          - {x: 18, y: 17}
+          - {x: 19, y: 17}
+          - {x: 22, y: 17}
+          - {x: 23, y: 17}
+          - {x: 26, y: 17}
+          - {x: 27, y: 17}
+          - {x: 30, y: 17}
+          - {x: 31, y: 17}
+          - {x: 34, y: 17}
+          - {x: 35, y: 17}
+          - {x: 4, y: 18}
+          - {x: 5, y: 18}
+          - {x: 8, y: 18}
+          - {x: 9, y: 18}
+          - {x: 12, y: 18}
+          - {x: 13, y: 18}
+          - {x: 16, y: 18}
+          - {x: 17, y: 18}
+          - {x: 20, y: 18}
+          - {x: 21, y: 18}
+          - {x: 24, y: 18}
+          - {x: 25, y: 18}
+          - {x: 28, y: 18}
+          - {x: 29, y: 18}
+          - {x: 32, y: 18}
+          - {x: 33, y: 18}
+          - {x: 36, y: 18}
+          - {x: 4, y: 19}
+          - {x: 5, y: 19}
+          - {x: 8, y: 19}
+          - {x: 9, y: 19}
+          - {x: 12, y: 19}
+          - {x: 13, y: 19}
+          - {x: 16, y: 19}
+          - {x: 17, y: 19}
+          - {x: 20, y: 19}
+          - {x: 21, y: 19}
+          - {x: 24, y: 19}
+          - {x: 25, y: 19}
+          - {x: 28, y: 19}
+          - {x: 29, y: 19}
+          - {x: 32, y: 19}
+          - {x: 33, y: 19}
+          snapshotKey: rockfall_b
+          ensureEscape: 0
+        color: {r: 1, g: 0.18, b: 0.24, a: 0.6}
+    - rid: 1012
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.4
+    - rid: 1013
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 5286838586219272981, guid: 9c5e92d094a41af44b4391668ec32517, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 3, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 14, y: 0}
+          - {x: 15, y: 0}
+          - {x: 18, y: 0}
+          - {x: 19, y: 0}
+          - {x: 22, y: 0}
+          - {x: 23, y: 0}
+          - {x: 26, y: 0}
+          - {x: 27, y: 0}
+          - {x: 30, y: 0}
+          - {x: 31, y: 0}
+          - {x: 34, y: 0}
+          - {x: 35, y: 0}
+          - {x: 2, y: 1}
+          - {x: 3, y: 1}
+          - {x: 6, y: 1}
+          - {x: 7, y: 1}
+          - {x: 10, y: 1}
+          - {x: 11, y: 1}
+          - {x: 14, y: 1}
+          - {x: 15, y: 1}
+          - {x: 18, y: 1}
+          - {x: 19, y: 1}
+          - {x: 22, y: 1}
+          - {x: 23, y: 1}
+          - {x: 26, y: 1}
+          - {x: 27, y: 1}
+          - {x: 30, y: 1}
+          - {x: 31, y: 1}
+          - {x: 34, y: 1}
+          - {x: 35, y: 1}
+          - {x: 1, y: 2}
+          - {x: 4, y: 2}
+          - {x: 5, y: 2}
+          - {x: 8, y: 2}
+          - {x: 9, y: 2}
+          - {x: 12, y: 2}
+          - {x: 13, y: 2}
+          - {x: 16, y: 2}
+          - {x: 17, y: 2}
+          - {x: 20, y: 2}
+          - {x: 21, y: 2}
+          - {x: 24, y: 2}
+          - {x: 25, y: 2}
+          - {x: 28, y: 2}
+          - {x: 29, y: 2}
+          - {x: 32, y: 2}
+          - {x: 33, y: 2}
+          - {x: 36, y: 2}
+          - {x: 37, y: 2}
+          - {x: 0, y: 3}
+          - {x: 1, y: 3}
+          - {x: 4, y: 3}
+          - {x: 5, y: 3}
+          - {x: 8, y: 3}
+          - {x: 9, y: 3}
+          - {x: 12, y: 3}
+          - {x: 13, y: 3}
+          - {x: 16, y: 3}
+          - {x: 17, y: 3}
+          - {x: 20, y: 3}
+          - {x: 21, y: 3}
+          - {x: 24, y: 3}
+          - {x: 25, y: 3}
+          - {x: 28, y: 3}
+          - {x: 29, y: 3}
+          - {x: 32, y: 3}
+          - {x: 33, y: 3}
+          - {x: 36, y: 3}
+          - {x: 37, y: 3}
+          - {x: 2, y: 4}
+          - {x: 3, y: 4}
+          - {x: 6, y: 4}
+          - {x: 7, y: 4}
+          - {x: 10, y: 4}
+          - {x: 11, y: 4}
+          - {x: 14, y: 4}
+          - {x: 15, y: 4}
+          - {x: 18, y: 4}
+          - {x: 19, y: 4}
+          - {x: 22, y: 4}
+          - {x: 23, y: 4}
+          - {x: 26, y: 4}
+          - {x: 27, y: 4}
+          - {x: 30, y: 4}
+          - {x: 31, y: 4}
+          - {x: 34, y: 4}
+          - {x: 35, y: 4}
+          - {x: 38, y: 4}
+          - {x: 2, y: 5}
+          - {x: 3, y: 5}
+          - {x: 6, y: 5}
+          - {x: 7, y: 5}
+          - {x: 10, y: 5}
+          - {x: 11, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 30, y: 5}
+          - {x: 31, y: 5}
+          - {x: 34, y: 5}
+          - {x: 35, y: 5}
+          - {x: 38, y: 5}
+          - {x: 0, y: 6}
+          - {x: 1, y: 6}
+          - {x: 4, y: 6}
+          - {x: 5, y: 6}
+          - {x: 8, y: 6}
+          - {x: 9, y: 6}
+          - {x: 12, y: 6}
+          - {x: 13, y: 6}
+          - {x: 16, y: 6}
+          - {x: 17, y: 6}
+          - {x: 20, y: 6}
+          - {x: 21, y: 6}
+          - {x: 24, y: 6}
+          - {x: 25, y: 6}
+          - {x: 28, y: 6}
+          - {x: 29, y: 6}
+          - {x: 32, y: 6}
+          - {x: 33, y: 6}
+          - {x: 36, y: 6}
+          - {x: 37, y: 6}
+          - {x: 0, y: 7}
+          - {x: 1, y: 7}
+          - {x: 4, y: 7}
+          - {x: 5, y: 7}
+          - {x: 8, y: 7}
+          - {x: 9, y: 7}
+          - {x: 12, y: 7}
+          - {x: 13, y: 7}
+          - {x: 16, y: 7}
+          - {x: 17, y: 7}
+          - {x: 20, y: 7}
+          - {x: 21, y: 7}
+          - {x: 24, y: 7}
+          - {x: 25, y: 7}
+          - {x: 28, y: 7}
+          - {x: 29, y: 7}
+          - {x: 32, y: 7}
+          - {x: 33, y: 7}
+          - {x: 36, y: 7}
+          - {x: 37, y: 7}
+          - {x: 2, y: 8}
+          - {x: 3, y: 8}
+          - {x: 6, y: 8}
+          - {x: 7, y: 8}
+          - {x: 10, y: 8}
+          - {x: 11, y: 8}
+          - {x: 14, y: 8}
+          - {x: 15, y: 8}
+          - {x: 22, y: 8}
+          - {x: 23, y: 8}
+          - {x: 26, y: 8}
+          - {x: 27, y: 8}
+          - {x: 30, y: 8}
+          - {x: 31, y: 8}
+          - {x: 34, y: 8}
+          - {x: 35, y: 8}
+          - {x: 38, y: 8}
+          - {x: 2, y: 9}
+          - {x: 3, y: 9}
+          - {x: 6, y: 9}
+          - {x: 7, y: 9}
+          - {x: 10, y: 9}
+          - {x: 11, y: 9}
+          - {x: 14, y: 9}
+          - {x: 15, y: 9}
+          - {x: 22, y: 9}
+          - {x: 23, y: 9}
+          - {x: 26, y: 9}
+          - {x: 27, y: 9}
+          - {x: 30, y: 9}
+          - {x: 31, y: 9}
+          - {x: 34, y: 9}
+          - {x: 35, y: 9}
+          - {x: 38, y: 9}
+          - {x: 0, y: 10}
+          - {x: 1, y: 10}
+          - {x: 4, y: 10}
+          - {x: 5, y: 10}
+          - {x: 8, y: 10}
+          - {x: 9, y: 10}
+          - {x: 12, y: 10}
+          - {x: 13, y: 10}
+          - {x: 16, y: 10}
+          - {x: 17, y: 10}
+          - {x: 21, y: 10}
+          - {x: 24, y: 10}
+          - {x: 25, y: 10}
+          - {x: 28, y: 10}
+          - {x: 29, y: 10}
+          - {x: 32, y: 10}
+          - {x: 33, y: 10}
+          - {x: 36, y: 10}
+          - {x: 37, y: 10}
+          - {x: 0, y: 11}
+          - {x: 1, y: 11}
+          - {x: 4, y: 11}
+          - {x: 5, y: 11}
+          - {x: 8, y: 11}
+          - {x: 9, y: 11}
+          - {x: 12, y: 11}
+          - {x: 13, y: 11}
+          - {x: 16, y: 11}
+          - {x: 17, y: 11}
+          - {x: 20, y: 11}
+          - {x: 21, y: 11}
+          - {x: 24, y: 11}
+          - {x: 25, y: 11}
+          - {x: 28, y: 11}
+          - {x: 29, y: 11}
+          - {x: 32, y: 11}
+          - {x: 33, y: 11}
+          - {x: 36, y: 11}
+          - {x: 37, y: 11}
+          - {x: 2, y: 12}
+          - {x: 3, y: 12}
+          - {x: 6, y: 12}
+          - {x: 7, y: 12}
+          - {x: 10, y: 12}
+          - {x: 11, y: 12}
+          - {x: 14, y: 12}
+          - {x: 15, y: 12}
+          - {x: 18, y: 12}
+          - {x: 19, y: 12}
+          - {x: 22, y: 12}
+          - {x: 23, y: 12}
+          - {x: 26, y: 12}
+          - {x: 27, y: 12}
+          - {x: 30, y: 12}
+          - {x: 31, y: 12}
+          - {x: 34, y: 12}
+          - {x: 35, y: 12}
+          - {x: 38, y: 12}
+          - {x: 2, y: 13}
+          - {x: 3, y: 13}
+          - {x: 6, y: 13}
+          - {x: 7, y: 13}
+          - {x: 10, y: 13}
+          - {x: 11, y: 13}
+          - {x: 14, y: 13}
+          - {x: 15, y: 13}
+          - {x: 18, y: 13}
+          - {x: 19, y: 13}
+          - {x: 22, y: 13}
+          - {x: 23, y: 13}
+          - {x: 26, y: 13}
+          - {x: 27, y: 13}
+          - {x: 30, y: 13}
+          - {x: 31, y: 13}
+          - {x: 34, y: 13}
+          - {x: 35, y: 13}
+          - {x: 38, y: 13}
+          - {x: 0, y: 14}
+          - {x: 1, y: 14}
+          - {x: 4, y: 14}
+          - {x: 5, y: 14}
+          - {x: 8, y: 14}
+          - {x: 9, y: 14}
+          - {x: 12, y: 14}
+          - {x: 13, y: 14}
+          - {x: 16, y: 14}
+          - {x: 17, y: 14}
+          - {x: 20, y: 14}
+          - {x: 21, y: 14}
+          - {x: 24, y: 14}
+          - {x: 25, y: 14}
+          - {x: 28, y: 14}
+          - {x: 29, y: 14}
+          - {x: 32, y: 14}
+          - {x: 33, y: 14}
+          - {x: 36, y: 14}
+          - {x: 37, y: 14}
+          - {x: 0, y: 15}
+          - {x: 1, y: 15}
+          - {x: 4, y: 15}
+          - {x: 5, y: 15}
+          - {x: 8, y: 15}
+          - {x: 9, y: 15}
+          - {x: 12, y: 15}
+          - {x: 13, y: 15}
+          - {x: 16, y: 15}
+          - {x: 17, y: 15}
+          - {x: 20, y: 15}
+          - {x: 21, y: 15}
+          - {x: 24, y: 15}
+          - {x: 25, y: 15}
+          - {x: 28, y: 15}
+          - {x: 29, y: 15}
+          - {x: 32, y: 15}
+          - {x: 33, y: 15}
+          - {x: 36, y: 15}
+          - {x: 37, y: 15}
+          - {x: 2, y: 16}
+          - {x: 3, y: 16}
+          - {x: 6, y: 16}
+          - {x: 7, y: 16}
+          - {x: 10, y: 16}
+          - {x: 11, y: 16}
+          - {x: 14, y: 16}
+          - {x: 15, y: 16}
+          - {x: 18, y: 16}
+          - {x: 19, y: 16}
+          - {x: 22, y: 16}
+          - {x: 23, y: 16}
+          - {x: 26, y: 16}
+          - {x: 27, y: 16}
+          - {x: 30, y: 16}
+          - {x: 31, y: 16}
+          - {x: 34, y: 16}
+          - {x: 35, y: 16}
+          - {x: 38, y: 16}
+          - {x: 2, y: 17}
+          - {x: 3, y: 17}
+          - {x: 6, y: 17}
+          - {x: 7, y: 17}
+          - {x: 10, y: 17}
+          - {x: 11, y: 17}
+          - {x: 14, y: 17}
+          - {x: 15, y: 17}
+          - {x: 18, y: 17}
+          - {x: 19, y: 17}
+          - {x: 22, y: 17}
+          - {x: 23, y: 17}
+          - {x: 26, y: 17}
+          - {x: 27, y: 17}
+          - {x: 30, y: 17}
+          - {x: 31, y: 17}
+          - {x: 34, y: 17}
+          - {x: 35, y: 17}
+          - {x: 4, y: 18}
+          - {x: 5, y: 18}
+          - {x: 8, y: 18}
+          - {x: 9, y: 18}
+          - {x: 12, y: 18}
+          - {x: 13, y: 18}
+          - {x: 16, y: 18}
+          - {x: 17, y: 18}
+          - {x: 20, y: 18}
+          - {x: 21, y: 18}
+          - {x: 24, y: 18}
+          - {x: 25, y: 18}
+          - {x: 28, y: 18}
+          - {x: 29, y: 18}
+          - {x: 32, y: 18}
+          - {x: 33, y: 18}
+          - {x: 36, y: 18}
+          - {x: 4, y: 19}
+          - {x: 5, y: 19}
+          - {x: 8, y: 19}
+          - {x: 9, y: 19}
+          - {x: 12, y: 19}
+          - {x: 13, y: 19}
+          - {x: 16, y: 19}
+          - {x: 17, y: 19}
+          - {x: 20, y: 19}
+          - {x: 21, y: 19}
+          - {x: 24, y: 19}
+          - {x: 25, y: 19}
+          - {x: 28, y: 19}
+          - {x: 29, y: 19}
+          - {x: 32, y: 19}
+          - {x: 33, y: 19}
+          snapshotKey: rockfall_b
+          ensureEscape: 0
+    - rid: 1014
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 3, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 14, y: 0}
+          - {x: 15, y: 0}
+          - {x: 18, y: 0}
+          - {x: 19, y: 0}
+          - {x: 22, y: 0}
+          - {x: 23, y: 0}
+          - {x: 26, y: 0}
+          - {x: 27, y: 0}
+          - {x: 30, y: 0}
+          - {x: 31, y: 0}
+          - {x: 34, y: 0}
+          - {x: 35, y: 0}
+          - {x: 2, y: 1}
+          - {x: 3, y: 1}
+          - {x: 6, y: 1}
+          - {x: 7, y: 1}
+          - {x: 10, y: 1}
+          - {x: 11, y: 1}
+          - {x: 14, y: 1}
+          - {x: 15, y: 1}
+          - {x: 18, y: 1}
+          - {x: 19, y: 1}
+          - {x: 22, y: 1}
+          - {x: 23, y: 1}
+          - {x: 26, y: 1}
+          - {x: 27, y: 1}
+          - {x: 30, y: 1}
+          - {x: 31, y: 1}
+          - {x: 34, y: 1}
+          - {x: 35, y: 1}
+          - {x: 1, y: 2}
+          - {x: 4, y: 2}
+          - {x: 5, y: 2}
+          - {x: 8, y: 2}
+          - {x: 9, y: 2}
+          - {x: 12, y: 2}
+          - {x: 13, y: 2}
+          - {x: 16, y: 2}
+          - {x: 17, y: 2}
+          - {x: 20, y: 2}
+          - {x: 21, y: 2}
+          - {x: 24, y: 2}
+          - {x: 25, y: 2}
+          - {x: 28, y: 2}
+          - {x: 29, y: 2}
+          - {x: 32, y: 2}
+          - {x: 33, y: 2}
+          - {x: 36, y: 2}
+          - {x: 37, y: 2}
+          - {x: 0, y: 3}
+          - {x: 1, y: 3}
+          - {x: 4, y: 3}
+          - {x: 5, y: 3}
+          - {x: 8, y: 3}
+          - {x: 9, y: 3}
+          - {x: 12, y: 3}
+          - {x: 13, y: 3}
+          - {x: 16, y: 3}
+          - {x: 17, y: 3}
+          - {x: 20, y: 3}
+          - {x: 21, y: 3}
+          - {x: 24, y: 3}
+          - {x: 25, y: 3}
+          - {x: 28, y: 3}
+          - {x: 29, y: 3}
+          - {x: 32, y: 3}
+          - {x: 33, y: 3}
+          - {x: 36, y: 3}
+          - {x: 37, y: 3}
+          - {x: 2, y: 4}
+          - {x: 3, y: 4}
+          - {x: 6, y: 4}
+          - {x: 7, y: 4}
+          - {x: 10, y: 4}
+          - {x: 11, y: 4}
+          - {x: 14, y: 4}
+          - {x: 15, y: 4}
+          - {x: 18, y: 4}
+          - {x: 19, y: 4}
+          - {x: 22, y: 4}
+          - {x: 23, y: 4}
+          - {x: 26, y: 4}
+          - {x: 27, y: 4}
+          - {x: 30, y: 4}
+          - {x: 31, y: 4}
+          - {x: 34, y: 4}
+          - {x: 35, y: 4}
+          - {x: 38, y: 4}
+          - {x: 2, y: 5}
+          - {x: 3, y: 5}
+          - {x: 6, y: 5}
+          - {x: 7, y: 5}
+          - {x: 10, y: 5}
+          - {x: 11, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 30, y: 5}
+          - {x: 31, y: 5}
+          - {x: 34, y: 5}
+          - {x: 35, y: 5}
+          - {x: 38, y: 5}
+          - {x: 0, y: 6}
+          - {x: 1, y: 6}
+          - {x: 4, y: 6}
+          - {x: 5, y: 6}
+          - {x: 8, y: 6}
+          - {x: 9, y: 6}
+          - {x: 12, y: 6}
+          - {x: 13, y: 6}
+          - {x: 16, y: 6}
+          - {x: 17, y: 6}
+          - {x: 20, y: 6}
+          - {x: 21, y: 6}
+          - {x: 24, y: 6}
+          - {x: 25, y: 6}
+          - {x: 28, y: 6}
+          - {x: 29, y: 6}
+          - {x: 32, y: 6}
+          - {x: 33, y: 6}
+          - {x: 36, y: 6}
+          - {x: 37, y: 6}
+          - {x: 0, y: 7}
+          - {x: 1, y: 7}
+          - {x: 4, y: 7}
+          - {x: 5, y: 7}
+          - {x: 8, y: 7}
+          - {x: 9, y: 7}
+          - {x: 12, y: 7}
+          - {x: 13, y: 7}
+          - {x: 16, y: 7}
+          - {x: 17, y: 7}
+          - {x: 20, y: 7}
+          - {x: 21, y: 7}
+          - {x: 24, y: 7}
+          - {x: 25, y: 7}
+          - {x: 28, y: 7}
+          - {x: 29, y: 7}
+          - {x: 32, y: 7}
+          - {x: 33, y: 7}
+          - {x: 36, y: 7}
+          - {x: 37, y: 7}
+          - {x: 2, y: 8}
+          - {x: 3, y: 8}
+          - {x: 6, y: 8}
+          - {x: 7, y: 8}
+          - {x: 10, y: 8}
+          - {x: 11, y: 8}
+          - {x: 14, y: 8}
+          - {x: 15, y: 8}
+          - {x: 22, y: 8}
+          - {x: 23, y: 8}
+          - {x: 26, y: 8}
+          - {x: 27, y: 8}
+          - {x: 30, y: 8}
+          - {x: 31, y: 8}
+          - {x: 34, y: 8}
+          - {x: 35, y: 8}
+          - {x: 38, y: 8}
+          - {x: 2, y: 9}
+          - {x: 3, y: 9}
+          - {x: 6, y: 9}
+          - {x: 7, y: 9}
+          - {x: 10, y: 9}
+          - {x: 11, y: 9}
+          - {x: 14, y: 9}
+          - {x: 15, y: 9}
+          - {x: 22, y: 9}
+          - {x: 23, y: 9}
+          - {x: 26, y: 9}
+          - {x: 27, y: 9}
+          - {x: 30, y: 9}
+          - {x: 31, y: 9}
+          - {x: 34, y: 9}
+          - {x: 35, y: 9}
+          - {x: 38, y: 9}
+          - {x: 0, y: 10}
+          - {x: 1, y: 10}
+          - {x: 4, y: 10}
+          - {x: 5, y: 10}
+          - {x: 8, y: 10}
+          - {x: 9, y: 10}
+          - {x: 12, y: 10}
+          - {x: 13, y: 10}
+          - {x: 16, y: 10}
+          - {x: 17, y: 10}
+          - {x: 21, y: 10}
+          - {x: 24, y: 10}
+          - {x: 25, y: 10}
+          - {x: 28, y: 10}
+          - {x: 29, y: 10}
+          - {x: 32, y: 10}
+          - {x: 33, y: 10}
+          - {x: 36, y: 10}
+          - {x: 37, y: 10}
+          - {x: 0, y: 11}
+          - {x: 1, y: 11}
+          - {x: 4, y: 11}
+          - {x: 5, y: 11}
+          - {x: 8, y: 11}
+          - {x: 9, y: 11}
+          - {x: 12, y: 11}
+          - {x: 13, y: 11}
+          - {x: 16, y: 11}
+          - {x: 17, y: 11}
+          - {x: 20, y: 11}
+          - {x: 21, y: 11}
+          - {x: 24, y: 11}
+          - {x: 25, y: 11}
+          - {x: 28, y: 11}
+          - {x: 29, y: 11}
+          - {x: 32, y: 11}
+          - {x: 33, y: 11}
+          - {x: 36, y: 11}
+          - {x: 37, y: 11}
+          - {x: 2, y: 12}
+          - {x: 3, y: 12}
+          - {x: 6, y: 12}
+          - {x: 7, y: 12}
+          - {x: 10, y: 12}
+          - {x: 11, y: 12}
+          - {x: 14, y: 12}
+          - {x: 15, y: 12}
+          - {x: 18, y: 12}
+          - {x: 19, y: 12}
+          - {x: 22, y: 12}
+          - {x: 23, y: 12}
+          - {x: 26, y: 12}
+          - {x: 27, y: 12}
+          - {x: 30, y: 12}
+          - {x: 31, y: 12}
+          - {x: 34, y: 12}
+          - {x: 35, y: 12}
+          - {x: 38, y: 12}
+          - {x: 2, y: 13}
+          - {x: 3, y: 13}
+          - {x: 6, y: 13}
+          - {x: 7, y: 13}
+          - {x: 10, y: 13}
+          - {x: 11, y: 13}
+          - {x: 14, y: 13}
+          - {x: 15, y: 13}
+          - {x: 18, y: 13}
+          - {x: 19, y: 13}
+          - {x: 22, y: 13}
+          - {x: 23, y: 13}
+          - {x: 26, y: 13}
+          - {x: 27, y: 13}
+          - {x: 30, y: 13}
+          - {x: 31, y: 13}
+          - {x: 34, y: 13}
+          - {x: 35, y: 13}
+          - {x: 38, y: 13}
+          - {x: 0, y: 14}
+          - {x: 1, y: 14}
+          - {x: 4, y: 14}
+          - {x: 5, y: 14}
+          - {x: 8, y: 14}
+          - {x: 9, y: 14}
+          - {x: 12, y: 14}
+          - {x: 13, y: 14}
+          - {x: 16, y: 14}
+          - {x: 17, y: 14}
+          - {x: 20, y: 14}
+          - {x: 21, y: 14}
+          - {x: 24, y: 14}
+          - {x: 25, y: 14}
+          - {x: 28, y: 14}
+          - {x: 29, y: 14}
+          - {x: 32, y: 14}
+          - {x: 33, y: 14}
+          - {x: 36, y: 14}
+          - {x: 37, y: 14}
+          - {x: 0, y: 15}
+          - {x: 1, y: 15}
+          - {x: 4, y: 15}
+          - {x: 5, y: 15}
+          - {x: 8, y: 15}
+          - {x: 9, y: 15}
+          - {x: 12, y: 15}
+          - {x: 13, y: 15}
+          - {x: 16, y: 15}
+          - {x: 17, y: 15}
+          - {x: 20, y: 15}
+          - {x: 21, y: 15}
+          - {x: 24, y: 15}
+          - {x: 25, y: 15}
+          - {x: 28, y: 15}
+          - {x: 29, y: 15}
+          - {x: 32, y: 15}
+          - {x: 33, y: 15}
+          - {x: 36, y: 15}
+          - {x: 37, y: 15}
+          - {x: 2, y: 16}
+          - {x: 3, y: 16}
+          - {x: 6, y: 16}
+          - {x: 7, y: 16}
+          - {x: 10, y: 16}
+          - {x: 11, y: 16}
+          - {x: 14, y: 16}
+          - {x: 15, y: 16}
+          - {x: 18, y: 16}
+          - {x: 19, y: 16}
+          - {x: 22, y: 16}
+          - {x: 23, y: 16}
+          - {x: 26, y: 16}
+          - {x: 27, y: 16}
+          - {x: 30, y: 16}
+          - {x: 31, y: 16}
+          - {x: 34, y: 16}
+          - {x: 35, y: 16}
+          - {x: 38, y: 16}
+          - {x: 2, y: 17}
+          - {x: 3, y: 17}
+          - {x: 6, y: 17}
+          - {x: 7, y: 17}
+          - {x: 10, y: 17}
+          - {x: 11, y: 17}
+          - {x: 14, y: 17}
+          - {x: 15, y: 17}
+          - {x: 18, y: 17}
+          - {x: 19, y: 17}
+          - {x: 22, y: 17}
+          - {x: 23, y: 17}
+          - {x: 26, y: 17}
+          - {x: 27, y: 17}
+          - {x: 30, y: 17}
+          - {x: 31, y: 17}
+          - {x: 34, y: 17}
+          - {x: 35, y: 17}
+          - {x: 4, y: 18}
+          - {x: 5, y: 18}
+          - {x: 8, y: 18}
+          - {x: 9, y: 18}
+          - {x: 12, y: 18}
+          - {x: 13, y: 18}
+          - {x: 16, y: 18}
+          - {x: 17, y: 18}
+          - {x: 20, y: 18}
+          - {x: 21, y: 18}
+          - {x: 24, y: 18}
+          - {x: 25, y: 18}
+          - {x: 28, y: 18}
+          - {x: 29, y: 18}
+          - {x: 32, y: 18}
+          - {x: 33, y: 18}
+          - {x: 36, y: 18}
+          - {x: 4, y: 19}
+          - {x: 5, y: 19}
+          - {x: 8, y: 19}
+          - {x: 9, y: 19}
+          - {x: 12, y: 19}
+          - {x: 13, y: 19}
+          - {x: 16, y: 19}
+          - {x: 17, y: 19}
+          - {x: 20, y: 19}
+          - {x: 21, y: 19}
+          - {x: 24, y: 19}
+          - {x: 25, y: 19}
+          - {x: 28, y: 19}
+          - {x: 29, y: 19}
+          - {x: 32, y: 19}
+          - {x: 33, y: 19}
+          snapshotKey: rockfall_b
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: "2 \xB7 \uBE48 \uBB36\uC74C \uBC18\uC804 \uB099\uC11D"
+    - rid: 1015
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 255086516629100043, guid: 7653b6835667c4548a08f14653ada6e7, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 3, y: 0}
+          - {x: 6, y: 0}
+          - {x: 7, y: 0}
+          - {x: 10, y: 0}
+          - {x: 11, y: 0}
+          - {x: 14, y: 0}
+          - {x: 15, y: 0}
+          - {x: 18, y: 0}
+          - {x: 19, y: 0}
+          - {x: 22, y: 0}
+          - {x: 23, y: 0}
+          - {x: 26, y: 0}
+          - {x: 27, y: 0}
+          - {x: 30, y: 0}
+          - {x: 31, y: 0}
+          - {x: 34, y: 0}
+          - {x: 35, y: 0}
+          - {x: 2, y: 1}
+          - {x: 3, y: 1}
+          - {x: 6, y: 1}
+          - {x: 7, y: 1}
+          - {x: 10, y: 1}
+          - {x: 11, y: 1}
+          - {x: 14, y: 1}
+          - {x: 15, y: 1}
+          - {x: 18, y: 1}
+          - {x: 19, y: 1}
+          - {x: 22, y: 1}
+          - {x: 23, y: 1}
+          - {x: 26, y: 1}
+          - {x: 27, y: 1}
+          - {x: 30, y: 1}
+          - {x: 31, y: 1}
+          - {x: 34, y: 1}
+          - {x: 35, y: 1}
+          - {x: 1, y: 2}
+          - {x: 4, y: 2}
+          - {x: 5, y: 2}
+          - {x: 8, y: 2}
+          - {x: 9, y: 2}
+          - {x: 12, y: 2}
+          - {x: 13, y: 2}
+          - {x: 16, y: 2}
+          - {x: 17, y: 2}
+          - {x: 20, y: 2}
+          - {x: 21, y: 2}
+          - {x: 24, y: 2}
+          - {x: 25, y: 2}
+          - {x: 28, y: 2}
+          - {x: 29, y: 2}
+          - {x: 32, y: 2}
+          - {x: 33, y: 2}
+          - {x: 36, y: 2}
+          - {x: 37, y: 2}
+          - {x: 0, y: 3}
+          - {x: 1, y: 3}
+          - {x: 4, y: 3}
+          - {x: 5, y: 3}
+          - {x: 8, y: 3}
+          - {x: 9, y: 3}
+          - {x: 12, y: 3}
+          - {x: 13, y: 3}
+          - {x: 16, y: 3}
+          - {x: 17, y: 3}
+          - {x: 20, y: 3}
+          - {x: 21, y: 3}
+          - {x: 24, y: 3}
+          - {x: 25, y: 3}
+          - {x: 28, y: 3}
+          - {x: 29, y: 3}
+          - {x: 32, y: 3}
+          - {x: 33, y: 3}
+          - {x: 36, y: 3}
+          - {x: 37, y: 3}
+          - {x: 2, y: 4}
+          - {x: 3, y: 4}
+          - {x: 6, y: 4}
+          - {x: 7, y: 4}
+          - {x: 10, y: 4}
+          - {x: 11, y: 4}
+          - {x: 14, y: 4}
+          - {x: 15, y: 4}
+          - {x: 18, y: 4}
+          - {x: 19, y: 4}
+          - {x: 22, y: 4}
+          - {x: 23, y: 4}
+          - {x: 26, y: 4}
+          - {x: 27, y: 4}
+          - {x: 30, y: 4}
+          - {x: 31, y: 4}
+          - {x: 34, y: 4}
+          - {x: 35, y: 4}
+          - {x: 38, y: 4}
+          - {x: 2, y: 5}
+          - {x: 3, y: 5}
+          - {x: 6, y: 5}
+          - {x: 7, y: 5}
+          - {x: 10, y: 5}
+          - {x: 11, y: 5}
+          - {x: 14, y: 5}
+          - {x: 15, y: 5}
+          - {x: 18, y: 5}
+          - {x: 19, y: 5}
+          - {x: 22, y: 5}
+          - {x: 23, y: 5}
+          - {x: 26, y: 5}
+          - {x: 27, y: 5}
+          - {x: 30, y: 5}
+          - {x: 31, y: 5}
+          - {x: 34, y: 5}
+          - {x: 35, y: 5}
+          - {x: 38, y: 5}
+          - {x: 0, y: 6}
+          - {x: 1, y: 6}
+          - {x: 4, y: 6}
+          - {x: 5, y: 6}
+          - {x: 8, y: 6}
+          - {x: 9, y: 6}
+          - {x: 12, y: 6}
+          - {x: 13, y: 6}
+          - {x: 16, y: 6}
+          - {x: 17, y: 6}
+          - {x: 20, y: 6}
+          - {x: 21, y: 6}
+          - {x: 24, y: 6}
+          - {x: 25, y: 6}
+          - {x: 28, y: 6}
+          - {x: 29, y: 6}
+          - {x: 32, y: 6}
+          - {x: 33, y: 6}
+          - {x: 36, y: 6}
+          - {x: 37, y: 6}
+          - {x: 0, y: 7}
+          - {x: 1, y: 7}
+          - {x: 4, y: 7}
+          - {x: 5, y: 7}
+          - {x: 8, y: 7}
+          - {x: 9, y: 7}
+          - {x: 12, y: 7}
+          - {x: 13, y: 7}
+          - {x: 16, y: 7}
+          - {x: 17, y: 7}
+          - {x: 20, y: 7}
+          - {x: 21, y: 7}
+          - {x: 24, y: 7}
+          - {x: 25, y: 7}
+          - {x: 28, y: 7}
+          - {x: 29, y: 7}
+          - {x: 32, y: 7}
+          - {x: 33, y: 7}
+          - {x: 36, y: 7}
+          - {x: 37, y: 7}
+          - {x: 2, y: 8}
+          - {x: 3, y: 8}
+          - {x: 6, y: 8}
+          - {x: 7, y: 8}
+          - {x: 10, y: 8}
+          - {x: 11, y: 8}
+          - {x: 14, y: 8}
+          - {x: 15, y: 8}
+          - {x: 22, y: 8}
+          - {x: 23, y: 8}
+          - {x: 26, y: 8}
+          - {x: 27, y: 8}
+          - {x: 30, y: 8}
+          - {x: 31, y: 8}
+          - {x: 34, y: 8}
+          - {x: 35, y: 8}
+          - {x: 38, y: 8}
+          - {x: 2, y: 9}
+          - {x: 3, y: 9}
+          - {x: 6, y: 9}
+          - {x: 7, y: 9}
+          - {x: 10, y: 9}
+          - {x: 11, y: 9}
+          - {x: 14, y: 9}
+          - {x: 15, y: 9}
+          - {x: 22, y: 9}
+          - {x: 23, y: 9}
+          - {x: 26, y: 9}
+          - {x: 27, y: 9}
+          - {x: 30, y: 9}
+          - {x: 31, y: 9}
+          - {x: 34, y: 9}
+          - {x: 35, y: 9}
+          - {x: 38, y: 9}
+          - {x: 0, y: 10}
+          - {x: 1, y: 10}
+          - {x: 4, y: 10}
+          - {x: 5, y: 10}
+          - {x: 8, y: 10}
+          - {x: 9, y: 10}
+          - {x: 12, y: 10}
+          - {x: 13, y: 10}
+          - {x: 16, y: 10}
+          - {x: 17, y: 10}
+          - {x: 21, y: 10}
+          - {x: 24, y: 10}
+          - {x: 25, y: 10}
+          - {x: 28, y: 10}
+          - {x: 29, y: 10}
+          - {x: 32, y: 10}
+          - {x: 33, y: 10}
+          - {x: 36, y: 10}
+          - {x: 37, y: 10}
+          - {x: 0, y: 11}
+          - {x: 1, y: 11}
+          - {x: 4, y: 11}
+          - {x: 5, y: 11}
+          - {x: 8, y: 11}
+          - {x: 9, y: 11}
+          - {x: 12, y: 11}
+          - {x: 13, y: 11}
+          - {x: 16, y: 11}
+          - {x: 17, y: 11}
+          - {x: 20, y: 11}
+          - {x: 21, y: 11}
+          - {x: 24, y: 11}
+          - {x: 25, y: 11}
+          - {x: 28, y: 11}
+          - {x: 29, y: 11}
+          - {x: 32, y: 11}
+          - {x: 33, y: 11}
+          - {x: 36, y: 11}
+          - {x: 37, y: 11}
+          - {x: 2, y: 12}
+          - {x: 3, y: 12}
+          - {x: 6, y: 12}
+          - {x: 7, y: 12}
+          - {x: 10, y: 12}
+          - {x: 11, y: 12}
+          - {x: 14, y: 12}
+          - {x: 15, y: 12}
+          - {x: 18, y: 12}
+          - {x: 19, y: 12}
+          - {x: 22, y: 12}
+          - {x: 23, y: 12}
+          - {x: 26, y: 12}
+          - {x: 27, y: 12}
+          - {x: 30, y: 12}
+          - {x: 31, y: 12}
+          - {x: 34, y: 12}
+          - {x: 35, y: 12}
+          - {x: 38, y: 12}
+          - {x: 2, y: 13}
+          - {x: 3, y: 13}
+          - {x: 6, y: 13}
+          - {x: 7, y: 13}
+          - {x: 10, y: 13}
+          - {x: 11, y: 13}
+          - {x: 14, y: 13}
+          - {x: 15, y: 13}
+          - {x: 18, y: 13}
+          - {x: 19, y: 13}
+          - {x: 22, y: 13}
+          - {x: 23, y: 13}
+          - {x: 26, y: 13}
+          - {x: 27, y: 13}
+          - {x: 30, y: 13}
+          - {x: 31, y: 13}
+          - {x: 34, y: 13}
+          - {x: 35, y: 13}
+          - {x: 38, y: 13}
+          - {x: 0, y: 14}
+          - {x: 1, y: 14}
+          - {x: 4, y: 14}
+          - {x: 5, y: 14}
+          - {x: 8, y: 14}
+          - {x: 9, y: 14}
+          - {x: 12, y: 14}
+          - {x: 13, y: 14}
+          - {x: 16, y: 14}
+          - {x: 17, y: 14}
+          - {x: 20, y: 14}
+          - {x: 21, y: 14}
+          - {x: 24, y: 14}
+          - {x: 25, y: 14}
+          - {x: 28, y: 14}
+          - {x: 29, y: 14}
+          - {x: 32, y: 14}
+          - {x: 33, y: 14}
+          - {x: 36, y: 14}
+          - {x: 37, y: 14}
+          - {x: 0, y: 15}
+          - {x: 1, y: 15}
+          - {x: 4, y: 15}
+          - {x: 5, y: 15}
+          - {x: 8, y: 15}
+          - {x: 9, y: 15}
+          - {x: 12, y: 15}
+          - {x: 13, y: 15}
+          - {x: 16, y: 15}
+          - {x: 17, y: 15}
+          - {x: 20, y: 15}
+          - {x: 21, y: 15}
+          - {x: 24, y: 15}
+          - {x: 25, y: 15}
+          - {x: 28, y: 15}
+          - {x: 29, y: 15}
+          - {x: 32, y: 15}
+          - {x: 33, y: 15}
+          - {x: 36, y: 15}
+          - {x: 37, y: 15}
+          - {x: 2, y: 16}
+          - {x: 3, y: 16}
+          - {x: 6, y: 16}
+          - {x: 7, y: 16}
+          - {x: 10, y: 16}
+          - {x: 11, y: 16}
+          - {x: 14, y: 16}
+          - {x: 15, y: 16}
+          - {x: 18, y: 16}
+          - {x: 19, y: 16}
+          - {x: 22, y: 16}
+          - {x: 23, y: 16}
+          - {x: 26, y: 16}
+          - {x: 27, y: 16}
+          - {x: 30, y: 16}
+          - {x: 31, y: 16}
+          - {x: 34, y: 16}
+          - {x: 35, y: 16}
+          - {x: 38, y: 16}
+          - {x: 2, y: 17}
+          - {x: 3, y: 17}
+          - {x: 6, y: 17}
+          - {x: 7, y: 17}
+          - {x: 10, y: 17}
+          - {x: 11, y: 17}
+          - {x: 14, y: 17}
+          - {x: 15, y: 17}
+          - {x: 18, y: 17}
+          - {x: 19, y: 17}
+          - {x: 22, y: 17}
+          - {x: 23, y: 17}
+          - {x: 26, y: 17}
+          - {x: 27, y: 17}
+          - {x: 30, y: 17}
+          - {x: 31, y: 17}
+          - {x: 34, y: 17}
+          - {x: 35, y: 17}
+          - {x: 4, y: 18}
+          - {x: 5, y: 18}
+          - {x: 8, y: 18}
+          - {x: 9, y: 18}
+          - {x: 12, y: 18}
+          - {x: 13, y: 18}
+          - {x: 16, y: 18}
+          - {x: 17, y: 18}
+          - {x: 20, y: 18}
+          - {x: 21, y: 18}
+          - {x: 24, y: 18}
+          - {x: 25, y: 18}
+          - {x: 28, y: 18}
+          - {x: 29, y: 18}
+          - {x: 32, y: 18}
+          - {x: 33, y: 18}
+          - {x: 36, y: 18}
+          - {x: 4, y: 19}
+          - {x: 5, y: 19}
+          - {x: 8, y: 19}
+          - {x: 9, y: 19}
+          - {x: 12, y: 19}
+          - {x: 13, y: 19}
+          - {x: 16, y: 19}
+          - {x: 17, y: 19}
+          - {x: 20, y: 19}
+          - {x: 21, y: 19}
+          - {x: 24, y: 19}
+          - {x: 25, y: 19}
+          - {x: 28, y: 19}
+          - {x: 29, y: 19}
+          - {x: 32, y: 19}
+          - {x: 33, y: 19}
+          snapshotKey: rockfall_b
+          ensureEscape: 0
+    - rid: 1016
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.65
+    - rid: 1017
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 7

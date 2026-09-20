@@ -1,5 +1,6 @@
 $ErrorActionPreference = 'Stop'
-$root = Join-Path (Split-Path -Parent $PSScriptRoot) 'Assets/Resources/Patterns'
+$root = Join-Path (Split-Path -Parent $PSScriptRoot) 'Assets/Resources/Effects/Audio'
+New-Item -ItemType Directory -Path $root -Force | Out-Null
 foreach ($cue in @(@('Warning', 660, 0.14), @('Impact', 100, 0.24))) {
     $samples = [int][Math]::Ceiling(22050 * $cue[2])
     $writer = [IO.BinaryWriter]::new([IO.File]::Create((Join-Path $root ($cue[0] + '.wav'))))

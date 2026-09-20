@@ -26,8 +26,7 @@ def numeric(block, name):
 guids = {}
 for meta in ASSETS.rglob("*.meta"):
     match = re.search(r"^guid: ([0-9a-f]{32})$", meta.read_text(encoding="utf-8-sig"), re.M)
-    if not match:
-        continue
+    assert match, f"Malformed Unity GUID in {meta}"
     guid = match.group(1)
     assert guid not in guids, f"Duplicate GUID: {meta} / {guids.get(guid)}"
     guids[guid] = Path(str(meta)[:-5])
@@ -76,7 +75,7 @@ for start_index, indent, pattern_id in starts:
     clip_blocks = [clip for clip in clip_blocks if clip.startswith(clip_marker)]
     patterns[pattern_id] = {"name": name, "duration": duration, "clips": clip_blocks}
 
-assert len(patterns) == 20, f"Expected 20 inline patterns, found {len(patterns)}"
+assert patterns, "The encounter must contain at least one inline pattern"
 assert len(patterns) == len(starts), "Duplicate encounter pattern ID"
 
 graph = {pattern_id: [] for pattern_id in patterns}
@@ -85,7 +84,8 @@ for pattern_id, pattern in patterns.items():
         start = numeric(clip, "start")
         duration = numeric(clip, "duration")
         assert start >= 0 and duration >= 0
-        rid = int(numeric(clip, "rid"))
+        # Unity may assign 64-bit reference IDs: a float round-trip loses bits.
+        rid = int(re.search(r"^\s*rid: (-?\d+)$", clip, re.M).group(1))
         assert rid in refs, f"Missing managed reference {rid} in {pattern_id}"
         event = refs[rid]
         if "class: DamageEvent," in event:

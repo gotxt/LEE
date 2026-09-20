@@ -91,7 +91,8 @@ namespace NHN.TraceStrike
         private readonly Text[,] tileLabels = new Text[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
         private readonly Image[,] minimapTiles = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
         private readonly RectTransform[,] attackWarningVisuals = new RectTransform[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
-        private readonly Image[,] attackWarningFillImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private readonly TileWarningVisual[,] attackWarningPresentations = new TileWarningVisual[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
+        private TileWarningVisual tileWarningPrefab;
         private readonly Image[,] endpointMarkerImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
         private readonly RectTransform[,] specialItemVisuals = new RectTransform[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
         private readonly Image[,] specialItemImages = new Image[TrailFieldModel.MaxSize, TrailFieldModel.MaxSize];
@@ -110,6 +111,7 @@ namespace NHN.TraceStrike
         private readonly Dictionary<Vector2Int, Dictionary<int, float>> crystalTelegraphProgress =
             new Dictionary<Vector2Int, Dictionary<int, float>>();
         private readonly RectTransform[] crystalVisuals = new RectTransform[CrystalRules.CrystalCount];
+        private readonly CrystalVisual[] crystalPresentations = new CrystalVisual[CrystalRules.CrystalCount];
         private readonly float[] crystalAttackTimers = new float[CrystalRules.CrystalCount];
         private readonly HashSet<Vector2Int> tutorialTrail = new HashSet<Vector2Int>();
         private readonly List<Vector2Int> tutorialTrailOrder = new List<Vector2Int>();
@@ -534,7 +536,6 @@ namespace NHN.TraceStrike
                     statusText.text = blockedByCrystal
                         ? "공격 수정은 통과할 수 없는 벽입니다"
                         : "필드 밖으로는 이동할 수 없어요";
-                    StartCoroutine(FlashFrame(Danger));
                     StartCoroutine(PunchPlayer(true));
                     PlaySfx(blockedSfx);
                     break;
@@ -1091,7 +1092,6 @@ namespace NHN.TraceStrike
             {
                 statusText.text = "4×4 훈련장 밖으로는 이동할 수 없습니다";
                 PlaySfx(blockedSfx);
-                StartCoroutine(FlashFrame(Danger));
                 return;
             }
 
@@ -1747,7 +1747,11 @@ namespace NHN.TraceStrike
             if (bossVisualImage != null) bossVisualImage.gameObject.SetActive(visible);
             if (arenaBossCore != null)
             {
-                arenaBossCore.gameObject.SetActive(visible && bossRenderStage == null);
+                // The health bar is a child of this container; hide only the legacy art
+                // when an encounter prefab supplies the boss appearance.
+                arenaBossCore.gameObject.SetActive(visible);
+                var legacyImage = arenaBossCore.GetComponent<Image>();
+                if (legacyImage != null) legacyImage.enabled = bossRenderStage == null;
             }
             if (arenaBossHealthRoot != null)
             {
@@ -2132,6 +2136,7 @@ namespace NHN.TraceStrike
                 visual.gameObject.SetActive(active);
                 if (active)
                 {
+                    crystalPresentations[i].SetCellSize(mainCellSize);
                     visual.anchoredPosition = GridPosition(crystalCells[i].x, crystalCells[i].y, mainCellSize);
                     visual.SetAsLastSibling();
                 }
@@ -2906,30 +2911,19 @@ namespace NHN.TraceStrike
             attackSlashGroup = attackSlash.gameObject.AddComponent<CanvasGroup>();
             attackSlashGroup.alpha = 0f;
 
-            Texture2D crystalTexture = Resources.Load<Texture2D>("Art/red_attack_crystal");
-            Sprite crystalSprite = null;
-            if (crystalTexture != null)
-            {
-                crystalTexture.filterMode = FilterMode.Point;
-                crystalTexture.wrapMode = TextureWrapMode.Clamp;
-                crystalSprite = Sprite.Create(crystalTexture,
-                    new Rect(0f, 0f, crystalTexture.width, crystalTexture.height),
-                    new Vector2(0.5f, 0.5f), 64f);
-            }
+            var crystalPrefab = Resources.Load<CrystalVisual>("Art/Crystals/PhaseTwoCrystal");
+            if (crystalPrefab == null)
+                throw new System.InvalidOperationException("Missing Art/Crystals/PhaseTwoCrystal visual prefab.");
             for (int i = 0; i < crystalVisuals.Length; i++)
             {
-                RectTransform crystal = CreateRect("Attack Crystal " + i, mainGrid);
+                var presentation = Instantiate(crystalPrefab, mainGrid, false);
+                RectTransform crystal = (RectTransform)presentation.transform;
+                crystal.name = "Attack Crystal " + i;
                 crystal.anchorMin = crystal.anchorMax = new Vector2(0.5f, 0.5f);
-                crystal.sizeDelta = Vector2.one * (mainCellSize * 0.82f);
-                Image crystalImage = crystal.gameObject.AddComponent<Image>();
-                crystalImage.sprite = crystalSprite;
-                crystalImage.preserveAspect = true;
-                crystalImage.raycastTarget = false;
-                Outline crystalOutline = crystal.gameObject.AddComponent<Outline>();
-                crystalOutline.effectColor = Hex("FF3156");
-                crystalOutline.effectDistance = new Vector2(3f, -3f);
+                presentation.SetCellSize(mainCellSize);
                 crystal.gameObject.SetActive(false);
                 crystalVisuals[i] = crystal;
+                crystalPresentations[i] = presentation;
             }
 
             campfireSprite = CreateCampfireSprite();
@@ -3035,9 +3029,21 @@ namespace NHN.TraceStrike
 
         }
 
+        private TileWarningVisual CreateTileWarning(Transform parent, string name)
+        {
+            if (tileWarningPrefab == null)
+                tileWarningPrefab = Resources.Load<TileWarningVisual>("Art/Warnings/TileWarning");
+            if (tileWarningPrefab == null)
+                throw new System.InvalidOperationException("Missing Art/Warnings/TileWarning visual prefab.");
+            var view = Instantiate(tileWarningPrefab, parent, false);
+            view.name = name;
+            return view;
+        }
+
         private void BuildAttackWarningVisual(RectTransform tile, int x, int y)
         {
-            RectTransform warning = CreateRect("Attack Warning", tile);
+            var presentation = CreateTileWarning(tile, "Attack Warning");
+            RectTransform warning = (RectTransform)presentation.transform;
             if (UseIsometricArena)
             {
                 warning.anchorMin = warning.anchorMax = new Vector2(0.5f, 0.5f);
@@ -3053,40 +3059,11 @@ namespace NHN.TraceStrike
                 warning.offsetMax = new Vector2(-3f, -3f);
             }
 
-            RectTransform fill = CreateRect("Warning Fill", warning);
-            fill.anchorMin = fill.anchorMax = new Vector2(0.5f, 0.5f);
-            fill.sizeDelta = Vector2.zero;
-            fill.anchoredPosition = Vector2.zero;
-            Image fillImage = fill.gameObject.AddComponent<Image>();
-            fillImage.color = new Color(Danger.r, Danger.g, Danger.b, 0.72f);
-            fillImage.raycastTarget = false;
-
-            CreateWarningEdge(warning, "Left", new Vector2(0f, 0f), new Vector2(0f, 1f),
-                new Vector2(4f, 0f), new Vector2(0f, 0.5f));
-            CreateWarningEdge(warning, "Right", new Vector2(1f, 0f), new Vector2(1f, 1f),
-                new Vector2(4f, 0f), new Vector2(1f, 0.5f));
-            CreateWarningEdge(warning, "Bottom", new Vector2(0f, 0f), new Vector2(1f, 0f),
-                new Vector2(0f, 4f), new Vector2(0.5f, 0f));
-            CreateWarningEdge(warning, "Top", new Vector2(0f, 1f), new Vector2(1f, 1f),
-                new Vector2(0f, 4f), new Vector2(0.5f, 1f));
-
+            presentation.SetColor(new Color(Danger.r, Danger.g, Danger.b, 0.72f));
+            presentation.SetProgress(0);
             warning.gameObject.SetActive(false);
             attackWarningVisuals[x, y] = warning;
-            attackWarningFillImages[x, y] = fillImage;
-        }
-
-        private void CreateWarningEdge(RectTransform parent, string name, Vector2 anchorMin,
-            Vector2 anchorMax, Vector2 sizeDelta, Vector2 pivot)
-        {
-            RectTransform edge = CreateRect(name, parent);
-            edge.anchorMin = anchorMin;
-            edge.anchorMax = anchorMax;
-            edge.pivot = pivot;
-            edge.sizeDelta = sizeDelta;
-            edge.anchoredPosition = Vector2.zero;
-            Image edgeImage = edge.gameObject.AddComponent<Image>();
-            edgeImage.color = Danger;
-            edgeImage.raycastTarget = false;
+            attackWarningPresentations[x, y] = presentation;
         }
 
         private void BuildFooterV2(RectTransform root)
@@ -3407,7 +3384,7 @@ namespace NHN.TraceStrike
                     bool crystalWarned = crystalWarningCounts.ContainsKey(cell);
                     bool crystalFiring = crystalFiringCounts.ContainsKey(cell);
                     bool hasSpecialTile = specialTiles.TryGetValue(cell, out SpecialTileType specialType);
-                    if (isCrystal) color = Hex("4A1723");
+                    // The crystal prefab supplies a contact shadow; keep the floor texture visible beneath it.
                     if (model.IsTrail(cell)) color = Trail;
                     if (cell == model.Start) color = StartColor;
                     if (cell == model.End) color = EndColor;
@@ -4110,7 +4087,7 @@ namespace NHN.TraceStrike
                 if (crystal != null && crystal.gameObject.activeSelf)
                 {
                     float crystalPulse = (Mathf.Sin(Time.unscaledTime * 7f + i * 1.4f) + 1f) * 0.5f;
-                    crystal.localScale = Vector3.one * PixelStep(0.94f + crystalPulse * 0.14f, 0.04f);
+                    crystalPresentations[i].SetPulse(PixelStep(0.94f + crystalPulse * 0.14f, 0.04f));
                 }
             }
         }
@@ -4159,8 +4136,8 @@ namespace NHN.TraceStrike
                 for (int x = 0; x < renderGridSize; x++)
                 {
                     RectTransform warning = attackWarningVisuals[x, y];
-                    Image fillImage = attackWarningFillImages[x, y];
-                    if (warning == null || fillImage == null)
+                    TileWarningVisual presentation = attackWarningPresentations[x, y];
+                    if (warning == null || presentation == null)
                     {
                         continue;
                     }
@@ -4192,13 +4169,8 @@ namespace NHN.TraceStrike
                     }
 
                     progress = Mathf.Clamp01(progress);
-                    float maxSize = Mathf.Max(0f, UseIsometricArena
-                        ? warning.sizeDelta.x - 8f
-                        : mainTiles[x, y].rectTransform.sizeDelta.x - 10f);
-                    float size = PixelStep(maxSize * progress, 1f);
-                    fillImage.rectTransform.sizeDelta = Vector2.one * size;
-                    fillImage.rectTransform.anchoredPosition = Vector2.zero;
-                    fillImage.color = new Color(Danger.r, Danger.g, Danger.b, 0.42f + progress * 0.48f);
+                    presentation.SetProgress(progress);
+                    presentation.SetColor(new Color(Danger.r, Danger.g, Danger.b, 0.42f + progress * 0.48f));
                     warning.SetAsLastSibling();
                 }
             }

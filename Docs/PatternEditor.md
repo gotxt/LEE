@@ -205,12 +205,15 @@ Arena 상단의 **맵 기본 이미지 → 기본 베이스 타일 이미지**�
 
 ## 보스 본체 연출 설정
 
+타일 공격용 기존 효과 프리팹과 사용 방법은 [패턴 이펙트 프리팹 안내](EffectPrefabs.md)를 참고한다. `Resources/Effects/Prefabs/Impact`의 프리팹을 일반 `Impact VFX`에 넣어 사용한다.
+
 보스 외형 프리팹은 `BossActor` 하나로 등록한다. 보스 설정/Arena의 `보스 외형 / 배치`에서 위치·크기·Animator 기본 상태를 설정하고, 이벤트 메뉴의 `Boss`에서 애니메이션·이펙트·모션을 추가한다. 바닥이 없는 위치에도 배치할 수 있다. 보스 프리팹과 ParticleSystem은 타일 미리보기 위에 실제 외형으로 표시된다.
 
 제작 순서, 상태/소켓 선택, 겹침 규칙, 미리보기 범위는 [보스 본체 연출 제작](BossPresentation.md)을 참고한다.
 
 ## 검증 상태와 재실행
 
+- 기존 타일 이펙트 프리팹 분리와 폴더 정리 후 새 임포트 캐시를 사용한 격리 프로젝트에서 Unity 전체 **127개 통과(실패·스킵 0)**. 네 프리팹의 입자 수·수명·크기 조정, 난수 분리와 재생 재현성, 이동한 효과음의 GUID·Resources 로드, 실제 게임에서 타일별 생성 및 종료·취소 정리를 검사했다. 결과: `Logs/PatternValidation/EffectPrefabsFresh.xml`. 실제 화면에서의 시각적 느낌은 재생 모드에서 별도 확인한다.
 - 간편 공격 설계 추가 후 새 임포트 캐시를 사용한 격리 사본에서 Unity 전체 **119개 통과(실패·스킵 0)**. 최종 복제 보완 후 관련 **9개 재검사 통과**. 서로 다른 위치의 순차/동시 타격, 복제 영역 독립, 연출 시간 이동, 삭제/비활성화 범위, Undo/Redo·직렬화, 기존 패턴의 비파괴 인식 및 복제, 간편/고급 창 그리기를 포함한다. 결과: `Logs/PatternValidation/AttackDesignerFresh.xml`, `Logs/PatternValidation/AttackDesignerFinal.xml`. 실제 팀원 대상 사용성 평가는 별도로 필요하다.
 - Unity 6000.5.3f1 자체 임포트와 런타임/에디터 스크립트 컴파일 통과.
 - 통합 구조 변경 당시 Unity EditMode 전체 77개 테스트 통과. 통합 보스 에셋 로드, 인라인 SerializeReference 타입 보존, 내부/공유 패턴 순환 호출 검사가 포함된다.

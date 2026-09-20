@@ -27,8 +27,9 @@ namespace NHN.TraceStrike.Editor
                 return;
             }
 
-            var warning = AssetDatabase.LoadAssetAtPath<AudioClip>(Root + "/Warning.wav");
-            var impact = AssetDatabase.LoadAssetAtPath<AudioClip>(Root + "/Impact.wav");
+            var warning = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Effects/Audio/Warning.wav");
+            var impact = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Effects/Audio/Impact.wav");
+            var impactPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Effects/Prefabs/Impact/TileImpact.prefab");
             var boss = ScriptableObject.CreateInstance<BossEncounterDefinition>();
             boss.id = "crimson-golem";
             boss.displayName = "크림슨 골렘";
@@ -81,7 +82,7 @@ namespace NHN.TraceStrike.Editor
                             new DamageEvent { tiles = tiles, reason = shape.ToString() });
                         if (impact != null) Clip(sequence, "Impact SFX", delay, 0.3f,
                             new SfxEvent { clip = impact });
-                        Clip(sequence, "Impact VFX", delay, 0.3f, new VfxEvent { tiles = tiles });
+                        Clip(sequence, "Impact VFX", delay, 0.3f, new VfxEvent { tiles = tiles, prefab = impactPrefab });
                         Clip(sequence, "Camera", delay, 0.3f, new CameraEvent { shake = 12 });
                         if (phaseIndex == 1)
                             Clip(sequence, "Targeted subpattern", 0.15f, targeted.Duration,
