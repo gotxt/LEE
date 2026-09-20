@@ -64,15 +64,15 @@ namespace NHN.TraceStrike.Tests
             using (var runner = new PatternRunner(Pattern, new PatternContext(host, host.CenterCell)))
             {
                 runner.Advance(1.05f);
-                CollectionAssert.AreEquivalent(new[] { new Vector2Int(6, 8) }, host.marks.Values.SelectMany(m => m.Item1));
+                CollectionAssert.AreEquivalent(new[] { new Vector2Int(6, 8) }, host.marks.Values.SelectMany(m => m.Cells));
                 runner.Advance(2f);
-                CollectionAssert.AreEquivalent(new[] { new Vector2Int(10, 8) }, host.marks.Values.SelectMany(m => m.Item1));
+                CollectionAssert.AreEquivalent(new[] { new Vector2Int(10, 8) }, host.marks.Values.SelectMany(m => m.Cells));
             }
             AttackStepEditing.SetTiming(b, 0, 1, 0.3f);
             using (var runner = new PatternRunner(Pattern, new PatternContext(host, host.CenterCell)))
             {
                 runner.Advance(1.05f);
-                CollectionAssert.AreEquivalent(new[] { new Vector2Int(6, 8), new Vector2Int(10, 8) }, host.marks.Values.SelectMany(m => m.Item1));
+                CollectionAssert.AreEquivalent(new[] { new Vector2Int(6, 8), new Vector2Int(10, 8) }, host.marks.Values.SelectMany(m => m.Cells));
             }
         }
 

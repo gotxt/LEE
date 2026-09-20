@@ -22,11 +22,18 @@ namespace NHN.TraceStrike.Editor
         public static void DrawCenterHighlight(Rect rect)
         {
             EditorGUI.DrawRect(rect, new Color(0.2f, 0.85f, 1f, 0.3f));
+            DrawOutline(rect, new Color(0.35f, 0.9f, 1f, 1f));
+        }
+
+        // Selection is an editing aid, not another attack-colour fill.
+        public static void DrawSelectionOutline(Rect rect) => DrawOutline(rect, Color.green);
+
+        private static void DrawOutline(Rect rect, Color outline)
+        {
             float inset = 1f / EditorGUIUtility.pixelsPerPoint;
             rect = Rect.MinMaxRect(rect.xMin + inset, rect.yMin + inset,
                 rect.xMax - inset, rect.yMax - inset);
             float thickness = Mathf.Min(2f, rect.width * 0.2f, rect.height * 0.2f);
-            var outline = new Color(0.35f, 0.9f, 1f, 1f);
             EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, thickness), outline);
             EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), outline);
             EditorGUI.DrawRect(new Rect(rect.x, rect.y, thickness, rect.height), outline);

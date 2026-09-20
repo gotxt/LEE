@@ -516,6 +516,7 @@ namespace NHN.TraceStrike.Editor
             float edge = Mathf.Max(Mathf.Min(300f, position.width * 0.32f), encounter.arena.GridSize * 14f);
             Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
             var tileSprites = encounter.arena.BuildTileSpriteLookup();
+            var orderedMarks = previewHost?.GetOrderedMarks();
             for (int y = 0; y < encounter.arena.GridSize; y++)
             for (int x = 0; x < encounter.arena.GridSize; x++)
             {
@@ -527,11 +528,11 @@ namespace NHN.TraceStrike.Editor
                 EditorGUI.DrawRect(rect, color);
                 if (previewHost != null && previewHost.Walkable.Contains(cell) &&
                     PatternPreviewGridGUI.DrawTileSprite(rect, encounter.arena.ResolveTileSprite(cell, tileSprites))) Repaint();
-                if (previewHost != null)
-                    foreach (var mark in previewHost.marks.Values)
-                        if (mark.Item1.Contains(cell)) EditorGUI.DrawRect(rect, mark.Item2);
+                if (orderedMarks != null)
+                    foreach (var mark in orderedMarks)
+                        if (mark.Cells.Contains(cell)) EditorGUI.DrawRect(rect, mark.Color);
                 if (showSelectedAttackArea && paintedCells != null && paintedCells.Contains(cell))
-                    EditorGUI.DrawRect(rect, new Color(0f, 1f, 0f, 0.55f));
+                    PatternPreviewGridGUI.DrawSelectionOutline(rect);
                 if (cell == previewPlayer) GUI.Label(rect, "P", EditorStyles.whiteMiniLabel);
             }
             PatternPreviewGridGUI.DrawLines(board, encounter.arena.GridSize);

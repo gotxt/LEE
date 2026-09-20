@@ -188,14 +188,16 @@ namespace NHN.TraceStrike.Editor
             float edge = Mathf.Min(300, position.width * 0.45f);
             Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
             var selectedTiles = SelectedTiles();
+            var orderedMarks = previewHost?.GetOrderedMarks();
             for (int y = 0; y < Mathf.Max(TrailFieldModel.Size, fieldSize); y++) for (int x = 0; x < Mathf.Max(TrailFieldModel.Size, fieldSize); x++)
             {
                 var cell = new Vector2Int(x, y);
                 Rect r = PatternPreviewGridGUI.CellRect(board, x, y, Mathf.Max(TrailFieldModel.Size, fieldSize));
                 Color color = previewHost != null && previewHost.Walkable.Contains(cell) ? new Color(0.27f, 0.3f, 0.35f) : new Color(0.12f, 0.13f, 0.15f);
-                if (previewHost != null) foreach (var mark in previewHost.marks.Values) if (mark.Item1.Contains(cell)) color = Color.Lerp(color, mark.Item2, mark.Item2.a);
-                if (selectedTiles != null && selectedTiles.shape == TileShape.Cells && selectedTiles.cells.Contains(cell - PaintOrigin(selectedTiles))) color = Color.Lerp(color, Color.green, 0.5f);
+                if (orderedMarks != null) foreach (var mark in orderedMarks) if (mark.Cells.Contains(cell)) color = Color.Lerp(color, mark.Color, mark.Color.a);
                 EditorGUI.DrawRect(r, color);
+                if (selectedTiles != null && selectedTiles.shape == TileShape.Cells && selectedTiles.cells.Contains(cell - PaintOrigin(selectedTiles)))
+                    PatternPreviewGridGUI.DrawSelectionOutline(r);
                 if (cell == previewPlayer) GUI.Label(r, "P", EditorStyles.whiteMiniLabel);
                 if (Event.current.type == EventType.MouseDown && r.Contains(Event.current.mousePosition))
                 {
