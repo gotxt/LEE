@@ -82,13 +82,13 @@ BossCatalog                         게임에 등록된 보스 / 시작 보스
 
 첫 공격 전에는 `initialDelay`, 이후에는 `max(minimumInterval, interval - 완료한 주 패턴 수 × acceleration)`만큼 기다린다. 이 값은 **패턴 시작 간격이 아니라 이전 패턴이 끝난 뒤의 대기 시간**이다.
 
-타임라인은 scaled time을 사용하며 플레이어의 경로 공격 연출 등 `inputLocked` 동안 멈춘다. 이동만 봉인된 상태와는 다르다. 단, 기존 수정 공격 코루틴과 이펙트 자체 재생 등 별도 업데이트를 쓰는 요소까지 모두 같은 시계로 묶인 것은 아니다.
+타임라인과 페이즈 기믹은 scaled time을 사용하며 플레이어의 경로 공격 연출 등 `inputLocked` 동안 멈춘다. 이동만 봉인된 상태와는 다르다. 이펙트 자체 재생까지 모두 같은 시계로 묶인 것은 아니다.
 
 ## 6. 현재 콘텐츠의 범위
 
 - BossCatalog에 등록된 보스는 크림슨 골렘 1개다.
 - 2개 페이즈, 주 패턴 17개(1페이즈 5개 / 2페이즈 12개), 보조 패턴 2개다.
-- 2페이즈의 `legacyCrystals`는 타임라인과 별도로 기존 수정 공격 기능을 사용한다. 맵과 연결성에 따라 실제 수정 배치는 제한될 수 있다.
+- 2페이즈는 지정 배치한 통과 가능한 수정 5개를 경로 공격으로 해제하는 기믹을 사용한다. 모두 해제하는 공격까지 보스 체력 1 보호가 유지되고 다음 공격부터 처치할 수 있다. [보스 기믹 가이드](../BossMechanics.md) 참고.
 - 보스 전용 애니메이션/모션/VFX 이벤트 타입은 구현되어 있지만 현재 저장 패턴은 아직 사용하지 않는다.
 - 허브 관련 코드가 남아 있어도 새 보스를 등록하는 것만으로 허브 선택 화면/잠금 정책까지 자동 확장되지는 않는다.
 
@@ -108,7 +108,7 @@ BossCatalog                         게임에 등록된 보스 / 시작 보스
 | 시간축 실행/중단 | `Assets/Scripts/Patterns/PatternRunner.cs` |
 | 게임 연결·페이즈 스케줄 | `Assets/Scripts/TraceStrikeGame.Patterns.cs` |
 | 보스 연출 | `Assets/Scripts/Patterns/BossEvents.cs`, `BossActor.cs`, `BossPresentation.cs` |
-| 기존 수정 기믹/입력 | `Assets/Scripts/TraceStrikeGame.cs`, `CrystalRules.cs` |
+| 기믹 실행/수정 봉인 | `Assets/Scripts/Patterns/BossMechanics.cs`, `CrystalSealMechanic.cs`, `Assets/Scripts/TraceStrikeGame.Mechanics.cs` |
 | 에디터의 공격 묶음 | `Assets/Editor/Patterns/AttackStepEditing.cs` |
 
 이 문서와 코드/에셋이 다르면 현재 파일을 확인해 차이를 보고한다. 차이를 발견했다는 이유만으로 사용자가 편집한 맵·패턴을 초기화하지 않는다.

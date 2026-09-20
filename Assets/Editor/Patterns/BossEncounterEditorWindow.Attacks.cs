@@ -37,6 +37,8 @@ namespace NHN.TraceStrike.Editor
                 {
                     BeginPaint("Add attack step");
                     var added = AttackStepEditing.Add(pattern, steps.Count == 0 ? 0 : steps.Max(s => s.End) + 0.25f);
+                    if (previewOriginOverride)
+                    { added.Tiles.anchor = TileAnchor.Origin; AttackStepEditing.SynchronizeArea(added); }
                     added.Warning.attackName = (steps.Count + 1) + "차 공격";
                     selectedClip = pattern.clips.IndexOf(added.Warning); playhead = added.Warning.start;
                     eventBrush = 0; Changed(); GUIUtility.ExitGUI();
@@ -157,7 +159,7 @@ namespace NHN.TraceStrike.Editor
             var tiles = step.Tiles;
             EditorGUI.BeginChangeCheck();
             int shape = EditorGUILayout.Popup("영역 모양", (int)tiles.shape, new[] { "직접 칠하기", "전체 바닥", "십자", "마름모 테두리", "대각선", "십자 + 마름모", "가로 줄무늬", "세로 줄무늬", "정사각형", "체크무늬" });
-            int anchor = EditorGUILayout.Popup("위치 기준", (int)tiles.anchor, new[] { "맵 중앙", "경고 시작 시 플레이어", "호출한 위치 (고급)", "맵 고정 좌표" });
+            int anchor = EditorGUILayout.Popup("위치 기준", (int)tiles.anchor, new[] { "맵 중앙", "경고 시작 시 플레이어", "기믹 / 호출 위치", "맵 고정 좌표" });
             Vector2Int offset = EditorGUILayout.Vector2IntField("위치 보정 (칸)", tiles.offset);
             int radius = tiles.radius;
             if (shape == (int)TileShape.Diamond || shape == (int)TileShape.Combined || shape == (int)TileShape.Rectangle || shape == (int)TileShape.Checker)
@@ -169,7 +171,7 @@ namespace NHN.TraceStrike.Editor
                 if (shape == (int)TileShape.Cells && tiles.shape != TileShape.Cells)
                 {
                     var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
-                    using (var context = new PatternContext(host, host.CenterCell))
+                    using (var context = new PatternContext(host, PreviewOrigin))
                         tiles.cells = tiles.Resolve(context).Select(c => c - PaintOrigin(tiles)).ToList();
                 }
                 tiles.shape = (TileShape)shape; tiles.anchor = (TileAnchor)anchor;
@@ -209,7 +211,7 @@ namespace NHN.TraceStrike.Editor
         {
             if (tiles == null || !showSelectedAttackArea) return null;
             var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
-            using (var context = new PatternContext(host, host.CenterCell)) return tiles.Resolve(context);
+            using (var context = new PatternContext(host, PreviewOrigin)) return tiles.Resolve(context);
         }
     }
 }

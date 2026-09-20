@@ -108,5 +108,5 @@ for pattern_id in patterns:
 
 print(
     f"Validated one encounter with {len(patterns)} inline patterns and "
-    f"{len(refs)} managed events; GUIDs, timings, types and local calls resolve."
+    f"{len(refs)} managed entries (events/mechanics); GUIDs, timings, types and local calls resolve."
 )

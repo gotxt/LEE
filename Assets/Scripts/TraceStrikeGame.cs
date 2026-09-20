@@ -326,13 +326,14 @@ namespace NHN.TraceStrike
             {
                 PrepareTitleScreen();
             }
-            StartCoroutine(CrystalPatternLoop());
+            // Phase mechanics now own crystal attacks on the shared gameplay clock.
             StartCoroutine(CaptureOnCommandLine());
         }
 
         private void OnDestroy()
         {
             CancelTimeline();
+            StopMechanics();
             DisposeBossVisual();
             if (titleBlindMaterial != null)
             {
@@ -534,7 +535,7 @@ namespace NHN.TraceStrike
             {
                 case MoveResult.Blocked:
                     statusText.text = blockedByCrystal
-                        ? "공격 수정은 통과할 수 없는 벽입니다"
+                        ? "장애물은 통과할 수 없어요"
                         : "필드 밖으로는 이동할 수 없어요";
                     StartCoroutine(PunchPlayer(true));
                     PlaySfx(blockedSfx);
@@ -619,6 +620,7 @@ namespace NHN.TraceStrike
         private void StartHub()
         {
             CancelTimeline();
+            StopMechanics();
             hubActive = true;
             tutorialActive = false;
             tutorialTransitioning = false;
@@ -1040,6 +1042,7 @@ namespace NHN.TraceStrike
         private void StartTutorial()
         {
             CancelTimeline();
+            StopMechanics();
             titleActive = false;
             if (titleScreen != null)
             {
@@ -1290,6 +1293,7 @@ namespace NHN.TraceStrike
         private IEnumerator SkipBossPhase()
         {
             CancelTimeline();
+            StopMechanics();
             inputLocked = true;
             bossPhaseSkipped = true;
             movementFrozen = false;
@@ -1611,21 +1615,17 @@ namespace NHN.TraceStrike
             }
 
             SpawnBurst(model.End, TrailHot, 28);
-            bossHealth = Mathf.Max(0, bossHealth - damage);
+            int healthBeforeAttack = bossHealth;
+            bossHealth = ResolvePlayerBossDamage(damage);
             bossHealthFill.fillAmount = (float)bossHealth / bossMaxHealth;
-            bossHealthText.text = bossHealth + " / " + bossMaxHealth;
+            RefreshMechanicHealthLabel();
             UpdatePhaseLabel();
-            damagePopup.text = "-" + damage;
+            damagePopup.text = "-" + (healthBeforeAttack - bossHealth);
             StartCoroutine(ShowDamagePopup());
             StartCoroutine(ShakeHud());
             PlaySfx(hitSfx);
             yield return StartCoroutine(FlashFrame(TrailHot));
             yield return new WaitForSeconds(0.45f);
-
-            if (ActivePhase.legacyCrystals && phaseTwoActive && !crystalsRelocated && bossHealth > 0 && bossHealth <= bossMaxHealth / 2)
-            {
-                RelocateCrystals();
-            }
 
             if (bossHealth <= 0 && HasNextBossPhase)
             {
@@ -1646,6 +1646,7 @@ namespace NHN.TraceStrike
                 crystalFiringCounts.Clear();
                 crystalTelegraphProgress.Clear();
                 CancelTimeline();
+                StopMechanics();
                 statusText.text = "STAGE CLEAR — " + ActiveBossName + " 격파!" + CompleteStageTimer();
                 PlaySfx(victorySfx);
                 RefreshBoard();
@@ -1740,6 +1741,7 @@ namespace NHN.TraceStrike
             statusText.text = "START에서 출발 — 보스의 붉은 공격 예고를 피하세요";
             UpdatePowerRuleText();
             RefreshBoard();
+            StartMechanics();
         }
 
         private void SetWorldBossVisible(bool visible)
@@ -2151,6 +2153,7 @@ namespace NHN.TraceStrike
         private IEnumerator EnterPhaseTwo()
         {
             CancelTimeline();
+            StopMechanics();
             phaseBanner.text = "PHASE " + (activePhaseIndex + 2);
             phaseBannerGroup.alpha = 1f;
             phaseOverlayRoot.SetAsLastSibling();
@@ -2176,7 +2179,6 @@ namespace NHN.TraceStrike
             crystalLayoutVersion++;
             crystalCells.Clear();
             model.SetBlockedCells(null);
-            if (ActivePhase.legacyCrystals) SetupFixedCrystals();
             RefreshCrystalVisuals();
             patternVersion++;
             bossAttackCount = 0;
@@ -2184,6 +2186,7 @@ namespace NHN.TraceStrike
             bossHealth = bossMaxHealth;
             bossHealthFill.fillAmount = 1f;
             bossHealthText.text = bossHealth + " / " + bossMaxHealth;
+            StartMechanics();
             warnedCells.Clear();
             targetedCells.Clear();
             hazardFiring = false;
@@ -2231,6 +2234,7 @@ namespace NHN.TraceStrike
         private IEnumerator KillPlayer(string patternName)
         {
             CancelTimeline();
+            StopMechanics();
             playerDead = true;
             inputLocked = true;
             movementFrozen = false;

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace NHN.TraceStrike
 {
-    // Presentation only: the existing crystal rules still own placement, blocking and attacks.
+    // Presentation only. Phase mechanics own placement, activation and attacks.
     [DisallowMultipleComponent, RequireComponent(typeof(RectTransform))]
     public sealed class CrystalVisual : MonoBehaviour
     {

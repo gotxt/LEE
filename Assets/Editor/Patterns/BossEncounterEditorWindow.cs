@@ -11,7 +11,7 @@ namespace NHN.TraceStrike.Editor
 {
     public sealed partial class BossEncounterEditorWindow : EditorWindow
     {
-        private enum NodeKind { Encounter, Arena, Phase, Pattern, Background, LibraryPattern }
+        private enum NodeKind { Encounter, Arena, Phase, Pattern, Background, LibraryPattern, Mechanic }
 
         [SerializeField] private BossEncounterDefinition encounter;
         [SerializeField] private NodeKind node = NodeKind.Encounter;
@@ -65,6 +65,7 @@ namespace NHN.TraceStrike.Editor
 
         private void OnDisable()
         {
+            mechanicTrailStroke.Cancel();
             mapStroke.Cancel();
             eventStroke.Cancel();
             EditorApplication.update -= UpdatePreview;
@@ -82,10 +83,12 @@ namespace NHN.TraceStrike.Editor
 
         private void SelectEncounter(BossEncounterDefinition value)
         {
+            mechanicTrailStroke.Cancel();
             mapStroke.Cancel();
             eventStroke.Cancel();
             DisposePreview();
             encounter = value;
+            previewOriginOverride = false; selectedDevice = -1; originPhase = originMechanic = -1;
             if (value != null && value.arena != null)
                 previewPlayer = value.arena.overridePlayerStart ? value.arena.playerStart : value.arena.CenterCell;
             serialized = value != null ? new SerializedObject(value) : null;
@@ -115,6 +118,7 @@ namespace NHN.TraceStrike.Editor
                     {
                         DrawArenaPainter();
                     }
+                    else if (node == NodeKind.Mechanic) DrawMechanicEditor();
                     else
                     {
                         if (pattern != null)
@@ -209,6 +213,10 @@ namespace NHN.TraceStrike.Editor
                     }
                     for (int i = 0; i < phase.patterns.Count; i++)
                         TreeButton("  ▶ " + phase.patterns[i].name, NodeKind.Pattern, p, i);
+                    if (phase.mechanics != null)
+                        for (int i = 0; i < phase.mechanics.Count; i++)
+                            TreeButton("  ◆ " + (phase.mechanics[i]?.name ?? "누락된 기믹"), NodeKind.Mechanic, p, i);
+                    if (GUILayout.Button("  + 기믹 추가", EditorStyles.miniButton)) ShowMechanicMenu(p);
                 }
                 EditorGUILayout.Space(8f);
                 if (GUILayout.Button("+ 보스 페이즈 추가")) AddPhase();
@@ -226,9 +234,11 @@ namespace NHN.TraceStrike.Editor
         private void SelectNode(NodeKind kind, int phase, int pattern)
         {
             if (node == kind && phaseIndex == phase && patternIndex == pattern) return;
+            mechanicTrailStroke.Cancel();
             mapStroke.Cancel();
             eventStroke.Cancel();
             node = kind;
+            previewOriginOverride = false;
             phaseIndex = phase;
             patternIndex = pattern;
             selectedClip = -1;
@@ -396,7 +406,7 @@ namespace NHN.TraceStrike.Editor
                 EditorGUILayout.PropertyField(phase.FindPropertyRelative("acceleration"));
                 EditorGUILayout.PropertyField(phase.FindPropertyRelative("minimumInterval"));
                 EditorGUILayout.PropertyField(phase.FindPropertyRelative("shuffle"));
-                EditorGUILayout.PropertyField(phase.FindPropertyRelative("legacyCrystals"));
+                EditorGUILayout.HelpBox("지속 기믹은 왼쪽 ‘+ 기믹 추가’에서 설정합니다.", MessageType.None);
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     if (GUILayout.Button("Move Phase Up") && phaseIndex > 0) MovePhase(-1);
@@ -510,6 +520,12 @@ namespace NHN.TraceStrike.Editor
             }
             EditorGUILayout.LabelField("Arena " + encounter.arena.size + "×" + encounter.arena.size +
                 " · " + encounter.arena.shape, EditorStyles.miniBoldLabel);
+            if (previewOriginOverride)
+            {
+                EditorGUILayout.LabelField("기믹 / 호출 위치: " + PreviewOrigin, EditorStyles.miniLabel);
+                if (GUILayout.Button("기믹 배치로 돌아가기"))
+                { SelectNode(NodeKind.Mechanic, originPhase, originMechanic); GUIUtility.ExitGUI(); }
+            }
             TileSelection selectedTiles = SelectedTiles(pattern);
             DrawEventPaintTools(selectedTiles);
             var paintedCells = SelectionOverlay(selectedTiles);
@@ -800,12 +816,14 @@ namespace NHN.TraceStrike.Editor
             Vector2Int center = new Vector2Int(encounter.arena.GridSize / 2,
                 encounter.arena.GridSize / 2);
             return (tiles.anchor == TileAnchor.Absolute ? Vector2Int.zero :
-                tiles.anchor == TileAnchor.Player ? previewPlayer : center) + tiles.offset;
+                tiles.anchor == TileAnchor.Player ? previewPlayer :
+                tiles.anchor == TileAnchor.Origin ? PreviewOrigin : center) + tiles.offset;
         }
 
         private void RebuildPreview()
         {
             DisposePreview();
+            if (node == NodeKind.Mechanic) { RebuildMechanicPreview(); return; }
             EncounterPattern pattern = CurrentPattern();
             if (encounter == null || pattern == null) return;
             previewError = null;
@@ -818,7 +836,7 @@ namespace NHN.TraceStrike.Editor
                     previewHost.boss = bossPreview.Presentation;
                 }
                 previewRunner = new PatternRunner(pattern, new PatternContext(previewHost,
-                    previewHost.CenterCell, 0, encounter.FindPattern));
+                    PreviewOrigin, 0, encounter.FindPattern));
                 previewRunner.Advance(0f);
                 float remaining = playhead;
                 while (remaining > 0f && !previewRunner.IsComplete)
@@ -838,6 +856,8 @@ namespace NHN.TraceStrike.Editor
 
         private void DisposePreview()
         {
+            try { mechanicPreview?.Dispose(); } catch { }
+            mechanicPreview = null;
             try { previewRunner?.Dispose(); }
             catch { }
             previewRunner = null;
@@ -848,6 +868,7 @@ namespace NHN.TraceStrike.Editor
 
         private void UpdatePreview()
         {
+            if (node == NodeKind.Mechanic) { UpdateMechanicPreview(); return; }
             EncounterPattern pattern = CurrentPattern();
             if (!playing || pattern == null) return;
             double now = EditorApplication.timeSinceStartup;

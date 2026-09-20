@@ -53,8 +53,7 @@ namespace NHN.TraceStrike.Editor
                     name = phaseIndex == 0 ? "PHASE 1" : "PHASE 2 · ENRAGED",
                     health = 150,
                     interval = phaseIndex == 0 ? 1.85f : 1.05f,
-                    initialDelay = phaseIndex == 0 ? 2.4f : 0.5f,
-                    legacyCrystals = phaseIndex == 1
+                    initialDelay = phaseIndex == 0 ? 2.4f : 0.5f
                 };
                 boss.phases.Add(phase);
                 for (int pass = 0; pass < 2; pass++)
@@ -96,6 +95,14 @@ namespace NHN.TraceStrike.Editor
                 }
             }
 
+            var crystalAttack = BossEncounterEditorWindow.CreateCrystalAttackPattern();
+            boss.libraryPatterns.Add(crystalAttack);
+            var seal = new CrystalSealMechanic { attackPatternId = crystalAttack.id,
+                activePrefab = Resources.Load<GameObject>("Art/Crystals/PhaseTwoCrystal") };
+            foreach (var cell in new[] { new Vector2Int(8, 13), new Vector2Int(13, 9),
+                new Vector2Int(11, 4), new Vector2Int(5, 4), new Vector2Int(3, 9) })
+                seal.crystals.Add(new CrystalPlacement { cell = cell });
+            boss.phases[1].mechanics.Add(seal);
             AssetDatabase.CreateAsset(boss, encounterPath);
             var catalog = AssetDatabase.LoadAssetAtPath<BossCatalog>(Root + "/BossCatalog.asset");
             if (catalog == null)

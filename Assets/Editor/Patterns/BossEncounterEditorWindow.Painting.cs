@@ -19,7 +19,7 @@ namespace NHN.TraceStrike.Editor
         private Vector2 mapScroll, tilePreviewScroll;
         private Vector2Int strokeOrigin;
 
-        private void OnLostFocus() { mapStroke.Cancel(); eventStroke.Cancel(); }
+        private void OnLostFocus() { mapStroke.Cancel(); eventStroke.Cancel(); mechanicTrailStroke.Cancel(); }
 
         private void BeginPaint(string label)
         {
@@ -248,7 +248,7 @@ namespace NHN.TraceStrike.Editor
                 {
                     BeginPaint("Convert event area to cells");
                     var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
-                    using (var context = new PatternContext(host, host.CenterCell))
+                    using (var context = new PatternContext(host, PreviewOrigin))
                         tiles.cells = tiles.Resolve(context).Select(c => c - PaintOrigin(tiles)).ToList();
                     tiles.shape = TileShape.Cells;
                     Changed();

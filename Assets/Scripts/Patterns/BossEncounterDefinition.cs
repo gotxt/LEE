@@ -134,7 +134,9 @@ namespace NHN.TraceStrike.Patterns
             name = "Background",
             minimumDuration = 1f
         };
-        [Tooltip("Compatibility with the Crimson Golem crystal system.")]
+        [SerializeReference] public List<BossMechanicDefinition> mechanics = new List<BossMechanicDefinition>();
+        // Kept only for reading old assets. Use phase mechanics for new content.
+        [HideInInspector]
         public bool legacyCrystals;
     }
 
@@ -220,6 +222,18 @@ namespace NHN.TraceStrike.Patterns
             foreach (BossPhaseDefinition phase in phases)
             {
                 if (phase == null) { errors.Add("Missing phase."); continue; }
+                if (phase.mechanics != null)
+                {
+                    var occupied = new HashSet<Vector2Int>();
+                    foreach (var mechanic in phase.mechanics)
+                    {
+                        if (mechanic == null) { errors.Add(phase.name + ": missing mechanic type."); continue; }
+                        if (!mechanic.enabled) continue;
+                        if (arena != null) mechanic.Validate(this, errors);
+                        foreach (var cell in mechanic.PlacementCells)
+                            if (!occupied.Add(cell)) errors.Add(phase.name + ": 기믹 장치의 배치가 겹칩니다.");
+                    }
+                }
                 if (phase.health < 1) errors.Add(phase.name + ": health must be positive.");
                 foreach (float value in new[] { phase.initialDelay, phase.interval, phase.minimumInterval, phase.acceleration })
                     if (float.IsNaN(value) || float.IsInfinity(value) || value < 0)
@@ -230,7 +244,8 @@ namespace NHN.TraceStrike.Patterns
                         if (pattern != null && pattern.enabled) { hasEnabledAttack = true; break; }
                 bool hasEnabledBackground = phase.backgroundEnabled &&
                     phase.background != null && phase.background.enabled;
-                if (!hasEnabledAttack && !hasEnabledBackground)
+                bool hasEnabledMechanic = phase.mechanics != null && phase.mechanics.Exists(m => m != null && m.enabled);
+                if (!hasEnabledAttack && !hasEnabledBackground && !hasEnabledMechanic)
                     errors.Add(phase.name + ": add at least one pattern or background timeline.");
                 if (phase.backgroundEnabled)
                 {

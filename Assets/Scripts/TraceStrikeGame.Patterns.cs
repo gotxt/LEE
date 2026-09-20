@@ -42,6 +42,7 @@ namespace NHN.TraceStrike
 
         private void ConfigureBoss(int index)
         {
+            StopMechanics();
             IsPatternPreview = false;
             var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
             if (catalog == null || index < 0 || index >= catalog.bosses.Count || catalog.bosses[index] == null)
@@ -75,7 +76,7 @@ namespace NHN.TraceStrike
             pendingTimelineDamage = null;
         }
 
-        private void OnDisable() => CancelTimeline();
+        private void OnDisable() { CancelTimeline(); StopMechanics(); }
 
         private void TickTimeline()
         {
@@ -91,6 +92,7 @@ namespace NHN.TraceStrike
             try
             {
                 float dt = Time.deltaTime;
+                if (!IsPatternPreview) mechanicSession?.Advance(dt);
                 if (!IsPatternPreview && ActivePhase.backgroundEnabled &&
                     ActivePhase.background != null && ActivePhase.background.enabled)
                 {
@@ -131,6 +133,7 @@ namespace NHN.TraceStrike
             catch (Exception error)
             {
                 CancelTimeline();
+                StopMechanics();
                 inputLocked = true;
                 Debug.LogException(error, this);
                 statusText.text = "Pattern configuration error — see Console";
@@ -164,6 +167,7 @@ namespace NHN.TraceStrike
         {
             StartStage(stage);
             CancelTimeline();
+            StopMechanics();
             IsPatternPreview = true;
             bossPhaseSkipped = true;
             stageTimerRunning = false;
@@ -181,6 +185,7 @@ namespace NHN.TraceStrike
                 throw new InvalidOperationException("Add the encounter to BossCatalog before Play Mode preview.");
             StartStage(catalogIndex);
             CancelTimeline();
+            StopMechanics();
             IsPatternPreview = true;
             bossPhaseSkipped = true;
             stageTimerRunning = false;
@@ -248,6 +253,7 @@ namespace NHN.TraceStrike
             accepted.IntersectWith(model.Walkable);
             accepted.Remove(model.Player); accepted.Remove(model.Start); accepted.Remove(model.End);
             accepted.ExceptWith(model.Trail);
+            if (mechanicSession != null) accepted.ExceptWith(mechanicSession.RequiredCells);
             var combined = CombinedWalls(); combined.UnionWith(accepted);
             if (!IsConnectedWithout(combined) || !model.HasEndpointPair(combined))
             { Debug.LogWarning("Pattern wall rejected: would disconnect the arena or exhaust START/END regions."); return new Lease(() => { }); }

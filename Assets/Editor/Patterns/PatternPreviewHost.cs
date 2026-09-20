@@ -8,7 +8,7 @@ using UnityEngine;
 namespace NHN.TraceStrike.Editor
 {
     // A sandbox model: editor scrubbing never changes the scene or plays prefabs/audio.
-    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost
+    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost
     {
         // Back to front. Dictionary slot reuse must never determine visual stacking.
         public enum PreviewLayer { Obstacle, Hazard, Warning, Damage, Effect }
@@ -83,6 +83,8 @@ namespace NHN.TraceStrike.Editor
         { var cells = new HashSet<Vector2Int>(); foreach (var wall in walls.Values) cells.UnionWith(wall); model.SetBlockedCells(cells); }
         public IPatternLease Spawn(string key, GameObject prefab, Vector2Int cell, Sprite sprite, Color color)
         { log.Add("Spawn " + (prefab != null ? prefab.name : "sprite") + " " + cell); return AddMark(new[] { cell }, color, PreviewLayer.Effect); }
+        public IPatternLease ShowDevice(Vector2Int cell, GameObject prefab, Sprite sprite, Color tint) =>
+            AddMark(new[] { cell }, tint, PreviewLayer.Obstacle);
         public IPatternLease Sound(AudioClip clip, float volume) { log.Add("SFX " + (clip != null ? clip.name : "missing")); return new PreviewLease(() => { }); }
         public IPatternLease Motion(string key, Vector2Int target) { log.Add("Move → " + target); return new PreviewLease(() => { }); }
         public IPatternLease Camera(Vector2 offset, float shake) { log.Add("Camera " + offset + " shake " + shake); return new PreviewLease(() => { }); }
