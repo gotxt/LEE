@@ -31,6 +31,8 @@ namespace NHN.TraceStrike.Tests
         }
         [TearDown] public void TearDown() { Undo.ClearUndo(boss); Object.DestroyImmediate(boss); }
         private BossMechanicSession Session() => new BossMechanicSession(boss.phases[0].mechanics, new MechanicContext(host, boss.FindPattern));
+        private void ActivateAll(BossMechanicSession session) => session.ResolvePlayerAttack(seal.PlacementCells.ToArray(), 150, 0);
+        private int Warnings => host.GetOrderedMarks().Count(m => m.Layer == PatternPreviewHost.PreviewLayer.Warning);
 
         [Test]
         public void ShippedEncounterHasFiveFixedCrystalsAndValidAttackAndVisualReferences()
@@ -47,62 +49,132 @@ namespace NHN.TraceStrike.Tests
         }
 
         [Test]
-        public void FinalSealAttackRetainsHealthOneAndNextAttackCanKill()
+        public void FinalActivationAttackRetainsHealthOneAndNextAttackCanKill()
         {
             using (var session = Session())
             {
                 var runtime = (CrystalSealRuntime)session.Runtimes[0];
                 Assert.AreEqual(1, session.ResolvePlayerAttack(new Vector2Int[0], 150, 999));
-                Assert.AreEqual(2, runtime.ActiveCount);
+                Assert.AreEqual(0, runtime.ActiveCount);
+                StringAssert.EndsWith("0/2", session.Status);
                 Assert.AreEqual(1, session.ResolvePlayerAttack(new[] { seal.crystals[0].cell }, 1, 999));
                 Assert.AreEqual(1, runtime.ActiveCount);
                 Assert.AreEqual(1, session.ResolvePlayerAttack(new[] { seal.crystals[1].cell }, 1, 999));
-                Assert.AreEqual(0, runtime.ActiveCount);
+                Assert.AreEqual(2, runtime.ActiveCount);
+                StringAssert.EndsWith("2/2", session.Status);
                 Assert.AreEqual(0, session.MinimumBossHealth);
                 Assert.AreEqual(0, session.ResolvePlayerAttack(new[] { host.CenterCell }, 1, 1));
             }
         }
 
         [Test]
-        public void OneCompletedAttackCanDisableAllAndDoesNotAutomaticallyKillHealthyBoss()
+        public void OneCompletedAttackCanActivateAllWithoutChangingNormalDamageOrKillingHealthyBoss()
         {
             using (var session = Session())
             {
                 int health = session.ResolvePlayerAttack(seal.crystals.Select(d => d.cell).ToArray(), 150, 10);
                 Assert.AreEqual(140, health);
-                Assert.AreEqual(0, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
+                Assert.AreEqual(2, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
                 Assert.AreEqual(139, session.ResolvePlayerAttack(new Vector2Int[0], health, 1));
             }
         }
 
         [Test]
-        public void WalkingAndClockTicksDoNotDisableCrystalsOrBlockTheirTiles()
+        public void InactiveCrystalsStaySilentAndWalkableUntilACompletedAttack()
         {
             using (var session = Session())
             {
                 foreach (var crystal in seal.crystals)
-                { host.player = crystal.cell; session.Advance(.1f); CollectionAssert.Contains(host.Traversable, crystal.cell); }
-                Assert.AreEqual(2, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
+                { host.player = crystal.cell; session.Advance(30); CollectionAssert.Contains(host.Traversable, crystal.cell); }
+                Assert.AreEqual(0, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
+                Assert.AreEqual(0, Warnings);
+                Assert.IsEmpty(host.log);
+                Assert.IsTrue(host.marks.Values.All(m => m.Color == seal.inactiveTint));
+                CollectionAssert.AreEquivalent(seal.PlacementCells, session.RequiredCells);
             }
         }
 
         [Test]
-        public void EachAttackUsesItsDeviceOriginAndDeactivationCancelsOnlyItsOwnAttack()
+        public void ZeroInitialDelayStillRequiresActivationBeforeTheFirstAttack()
+        {
+            seal.initialDelay = 0;
+            using (var session = Session())
+            {
+                session.Advance(30);
+                Assert.AreEqual(0, Warnings);
+                session.ResolvePlayerAttack(new[] { seal.crystals[0].cell }, 150, 0);
+                session.Advance(0);
+                Assert.AreEqual(1, Warnings);
+                session.ResolvePlayerAttack(new[] { seal.crystals[0].cell }, 150, 0);
+                session.Advance(0);
+                Assert.AreEqual(1, Warnings);
+            }
+            Assert.IsEmpty(host.marks);
+        }
+
+        [Test]
+        public void ActivationStartsEachDevicesOwnDelayAndAllActivatedDevicesKeepAttacking()
         {
             using (var session = Session())
             {
-                session.Advance(1.1f);
+                session.Advance(30);
+                session.ResolvePlayerAttack(new[] { seal.crystals[0].cell }, 150, 0);
+                session.Advance(.5f);
+                session.ResolvePlayerAttack(new[] { seal.crystals[1].cell }, 150, 0);
+                session.Advance(.6f);
+                Assert.AreEqual(1, Warnings, "Only the first device has waited its full initial delay.");
+                session.Advance(.5f);
                 var warnings = host.GetOrderedMarks().Where(m => m.Layer == PatternPreviewHost.PreviewLayer.Warning).ToArray();
                 Assert.AreEqual(2, warnings.Length);
                 foreach (var device in seal.crystals)
                     using (var context = new PatternContext(host, device.cell))
                         Assert.IsTrue(warnings.Any(m => m.Cells.SetEquals(((WarningEvent)attack.clips[0].action).tiles.Resolve(context))));
-                session.ResolvePlayerAttack(new[] { seal.crystals[0].cell }, 150, 0);
-                Assert.AreEqual(1, host.GetOrderedMarks().Count(m => m.Layer == PatternPreviewHost.PreviewLayer.Warning));
                 session.Advance(4);
-                Assert.AreEqual(1, host.GetOrderedMarks().Count(m => m.Layer == PatternPreviewHost.PreviewLayer.Warning));
-                Assert.AreEqual(1, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
+                Assert.AreEqual(2, Warnings, "Completing the objective must not stop either device's repeating attack.");
+                Assert.AreEqual(2, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
+                Assert.AreEqual(0, session.MinimumBossHealth);
             }
+            Assert.IsEmpty(host.marks);
+        }
+
+        [Test]
+        public void HittingAnActiveDeviceAgainDoesNotRestartItsDelayOrReplaceItsVisualOrAttack()
+        {
+            using (var session = Session())
+            {
+                var cell = new[] { seal.crystals[0].cell };
+                session.ResolvePlayerAttack(cell, 150, 0);
+                session.Advance(.5f);
+                var visuals = host.marks.Keys.ToArray();
+                session.ResolvePlayerAttack(cell, 150, 0);
+                CollectionAssert.AreEquivalent(visuals, host.marks.Keys);
+                session.Advance(.6f);
+                Assert.AreEqual(1, Warnings, "Repeated activation must not postpone the first attack.");
+                var resources = host.marks.Keys.ToArray();
+                session.ResolvePlayerAttack(cell, 150, 0);
+                CollectionAssert.AreEquivalent(resources, host.marks.Keys, "Repeated hits must keep the in-flight attack and visual.");
+                Assert.AreEqual(1, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
+                CollectionAssert.AreEqual(new[] { seal.crystals[1].cell }, session.RequiredCells);
+            }
+            Assert.IsEmpty(host.marks);
+        }
+
+        [Test]
+        public void PreviewWallsProtectOnlyCrystalsStillNeededForActivation()
+        {
+            using (var session = Session())
+            {
+                host.RequiredCellsProvider = () => session.RequiredCells;
+                using (host.Block(seal.PlacementCells.ToArray()))
+                    foreach (var cell in seal.PlacementCells) CollectionAssert.Contains(host.Traversable, cell);
+                session.ResolvePlayerAttack(new[] { seal.crystals[0].cell }, 150, 0);
+                using (host.Block(seal.PlacementCells.ToArray()))
+                {
+                    CollectionAssert.DoesNotContain(host.Traversable, seal.crystals[0].cell);
+                    CollectionAssert.Contains(host.Traversable, seal.crystals[1].cell);
+                }
+            }
+            host.RequiredCellsProvider = null;
             Assert.IsEmpty(host.marks);
         }
 
@@ -113,6 +185,8 @@ namespace NHN.TraceStrike.Tests
             string before = EditorJsonUtility.ToJson(boss);
             using (var session = Session())
             {
+                session.Advance(20);
+                ActivateAll(session);
                 session.Advance(1.1f);
                 Assert.AreEqual(1, host.GetOrderedMarks().Count(m => m.Layer == PatternPreviewHost.PreviewLayer.Warning));
                 session.Advance(2);
@@ -125,9 +199,9 @@ namespace NHN.TraceStrike.Tests
         public void LargeAndSmallTimeStepsProduceTheSameRepeatingAttacks()
         {
             attack.clips.Add(new PatternClip { duration = 0, action = new SignalEvent { signal = "tick" } });
-            using (var session = Session()) session.Advance(14.25f);
+            using (var session = Session()) { ActivateAll(session); session.Advance(14.25f); }
             int coarse = host.log.Count(s => s.StartsWith("Signal:")); host.log.Clear();
-            using (var session = Session()) for (int i = 0; i < 114; i++) session.Advance(.125f);
+            using (var session = Session()) { ActivateAll(session); for (int i = 0; i < 114; i++) session.Advance(.125f); }
             Assert.AreEqual(14, coarse);
             Assert.AreEqual(coarse, host.log.Count(s => s.StartsWith("Signal:")));
             Assert.IsEmpty(host.marks);
@@ -139,11 +213,20 @@ namespace NHN.TraceStrike.Tests
             for (int x = 6; x <= 10; x++) seal.crystals.Add(new CrystalPlacement { cell = new Vector2Int(x, 10) });
             using (var session = Session())
             {
-                Assert.AreEqual(7, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
-                session.ResolvePlayerAttack(seal.crystals.Select(d => d.cell).ToArray(), 1, 1);
+                Assert.AreEqual(7, ((CrystalSealRuntime)session.Runtimes[0]).Devices.Count);
+                Assert.AreEqual(0, ((CrystalSealRuntime)session.Runtimes[0]).ActiveCount);
+                ActivateAll(session);
+                session.Advance(1.1f);
+                Assert.AreEqual(7, Warnings);
             }
             Assert.IsEmpty(host.marks);
-            using (var restarted = Session()) Assert.AreEqual(7, ((CrystalSealRuntime)restarted.Runtimes[0]).ActiveCount);
+            using (var restarted = Session())
+            {
+                Assert.AreEqual(0, ((CrystalSealRuntime)restarted.Runtimes[0]).ActiveCount);
+                Assert.AreEqual(7, restarted.RequiredCells.Count());
+                restarted.Advance(30);
+                Assert.AreEqual(0, Warnings);
+            }
         }
 
         [Test]
@@ -159,6 +242,72 @@ namespace NHN.TraceStrike.Tests
                 Assert.AreEqual(1, session.ResolvePlayerAttack(second.PlacementCells.ToArray(), 1, 1));
                 Assert.AreEqual(0, session.ResolvePlayerAttack(new Vector2Int[0], 1, 1));
             }
+        }
+
+        [TestCase("construction")]
+        [TestCase("activation")]
+        [TestCase("attack")]
+        public void HostFailuresReleaseEveryDeviceAndInFlightAttack(string stage)
+        {
+            var failing = new FaultHost(host);
+            if (stage == "construction")
+            {
+                failing.FailDeviceOnCall = 2;
+                Assert.Throws<System.InvalidOperationException>(() =>
+                    new BossMechanicSession(boss.phases[0].mechanics, new MechanicContext(failing, boss.FindPattern)));
+            }
+            else
+            {
+                using (var session = new BossMechanicSession(boss.phases[0].mechanics, new MechanicContext(failing, boss.FindPattern)))
+                {
+                    if (stage == "activation")
+                    {
+                        failing.FailDeviceOnCall = 4; // One activation succeeds before the second fails.
+                        Assert.Throws<System.InvalidOperationException>(() => ActivateAll(session));
+                    }
+                    else
+                    {
+                        ActivateAll(session);
+                        failing.FailWarningOnCall = 2; // The first device already owns its warning.
+                        Assert.Throws<System.InvalidOperationException>(() => session.Advance(1.1f));
+                    }
+                    Assert.IsEmpty(session.Runtimes);
+                    Assert.IsEmpty(host.marks, "Failure cleanup must happen before the caller disposes the session.");
+                    session.Dispose();
+                }
+            }
+            Assert.IsEmpty(host.marks);
+        }
+
+        private sealed class FaultHost : IPatternHost, IMechanicPresentationHost
+        {
+            private readonly PatternPreviewHost inner;
+            private int deviceCalls, warningCalls;
+            public int FailDeviceOnCall, FailWarningOnCall;
+            public FaultHost(PatternPreviewHost inner) { this.inner = inner; }
+            public Vector2Int PlayerCell => inner.PlayerCell;
+            public Vector2Int CenterCell => inner.CenterCell;
+            public IReadOnlyCollection<Vector2Int> Walkable => inner.Walkable;
+            public IReadOnlyCollection<Vector2Int> Traversable => inner.Traversable;
+            public bool IsAlive => inner.IsAlive;
+            public IPatternLease ShowDevice(Vector2Int cell, GameObject prefab, Sprite sprite, Color tint)
+            {
+                if (++deviceCalls == FailDeviceOnCall) throw new System.InvalidOperationException("Injected device presentation failure.");
+                return inner.ShowDevice(cell, prefab, sprite, tint);
+            }
+            public IPatternLease Mark(IReadOnlyCollection<Vector2Int> cells, Color color, bool warning)
+            {
+                if (warning && ++warningCalls == FailWarningOnCall) throw new System.InvalidOperationException("Injected warning failure.");
+                return inner.Mark(cells, color, warning);
+            }
+            public IPatternLease Block(IReadOnlyCollection<Vector2Int> cells) => inner.Block(cells);
+            public IPatternLease Hazard(IReadOnlyCollection<Vector2Int> cells, string reason) => inner.Hazard(cells, reason);
+            public IPatternLease Spawn(string key, GameObject prefab, Vector2Int cell, Sprite sprite, Color color) => inner.Spawn(key, prefab, cell, sprite, color);
+            public IPatternLease Sound(AudioClip clip, float volume) => inner.Sound(clip, volume);
+            public IPatternLease Motion(string key, Vector2Int target) => inner.Motion(key, target);
+            public IPatternLease Camera(Vector2 offset, float shake) => inner.Camera(offset, shake);
+            public void Damage(string reason) => inner.Damage(reason);
+            public void Signal(string name, string argument) => inner.Signal(name, argument);
         }
 
         [TestCase("empty")]
@@ -253,11 +402,24 @@ namespace NHN.TraceStrike.Tests
                     window.Repaint(); yield return null; yield return null;
                 }
                 var trail = (HashSet<Vector2Int>)type.GetField("mechanicTestTrail", flags).GetValue(window);
+                var initialPreview = (BossMechanicSession)type.GetField("mechanicPreview", flags).GetValue(window);
+                var initialHost = (PatternPreviewHost)type.GetField("previewHost", flags).GetValue(window);
+                Assert.AreEqual(0, ((CrystalSealRuntime)initialPreview.Runtimes.Single()).ActiveCount);
                 trail.UnionWith(seal.PlacementCells);
                 type.GetMethod("ApplyMechanicPreviewAttack", flags).Invoke(window, null);
                 Assert.AreEqual(1, type.GetField("mechanicPreviewHealth", flags).GetValue(window));
+                Assert.AreEqual(2, ((CrystalSealRuntime)initialPreview.Runtimes.Single()).ActiveCount);
+                Assert.IsNull(type.GetField("previewError", flags).GetValue(window));
+                Assert.IsNotEmpty((string)type.GetField("mechanicPreviewResult", flags).GetValue(window));
                 type.GetMethod("ApplyMechanicPreviewAttack", flags).Invoke(window, null);
                 Assert.AreEqual(0, type.GetField("mechanicPreviewHealth", flags).GetValue(window));
+                Assert.IsNull(type.GetField("mechanicPreview", flags).GetValue(window));
+                Assert.IsEmpty(initialHost.marks);
+                Assert.IsNull(initialHost.RequiredCellsProvider);
+                type.GetMethod("RebuildPreview", flags).Invoke(window, null);
+                var restarted = (BossMechanicSession)type.GetField("mechanicPreview", flags).GetValue(window);
+                Assert.AreEqual(0, ((CrystalSealRuntime)restarted.Runtimes.Single()).ActiveCount);
+                Assert.AreEqual(2, restarted.RequiredCells.Count());
                 Assert.AreEqual(arenaBefore, JsonUtility.ToJson(boss.arena)); Assert.AreEqual(attackBefore, JsonUtility.ToJson(attack));
                 LogAssert.NoUnexpectedReceived();
             }

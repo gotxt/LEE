@@ -11,6 +11,7 @@ namespace NHN.TraceStrike.Editor
     public sealed partial class BossEncounterEditorWindow
     {
         private BossMechanicSession mechanicPreview;
+        private string mechanicPreviewResult;
         private Vector2 mechanicScroll, mechanicMapScroll;
         private int selectedDevice = -1, mechanicTool, mechanicPreviewHealth = 150;
         private readonly HashSet<Vector2Int> mechanicTestTrail = new HashSet<Vector2Int>();
@@ -78,7 +79,7 @@ namespace NHN.TraceStrike.Editor
             EditorGUILayout.PropertyField(property.FindPropertyRelative("enabled"), new GUIContent("기믹 사용"));
             EditorGUILayout.LabelField("공통 공격", EditorStyles.boldLabel);
             PatternChoice(property.FindPropertyRelative("attackPatternId"), "공격 패턴", false);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("initialDelay"), new GUIContent("첫 공격 대기 (초)"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("initialDelay"), new GUIContent("활성화 후 첫 공격 대기 (초)"));
             EditorGUILayout.PropertyField(property.FindPropertyRelative("interval"), new GUIContent("반복 주기 (시작→시작)"));
             if (GUILayout.Button("+ 주변 공격 패턴 만들기"))
             {
@@ -91,12 +92,12 @@ namespace NHN.TraceStrike.Editor
                 serialized.ApplyModifiedProperties();
                 OpenMechanicAttack(seal.attackPatternId, selectedDevice >= 0 && selectedDevice < seal.crystals.Count ? seal.crystals[selectedDevice].cell : encounter.arena.CenterCell);
             }
-            EditorGUILayout.HelpBox("공격의 위치 기준은 ‘기믹 / 호출 위치’를 사용하세요. 같은 공격이 각 수정 위치를 중심으로 실행됩니다. 반복 주기는 공격 전체 길이 이상으로 설정합니다.", MessageType.Info);
+            EditorGUILayout.HelpBox("공격의 위치 기준은 ‘기믹 / 호출 위치’를 사용하세요. 첫 대기는 각 수정이 활성화된 순간부터 셉니다. 이미 활성인 수정을 다시 맞혀도 공격 시간을 초기화하지 않습니다. 반복 주기는 공격 전체 길이 이상으로 설정합니다.", MessageType.Info);
             EditorGUILayout.LabelField("외형 (UI 프리팹 또는 Sprite)", EditorStyles.boldLabel);
             foreach (var entry in new[] { ("activePrefab", "활성 프리팹"), ("activeSprite", "활성 이미지"),
                 ("activeTint", "활성 색상"), ("inactivePrefab", "비활성 프리팹"), ("inactiveSprite", "비활성 이미지"), ("inactiveTint", "비활성 색상") })
                 EditorGUILayout.PropertyField(property.FindPropertyRelative(entry.Item1), new GUIContent(entry.Item2));
-            EditorGUILayout.HelpBox("비활성 외형을 비우면 활성 외형을 비활성 색상으로 표시합니다. 프리팹이 있으면 이미지보다 우선합니다.", MessageType.None);
+            EditorGUILayout.HelpBox("처음에는 비활성 외형으로 표시하고, 경로 공격으로 활성화되면 활성 외형으로 바뀝니다. 비활성 외형을 비우면 활성 외형에 비활성 색상을 적용합니다. 프리팹이 이미지보다 우선합니다.", MessageType.None);
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("수정 배치 · " + seal.crystals.Count + "개", EditorStyles.boldLabel);
             for (int i = 0; i < seal.crystals.Count; i++)
@@ -111,7 +112,7 @@ namespace NHN.TraceStrike.Editor
                 EditorGUILayout.PropertyField(item.FindPropertyRelative("overrideTiming"), new GUIContent("개별 시간 사용"));
                 if (item.FindPropertyRelative("overrideTiming").boolValue)
                 {
-                    EditorGUILayout.PropertyField(item.FindPropertyRelative("initialDelay"), new GUIContent("첫 공격 대기 (초)"));
+                    EditorGUILayout.PropertyField(item.FindPropertyRelative("initialDelay"), new GUIContent("활성화 후 첫 공격 대기 (초)"));
                     EditorGUILayout.PropertyField(item.FindPropertyRelative("interval"), new GUIContent("반복 주기 (초)"));
                 }
                 if (GUILayout.Button("이 수정의 공격 편집"))
@@ -129,7 +130,7 @@ namespace NHN.TraceStrike.Editor
                     }
                 }
             }
-            EditorGUILayout.HelpBox("수정은 통과 가능합니다. 완성된 경로 공격에 포함된 수정은 모두 비활성화됩니다. 마지막 수정 해제 공격에는 체력 1 보호가 남고 다음 공격부터 처치 가능합니다.", MessageType.None);
+            EditorGUILayout.HelpBox("수정은 처음에 비활성이며 통과할 수 있습니다. 완성된 경로 공격에 포함된 수정이 활성화되어 반복 공격합니다. 모두 활성화된 뒤에도 수정 공격은 계속됩니다. 마지막 수정 활성화 공격에는 체력 1 보호가 남고 다음 공격부터 처치 가능합니다.", MessageType.None);
         }
 
         private void PatternChoice(SerializedProperty property, string label, bool inherit)
@@ -179,7 +180,8 @@ namespace NHN.TraceStrike.Editor
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (GUILayout.Button(playing ? "일시정지" : "기믹 재생")) { playing = !playing; lastPreviewTime = EditorApplication.timeSinceStartup; }
+                using (new EditorGUI.DisabledScope(mechanicPreview == null))
+                    if (GUILayout.Button(playing ? "일시정지" : "기믹 재생")) { playing = !playing; lastPreviewTime = EditorApplication.timeSinceStartup; }
                 if (GUILayout.Button("미리보기 초기화")) { playing = false; RebuildPreview(); }
                 GUILayout.Label(playhead.ToString("0.00") + "초");
             }
@@ -221,14 +223,15 @@ namespace NHN.TraceStrike.Editor
                     (cell, erase) => { if (erase) mechanicTestTrail.Remove(cell); else if (floor.Contains(cell)) mechanicTestTrail.Add(cell); }, Repaint, Repaint);
             EditorGUILayout.EndScrollView();
             if (!string.IsNullOrEmpty(previewError)) EditorGUILayout.HelpBox(previewError, MessageType.Error);
-            EditorGUILayout.LabelField(mechanicPreview?.Status ?? "설정을 확인하세요.");
+            if (!string.IsNullOrEmpty(mechanicPreviewResult)) EditorGUILayout.HelpBox(mechanicPreviewResult, MessageType.Info);
+            EditorGUILayout.LabelField(mechanicPreview?.Status ?? (mechanicPreviewHealth == 0 ? "미리보기 종료" : "설정을 확인하세요."));
             mechanicPreviewHealth = Mathf.Max(0, EditorGUILayout.IntField("시험 보스 체력", mechanicPreviewHealth));
             using (new EditorGUILayout.HorizontalScope())
             {
                 if (GUILayout.Button("시험 경로로 공격 (큰 피해)")) ApplyMechanicPreviewAttack();
                 if (GUILayout.Button("시험 경로 지우기")) mechanicTestTrail.Clear();
             }
-            EditorGUILayout.HelpBox("선택 기믹만 시뮬레이션합니다. 시험 경로는 해제·체력 보호 검증용이며 START/END 연결은 검사하지 않습니다. 실전에서는 완성된 경로 공격만 인정됩니다.", MessageType.None);
+            EditorGUILayout.HelpBox("선택 기믹만 시뮬레이션합니다. 처음에는 수정 공격이 없습니다. 시험 경로로 수정을 활성화한 뒤 재생하여 공격을 확인하세요. 시험 경로는 활성화·체력 보호 검증용이며 START/END 연결은 검사하지 않습니다. 초기화하면 모든 수정이 비활성으로 돌아갑니다.", MessageType.None);
         }
 
         private void EditCrystalCell(CrystalSealMechanic seal, Vector2Int cell, int tool)
@@ -248,35 +251,48 @@ namespace NHN.TraceStrike.Editor
 
         private void RebuildMechanicPreview()
         {
-            playing = false; playhead = 0; previewError = null; mechanicTestTrail.Clear();
+            playing = false; playhead = 0; previewError = null; mechanicPreviewResult = null; mechanicTestTrail.Clear();
             if (CurrentMechanic == null) return;
-            mechanicPreviewHealth = encounter.phases[phaseIndex].health;
-            var errors = new List<string>(); CurrentMechanic.Validate(encounter, errors);
-            if (errors.Count > 0) { previewError = string.Join("\n", errors); return; }
             try
             {
-                previewHost = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
+                mechanicPreviewHealth = encounter.phases[phaseIndex].health;
+                var errors = new List<string>(); CurrentMechanic.Validate(encounter, errors);
+                if (errors.Count > 0) { previewError = string.Join("\n", errors); return; }
+                previewHost = new PatternPreviewHost(encounter.arena)
+                { player = previewPlayer, RequiredCellsProvider = () => mechanicPreview?.RequiredCells };
                 if (encounter.bossVisual?.prefab != null)
                 { bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true); previewHost.boss = bossPreview.Presentation; }
                 mechanicPreview = new BossMechanicSession(new[] { CurrentMechanic }, new MechanicContext(previewHost, encounter.FindPattern));
                 mechanicPreview.Advance(0);
             }
-            catch (Exception error) { previewError = error.Message; }
+            catch (Exception error) { FailPreview(error); }
         }
         private void UpdateMechanicPreview()
         {
             if (!playing || mechanicPreview == null) return;
             double now = EditorApplication.timeSinceStartup; float delta = (float)(now - lastPreviewTime); lastPreviewTime = now;
             try { bossPreview?.Presentation.Advance(delta); mechanicPreview.Advance(delta); playhead += delta; }
-            catch (Exception error) { previewError = error.Message; playing = false; }
+            catch (Exception error) { FailPreview(error); }
             Repaint();
         }
         private void ApplyMechanicPreviewAttack()
         {
             if (mechanicPreview == null || mechanicTestTrail.Count == 0) return;
-            mechanicPreviewHealth = mechanicPreview.ResolvePlayerAttack(mechanicTestTrail, mechanicPreviewHealth, 99999);
-            previewError = mechanicPreviewHealth == 0 ? "처치 가능: 보호가 해제된 뒤의 공격입니다." :
-                "체력 " + mechanicPreviewHealth + " · " + (mechanicPreview.MinimumBossHealth > 0 ? "활성 수정이 남아 있습니다." : "모두 해제했습니다. 다음 공격부터 처치 가능합니다.");
+            try
+            {
+                mechanicPreviewHealth = mechanicPreview.ResolvePlayerAttack(mechanicTestTrail, mechanicPreviewHealth, 99999);
+                if (mechanicPreviewHealth == 0)
+                {
+                    playing = false; DisposePreview();
+                    mechanicPreviewResult = "처치 가능: 보호 조건을 완료한 다음 공격입니다. 미리보기를 종료했습니다.";
+                }
+                else
+                {
+                    mechanicPreviewResult = "체력 " + mechanicPreviewHealth + " · " + (mechanicPreview.MinimumBossHealth > 0
+                        ? "기믹의 체력 보호가 남아 있습니다." : "보호 조건을 완료했습니다. 다음 공격부터 처치 가능합니다.");
+                }
+            }
+            catch (Exception error) { FailPreview(error); }
             Repaint();
         }
     }

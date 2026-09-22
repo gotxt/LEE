@@ -8,7 +8,7 @@ using UnityEngine;
 namespace NHN.TraceStrike.Editor
 {
     // A sandbox model: editor scrubbing never changes the scene or plays prefabs/audio.
-    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost
+    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost, IDisposable
     {
         // Back to front. Dictionary slot reuse must never determine visual stacking.
         public enum PreviewLayer { Obstacle, Hazard, Warning, Damage, Effect }
@@ -31,9 +31,11 @@ namespace NHN.TraceStrike.Editor
         public Vector2Int player = new Vector2Int(8, 8);
         public readonly Dictionary<int, PreviewMark> marks = new Dictionary<int, PreviewMark>();
         public readonly List<string> log = new List<string>();
+        public Func<IEnumerable<Vector2Int>> RequiredCellsProvider { get; set; }
         private readonly TrailFieldModel model = new TrailFieldModel();
         private readonly Dictionary<int, HashSet<Vector2Int>> walls = new Dictionary<int, HashSet<Vector2Int>>();
         private int id;
+        private bool disposed;
         public PatternPreviewHost(int size, ArenaShape shape = ArenaShape.Rounded)
         {
             model.CreateField((int)shape, size);
@@ -44,7 +46,7 @@ namespace NHN.TraceStrike.Editor
         public Vector2Int CenterCell => model.CenterCell;
         public IReadOnlyCollection<Vector2Int> Walkable => model.Walkable;
         public IReadOnlyCollection<Vector2Int> Traversable => model.Traversable;
-        public bool IsAlive => true;
+        public bool IsAlive => !disposed;
 
         // Take once per board draw, not per tile. Newer marks win within a layer.
         public IReadOnlyList<PreviewMark> GetOrderedMarks() => marks
@@ -75,8 +77,11 @@ namespace NHN.TraceStrike.Editor
         public IPatternLease Hazard(IReadOnlyCollection<Vector2Int> cells, string reason) => AddMark(cells, Color.magenta, PreviewLayer.Hazard);
         public IPatternLease Block(IReadOnlyCollection<Vector2Int> cells)
         {
-            int token = ++id; walls[token] = new HashSet<Vector2Int>(cells); RebuildWalls();
-            var visual = AddMark(cells, Color.gray, PreviewLayer.Obstacle);
+            var blocked = new HashSet<Vector2Int>(cells);
+            var required = RequiredCellsProvider?.Invoke();
+            if (required != null) blocked.ExceptWith(required);
+            int token = ++id; walls[token] = blocked; RebuildWalls();
+            var visual = AddMark(blocked, Color.gray, PreviewLayer.Obstacle);
             return new PreviewLease(() => { walls.Remove(token); RebuildWalls(); visual.Dispose(); });
         }
         private void RebuildWalls()
@@ -90,6 +95,14 @@ namespace NHN.TraceStrike.Editor
         public IPatternLease Camera(Vector2 offset, float shake) { log.Add("Camera " + offset + " shake " + shake); return new PreviewLease(() => { }); }
         public void Damage(string reason) { log.Add("Hit: " + reason); }
         public void Signal(string name, string argument) { log.Add("Signal: " + name + " " + argument); }
+        public void Dispose()
+        {
+            if (disposed) return;
+            disposed = true;
+            RequiredCellsProvider = null;
+            marks.Clear(); walls.Clear(); RebuildWalls();
+            boss = null;
+        }
     }
 }
 #endif

@@ -67,15 +67,22 @@ namespace NHN.TraceStrike.Patterns
         public void Advance(float delta)
         {
             if (float.IsNaN(delta) || float.IsInfinity(delta) || delta < 0) throw new ArgumentOutOfRangeException(nameof(delta));
-            foreach (var runtime in runtimes) runtime.Advance(delta);
+            try { foreach (var runtime in runtimes) runtime.Advance(delta); }
+            catch (Exception error) { DisposeAfterFailure(error); throw; }
         }
         public int ResolvePlayerAttack(IReadOnlyCollection<Vector2Int> completedTrail, int health, int damage)
         {
             if (health <= 0) return 0;
-            // Snapshot BEFORE deactivation: the attack releasing the final seal cannot kill.
+            // Snapshot before state changes: the attack completing the mechanic cannot kill.
             int floor = MinimumBossHealth;
-            foreach (var runtime in runtimes) runtime.OnPlayerAttack(completedTrail);
+            try { foreach (var runtime in runtimes) runtime.OnPlayerAttack(completedTrail); }
+            catch (Exception error) { DisposeAfterFailure(error); throw; }
             return Math.Max(floor, Math.Max(0, health - Math.Max(0, damage)));
+        }
+        private void DisposeAfterFailure(Exception failure)
+        {
+            try { Dispose(); }
+            catch (Exception cleanupError) { throw new AggregateException(failure, cleanupError); }
         }
         public void Dispose()
         {

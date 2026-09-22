@@ -1616,7 +1616,8 @@ namespace NHN.TraceStrike
 
             SpawnBurst(model.End, TrailHot, 28);
             int healthBeforeAttack = bossHealth;
-            bossHealth = ResolvePlayerBossDamage(damage);
+            if (!TryResolvePlayerBossDamage(damage, out int resolvedHealth)) yield break;
+            bossHealth = resolvedHealth;
             bossHealthFill.fillAmount = (float)bossHealth / bossMaxHealth;
             RefreshMechanicHealthLabel();
             UpdatePhaseLabel();

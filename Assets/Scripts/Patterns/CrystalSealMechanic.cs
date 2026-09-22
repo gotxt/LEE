@@ -59,7 +59,7 @@ namespace NHN.TraceStrike.Patterns
         public sealed class Device
         {
             public Vector2Int Cell { get; internal set; }
-            public bool Active { get; internal set; } = true;
+            public bool Active { get; internal set; }
             internal EncounterPattern pattern;
             internal float interval, untilAttack;
             internal PatternRunner attack;
@@ -71,16 +71,18 @@ namespace NHN.TraceStrike.Patterns
         private bool disposed;
         public IReadOnlyList<Device> Devices => devices;
         public int ActiveCount { get { int count = 0; foreach (var d in devices) if (d.Active) count++; return count; } }
-        public override int MinimumBossHealth => !disposed && ActiveCount > 0 ? 1 : 0;
-        public override string Status => disposed ? "" : definition.name + " " + (devices.Count - ActiveCount) + "/" + devices.Count;
+        public override int MinimumBossHealth => !disposed && ActiveCount < devices.Count ? 1 : 0;
+        public override string Status => disposed ? "" : definition.name + " 활성화 " + ActiveCount + "/" + devices.Count;
         public override IEnumerable<Vector2Int> RequiredCells
-        { get { if (!disposed) foreach (var device in devices) if (device.Active) yield return device.Cell; } }
+        { get { if (!disposed) foreach (var device in devices) if (!device.Active) yield return device.Cell; } }
 
         public CrystalSealRuntime(CrystalSealMechanic definition, MechanicContext context)
         {
             this.definition = definition; this.context = context;
             try
             {
+                if (definition.crystals == null || definition.crystals.Count == 0)
+                    throw new InvalidOperationException("Place at least one crystal.");
                 foreach (var placement in definition.crystals)
                 {
                     var pattern = context.ResolvePattern(definition.PatternId(placement));
@@ -90,7 +92,9 @@ namespace NHN.TraceStrike.Patterns
                     var device = new Device { Cell = placement.cell, pattern = pattern,
                         interval = definition.Interval(placement), untilAttack = definition.Delay(placement) };
                     devices.Add(device);
-                    device.visual = context.ShowDevice(device.Cell, definition.activePrefab, definition.activeSprite, definition.activeTint);
+                    device.visual = context.ShowDevice(device.Cell, definition.inactivePrefab != null ? definition.inactivePrefab :
+                        definition.inactiveSprite != null ? null : definition.activePrefab,
+                        definition.inactiveSprite != null ? definition.inactiveSprite : definition.activeSprite, definition.inactiveTint);
                 }
             }
             catch { Dispose(); throw; }
@@ -122,17 +126,15 @@ namespace NHN.TraceStrike.Patterns
         }
         public override void OnPlayerAttack(IReadOnlyCollection<Vector2Int> completedTrail)
         {
-            if (disposed) return;
+            if (disposed || !context.Host.IsAlive) return;
             var hit = new HashSet<Vector2Int>(completedTrail);
             foreach (var device in devices)
             {
-                if (!device.Active || !hit.Contains(device.Cell)) continue;
-                device.Active = false;
-                device.attack?.Dispose(); device.attack = null;
+                if (device.Active || !hit.Contains(device.Cell)) continue;
                 device.visual?.Dispose(); device.visual = null;
-                device.visual = context.ShowDevice(device.Cell, definition.inactivePrefab != null ? definition.inactivePrefab :
-                    definition.inactiveSprite != null ? null : definition.activePrefab,
-                    definition.inactiveSprite != null ? definition.inactiveSprite : definition.activeSprite, definition.inactiveTint);
+                device.visual = context.ShowDevice(device.Cell, definition.activePrefab, definition.activeSprite, definition.activeTint);
+                // Inactive devices never advance their clock. Repeated hits leave it untouched.
+                device.Active = true;
             }
         }
         public override void Dispose()

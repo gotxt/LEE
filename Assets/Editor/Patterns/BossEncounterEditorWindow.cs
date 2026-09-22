@@ -849,21 +849,31 @@ namespace NHN.TraceStrike.Editor
             }
             catch (Exception error)
             {
-                previewError = error.Message;
-                playing = false;
+                FailPreview(error);
             }
         }
 
         private void DisposePreview()
         {
+            if (previewHost != null) previewHost.RequiredCellsProvider = null;
             try { mechanicPreview?.Dispose(); } catch { }
             mechanicPreview = null;
             try { previewRunner?.Dispose(); }
             catch { }
             previewRunner = null;
-            bossPreview?.Dispose();
+            try { bossPreview?.Dispose(); } catch { }
             bossPreview = null;
+            try { previewHost?.Dispose(); } catch { }
             previewHost = null;
+            mechanicPreviewResult = null;
+            previewError = null;
+        }
+
+        private void FailPreview(Exception error)
+        {
+            playing = false;
+            DisposePreview();
+            previewError = error.Message;
         }
 
         private void UpdatePreview()
@@ -888,8 +898,7 @@ namespace NHN.TraceStrike.Editor
             }
             catch (Exception error)
             {
-                previewError = error.Message;
-                playing = false;
+                FailPreview(error);
             }
             if (previewRunner == null || previewRunner.IsComplete) playing = false;
             Repaint();

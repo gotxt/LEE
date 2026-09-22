@@ -20,6 +20,8 @@ namespace NHN.TraceStrike.Tests
         static CrystalVisual Prefab => Resources.Load<CrystalVisual>("Art/Crystals/PhaseTwoCrystal");
         static T Field<T>(TraceStrikeGame game, string name) =>
             (T)typeof(TraceStrikeGame).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(game);
+        static void Set(TraceStrikeGame game, string name, object value) =>
+            typeof(TraceStrikeGame).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(game, value);
         static object Call(TraceStrikeGame game, string name, params object[] args)
         {
             var method = typeof(TraceStrikeGame).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
@@ -83,7 +85,7 @@ namespace NHN.TraceStrike.Tests
         }
 
         [UnityTest]
-        public IEnumerator PhaseEntryCreatesFiveWalkableSealsAndFinalReleaseRequiresAnotherAttack()
+        public IEnumerator PhaseEntryCreatesInactiveSealsAndFinalActivationRequiresAnotherAttack()
         {
             yield return new EnterPlayMode();
             var listener = new GameObject("Crystal visual test audio", typeof(AudioListener));
@@ -104,11 +106,14 @@ namespace NHN.TraceStrike.Tests
                 Assert.IsFalse(Field<bool>(game, "inputLocked"), "Phase-entry transition did not finish.");
                 Time.timeScale = 0;
                 Call(game, "CancelTimeline");
+                // Keep unrelated phase patterns outside this mechanic integration test.
+                Set(game, "timelineVersion", Field<int>(game, "patternVersion"));
+                Set(game, "timelineWait", 10000f);
                 Assert.IsTrue(Field<bool>(game, "phaseTwoActive"));
                 Assert.AreEqual(1, Field<int>(game, "activePhaseIndex"));
                 var session = Field<BossMechanicSession>(game, "mechanicSession");
                 var runtime = (CrystalSealRuntime)session.Runtimes.Single();
-                Assert.AreEqual(5, runtime.ActiveCount);
+                Assert.AreEqual(0, runtime.ActiveCount);
                 Assert.IsTrue(legacyViews.All(v => !v.gameObject.activeSelf));
                 var grid = Field<RectTransform>(game, "mainGrid");
                 var views = grid.GetComponentsInChildren<CrystalVisual>();
@@ -118,48 +123,58 @@ namespace NHN.TraceStrike.Tests
                 CollectionAssert.AreEqual(configuredSeal.PlacementCells, cells,
                     "Phase entry must spawn crystals at the editor-authored positions without random relocation.");
                 CheckLayout(game, views, cells);
+                Assert.IsTrue(views.All(v => v.Body.GetComponent<Image>().color.a < 1));
                 FrameCrystal(game);
                 yield return null;
                 foreach (var view in views) view.SetPulse(1);
-                Capture(game, "PhaseTwoCrystal_Entry");
+                Capture(game, "Activation_InitialInactive");
 
                 using (((IPatternHost)game).Block(cells))
                     foreach (var cell in cells) Assert.IsFalse(Field<TrailFieldModel>(game, "model").IsBlocked(cell));
-                session.Advance(5.1f);
-                Assert.IsNotEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
+                session.Advance(30);
+                Assert.IsEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
+                Assert.AreEqual(0, runtime.ActiveCount, "Waiting alone cannot activate a device or start its attack.");
 
-                var model = Field<TrailFieldModel>(game, "model");
-                // Supply a completed attack's hit cells to the real ExecuteAttack pipeline.
-                // Route construction itself remains covered by TrailFieldModel tests.
-                var trail = (List<Vector2Int>)model.Trail;
-                trail.Clear(); trail.AddRange(cells);
-                typeof(TraceStrikeGame).GetField("bossHealth", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(game, 1);
-                Time.timeScale = 1;
-                game.StartCoroutine((IEnumerator)Call(game, "ExecuteAttack"));
-                deadline = Time.realtimeSinceStartup + 10;
-                while (Field<bool>(game, "inputLocked") && Time.realtimeSinceStartup < deadline) yield return null;
-                Time.timeScale = 0;
+                yield return CompleteAttack(game, new[] { cells[0] });
+                Assert.AreEqual(1, runtime.ActiveCount);
+                Assert.AreEqual(4, session.RequiredCells.Count());
+                yield return null;
+                views = grid.GetComponentsInChildren<CrystalVisual>();
+                Assert.AreEqual(1, views.Count(v => v.Body.GetComponent<Image>().color.a == 1));
+                Assert.AreEqual(4, views.Count(v => v.Body.GetComponent<Image>().color.a < 1));
+                Capture(game, "Activation_Partial");
+                session.Advance(5.1f);
+                Assert.AreEqual(1, Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger").Count);
+                var viewInstances = views.Select(v => v.GetEntityId()).ToArray();
+                var warningIds = Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger").Keys.ToArray();
+                yield return CompleteAttack(game, new[] { cells[0] });
+                CollectionAssert.AreEquivalent(viewInstances, grid.GetComponentsInChildren<CrystalVisual>().Select(v => v.GetEntityId()));
+                CollectionAssert.AreEquivalent(warningIds, Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger").Keys);
+
+                Set(game, "bossHealth", 1);
+                yield return CompleteAttack(game, cells);
                 Assert.IsFalse(Field<bool>(game, "inputLocked"));
                 Assert.AreEqual(1, Field<int>(game, "bossHealth"));
-                Assert.AreEqual(0, runtime.ActiveCount);
-                Assert.IsEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
+                Assert.AreEqual(5, runtime.ActiveCount);
+                Assert.AreEqual(0, session.MinimumBossHealth);
+                Assert.IsEmpty(session.RequiredCells);
                 Assert.IsFalse(Field<bool>(game, "gameCleared"));
                 CollectionAssert.AreEqual(cells, runtime.Devices.Select(d => d.Cell));
                 yield return null;
                 views = grid.GetComponentsInChildren<CrystalVisual>();
                 Assert.AreEqual(5, views.Length);
-                Assert.IsTrue(views.All(v => v.Body.GetComponent<Image>().color.a < 1));
-                Capture(game, "PhaseTwoCrystal_Disabled");
+                Assert.IsTrue(views.All(v => v.Body.GetComponent<Image>().color.a == 1));
+                Capture(game, "Activation_AllActive");
+                session.Advance(5.1f);
+                Assert.IsNotEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"),
+                    "All activated devices keep attacking until the encounter actually ends.");
 
-                trail.Clear(); trail.Add(model.Start); trail.Add(model.End);
-                Time.timeScale = 1;
-                game.StartCoroutine((IEnumerator)Call(game, "ExecuteAttack"));
-                deadline = Time.realtimeSinceStartup + 10;
-                while (!Field<bool>(game, "gameCleared") && Time.realtimeSinceStartup < deadline) yield return null;
-                Time.timeScale = 0;
+                var model = Field<TrailFieldModel>(game, "model");
+                yield return CompleteAttack(game, new[] { model.Start, model.End });
                 Assert.IsTrue(Field<bool>(game, "gameCleared"));
                 Assert.AreEqual(0, Field<int>(game, "bossHealth"));
                 Assert.IsNull(Field<BossMechanicSession>(game, "mechanicSession"));
+                Assert.IsEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
                 yield return null;
                 Assert.IsEmpty(grid.GetComponentsInChildren<CrystalVisual>());
 
@@ -174,6 +189,116 @@ namespace NHN.TraceStrike.Tests
             }
             finally { Time.timeScale = previousTimeScale; Object.Destroy(listener); }
             yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator PhaseOneProtectionTransitionsToFreshPhaseTwoAndDeathRestartsWithoutLeasesOrAssetChanges()
+        {
+            yield return new EnterPlayMode();
+            var listener = new GameObject("Crystal phase integration audio", typeof(AudioListener));
+            var game = Object.FindAnyObjectByType<TraceStrikeGame>();
+            var source = Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+            string sourceBefore = EditorJsonUtility.ToJson(source);
+            bool dirtyBefore = EditorUtility.IsDirty(source);
+            var fixture = Object.Instantiate(source);
+            float previousTimeScale = Time.timeScale;
+            try
+            {
+                // Clone settings only into a test instance. Resources and BossCatalog are never edited.
+                var phaseOneSeal = new CrystalSealMechanic
+                {
+                    attackPatternId = fixture.phases[1].mechanics.OfType<CrystalSealMechanic>().Single().attackPatternId,
+                    activePrefab = Prefab.gameObject,
+                    initialDelay = 5,
+                    interval = 5
+                };
+                phaseOneSeal.crystals.Add(new CrystalPlacement
+                { cell = fixture.phases[1].mechanics.OfType<CrystalSealMechanic>().Single().crystals[0].cell });
+                fixture.phases[0].mechanics.Add(phaseOneSeal);
+                foreach (var phase in fixture.phases) phase.initialDelay = 10000;
+                Assert.AreEqual(sourceBefore, EditorJsonUtility.ToJson(source), "Editing the fixture must not mutate the source's managed references.");
+                Assert.AreEqual(dirtyBefore, EditorUtility.IsDirty(source));
+                Call(game, "StartStage", 0);
+                Time.timeScale = 0;
+                Call(game, "CancelTimeline");
+                Set(game, "activeBoss", fixture);
+                Set(game, "timelineWait", 10000f);
+                Call(game, "StartMechanics");
+                var phaseOneSession = Field<BossMechanicSession>(game, "mechanicSession");
+                var phaseOneRuntime = (CrystalSealRuntime)phaseOneSession.Runtimes.Single();
+                Assert.AreEqual(0, Field<int>(game, "activePhaseIndex"));
+                Assert.AreEqual(0, phaseOneRuntime.ActiveCount);
+                Set(game, "bossHealth", 1);
+                yield return CompleteAttack(game, phaseOneSeal.PlacementCells);
+                Assert.AreEqual(1, Field<int>(game, "bossHealth"));
+                Assert.AreEqual(0, Field<int>(game, "activePhaseIndex"));
+                Assert.AreEqual(1, phaseOneRuntime.ActiveCount);
+                FrameCrystal(game);
+                phaseOneSession.Advance(5.1f);
+                Assert.IsNotEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
+                var phaseOneViews = Field<RectTransform>(game, "mainGrid").GetComponentsInChildren<CrystalVisual>();
+                var model = Field<TrailFieldModel>(game, "model");
+                yield return CompleteAttack(game, new[] { model.Start, model.End });
+                Assert.AreEqual(1, Field<int>(game, "activePhaseIndex"));
+                Assert.AreEqual(fixture.phases[1].health, Field<int>(game, "bossHealth"));
+                Assert.IsEmpty(phaseOneSession.Runtimes);
+                Assert.IsEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
+                yield return null;
+                Assert.IsTrue(phaseOneViews.All(v => v == null), "P1 device objects must be destroyed at the transition.");
+
+                var phaseTwoSession = Field<BossMechanicSession>(game, "mechanicSession");
+                var phaseTwoRuntime = (CrystalSealRuntime)phaseTwoSession.Runtimes.Single();
+                Assert.AreEqual(0, phaseTwoRuntime.ActiveCount);
+                Assert.AreEqual(5, phaseTwoSession.RequiredCells.Count());
+                Assert.AreEqual(1, phaseTwoSession.MinimumBossHealth);
+                yield return CompleteAttack(game, new[] { phaseTwoRuntime.Devices[0].Cell });
+                phaseTwoSession.Advance(5.1f);
+                Assert.IsNotEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
+                var phaseTwoViews = Field<RectTransform>(game, "mainGrid").GetComponentsInChildren<CrystalVisual>();
+                Time.timeScale = 1;
+                game.StartCoroutine((IEnumerator)Call(game, "KillPlayer", "Crystal integration test"));
+                Assert.IsNull(Field<BossMechanicSession>(game, "mechanicSession"));
+                Assert.IsEmpty(phaseTwoSession.Runtimes);
+                Assert.IsEmpty(Field<Dictionary<int, HashSet<Vector2Int>>>(game, "timelineDanger"));
+                float deadline = Time.realtimeSinceStartup + 10;
+                while (Field<bool>(game, "playerDead") && Time.realtimeSinceStartup < deadline) yield return null;
+                Time.timeScale = 0;
+                Assert.IsFalse(Field<bool>(game, "playerDead"), "Death should complete the ordinary StartStage restart.");
+                Assert.AreEqual(0, Field<int>(game, "activePhaseIndex"));
+                Assert.AreEqual(source.phases[0].health, Field<int>(game, "bossHealth"));
+                Assert.IsTrue(phaseTwoViews.All(v => v == null));
+                Assert.IsEmpty(Field<BossMechanicSession>(game, "mechanicSession").Runtimes);
+                Call(game, "StartHub");
+                Assert.IsNull(Field<BossMechanicSession>(game, "mechanicSession"));
+                Assert.AreEqual(sourceBefore, EditorJsonUtility.ToJson(source));
+                Assert.AreEqual(dirtyBefore, EditorUtility.IsDirty(source));
+                LogAssert.NoUnexpectedReceived();
+            }
+            finally
+            {
+                Call(game, "StopMechanics");
+                Call(game, "CancelTimeline");
+                Set(game, "activeBoss", source);
+                Time.timeScale = previousTimeScale;
+                Object.Destroy(fixture);
+                Object.Destroy(listener);
+            }
+            yield return new ExitPlayMode();
+        }
+
+        static IEnumerator CompleteAttack(TraceStrikeGame game, IEnumerable<Vector2Int> cells)
+        {
+            // Exercise the real attack and phase-transition pipeline with completed hit cells.
+            // Path construction/input remains the responsibility of TrailFieldModel tests.
+            var trail = (List<Vector2Int>)Field<TrailFieldModel>(game, "model").Trail;
+            trail.Clear(); trail.AddRange(cells);
+            Time.timeScale = 1;
+            game.StartCoroutine((IEnumerator)Call(game, "ExecuteAttack"));
+            float deadline = Time.realtimeSinceStartup + 12;
+            while (Field<bool>(game, "inputLocked") && !Field<bool>(game, "gameCleared") && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Time.timeScale = 0;
+            Assert.IsTrue(!Field<bool>(game, "inputLocked") || Field<bool>(game, "gameCleared"), "Completed attack did not finish.");
         }
 
         static void CheckLayout(TraceStrikeGame game, CrystalVisual[] views, Vector2Int[] cells)
@@ -202,10 +327,12 @@ namespace NHN.TraceStrike.Tests
 
         static void FrameCrystal(TraceStrikeGame game)
         {
-            var cells = ((CrystalSealRuntime)Field<BossMechanicSession>(game, "mechanicSession").Runtimes.Single()).Devices.Select(d => d.Cell);
+            var cells = ((CrystalSealRuntime)Field<BossMechanicSession>(game, "mechanicSession").Runtimes.Single()).Devices.Select(d => d.Cell).ToArray();
             var model = Field<TrailFieldModel>(game, "model");
-            var target = cells.OrderBy(c => (c - new Vector2Int(19, 10)).sqrMagnitude).First() + Vector2Int.right * 2;
-            Assert.IsTrue(model.TryPlacePlayer(model.Traversable.OrderBy(c => (c - target).sqrMagnitude).First()));
+            var target = cells.OrderBy(c => (c - new Vector2Int(19, 10)).sqrMagnitude).First() + Vector2Int.right * 3;
+            Assert.IsTrue(model.TryPlacePlayer(model.Traversable
+                .Where(c => cells.All(device => Mathf.Max(Mathf.Abs(c.x - device.x), Mathf.Abs(c.y - device.y)) > 2))
+                .OrderBy(c => (c - target).sqrMagnitude).First()));
             typeof(TraceStrikeGame).GetField("battleCameraInitialized", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(game, false);
             Call(game, "RefreshBoard");
         }

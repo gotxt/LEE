@@ -28,12 +28,25 @@ namespace NHN.TraceStrike
             if (mechanicSession != null && !string.IsNullOrEmpty(mechanicSession.Status))
                 bossHealthText.text += "  [" + mechanicSession.Status + "]";
         }
-        private int ResolvePlayerBossDamage(int damage)
+        private bool TryResolvePlayerBossDamage(int damage, out int health)
         {
-            int health = mechanicSession != null
-                ? mechanicSession.ResolvePlayerAttack(new System.Collections.Generic.HashSet<Vector2Int>(model.Trail), bossHealth, damage)
-                : Mathf.Max(0, bossHealth - damage);
-            return health;
+            health = bossHealth;
+            try
+            {
+                health = mechanicSession != null
+                    ? mechanicSession.ResolvePlayerAttack(new System.Collections.Generic.HashSet<Vector2Int>(model.Trail), bossHealth, damage)
+                    : Mathf.Max(0, bossHealth - damage);
+                return true;
+            }
+            catch (Exception error)
+            {
+                CancelTimeline();
+                StopMechanics();
+                inputLocked = true;
+                Debug.LogException(error, this);
+                statusText.text = "기믹 실행 오류 — Console을 확인하세요";
+                return false;
+            }
         }
 
         IPatternLease IMechanicPresentationHost.ShowDevice(Vector2Int cell, GameObject prefab, Sprite sprite, Color tint)
