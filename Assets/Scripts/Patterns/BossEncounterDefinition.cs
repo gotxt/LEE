@@ -140,7 +140,7 @@ namespace NHN.TraceStrike.Patterns
         public bool legacyCrystals;
     }
 
-    [CreateAssetMenu(menuName = "Trace Strike/Boss Encounter Definition")]
+    [CreateAssetMenu(fileName = "BossData_NewBoss", menuName = "Trace Strike/Boss Encounter Definition")]
     public sealed class BossEncounterDefinition : ScriptableObject
     {
         public string id = "boss";

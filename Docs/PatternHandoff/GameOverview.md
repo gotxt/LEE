@@ -102,7 +102,7 @@ BossCatalog                         게임에 등록된 보스 / 시작 보스
 |---|---|
 | 실제 이동/경로/START·END | `Assets/Scripts/TrailFieldModel.cs` |
 | 경로 피해·0.18초 유예 | `Assets/Scripts/CombatBalanceRules.cs` |
-| 현재 보스와 패턴 데이터 | `Assets/Resources/Patterns/CrimsonGolem.asset`, `BossCatalog.asset` |
+| 현재 보스와 패턴 데이터 | `Assets/Resources/Patterns/BossData_CrimsonGolem.asset`, `BossCatalog_Main.asset` |
 | 데이터 스키마 | `Assets/Scripts/Patterns/BossEncounterDefinition.cs`, `PatternSequence.cs` |
 | 선택 영역·이벤트 의미 | `Assets/Scripts/Patterns/TileSelection.cs`, `PatternEvents.cs` |
 | 시간축 실행/중단 | `Assets/Scripts/Patterns/PatternRunner.cs` |

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1001}
   - component: {fileID: 1002}
   m_Layer: 5
-  m_Name: PhaseTwoCrystal
+  m_Name: MechanicVisual_CrystalSeal
   m_TagString: Untagged
   m_IsActive: 1
 --- !u!224 &1001

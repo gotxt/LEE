@@ -2916,9 +2916,9 @@ namespace NHN.TraceStrike
             attackSlashGroup = attackSlash.gameObject.AddComponent<CanvasGroup>();
             attackSlashGroup.alpha = 0f;
 
-            var crystalPrefab = Resources.Load<CrystalVisual>("Art/Crystals/PhaseTwoCrystal");
+            var crystalPrefab = Resources.Load<CrystalVisual>("Art/Crystals/MechanicVisual_CrystalSeal");
             if (crystalPrefab == null)
-                throw new System.InvalidOperationException("Missing Art/Crystals/PhaseTwoCrystal visual prefab.");
+                throw new System.InvalidOperationException("Missing Art/Crystals/MechanicVisual_CrystalSeal visual prefab.");
             for (int i = 0; i < crystalVisuals.Length; i++)
             {
                 var presentation = Instantiate(crystalPrefab, mainGrid, false);
@@ -3037,9 +3037,9 @@ namespace NHN.TraceStrike
         private TileWarningVisual CreateTileWarning(Transform parent, string name)
         {
             if (tileWarningPrefab == null)
-                tileWarningPrefab = Resources.Load<TileWarningVisual>("Art/Warnings/TileWarning");
+                tileWarningPrefab = Resources.Load<TileWarningVisual>("Art/Warnings/TileVisual_AttackWarning");
             if (tileWarningPrefab == null)
-                throw new System.InvalidOperationException("Missing Art/Warnings/TileWarning visual prefab.");
+                throw new System.InvalidOperationException("Missing Art/Warnings/TileVisual_AttackWarning visual prefab.");
             var view = Instantiate(tileWarningPrefab, parent, false);
             view.name = name;
             return view;

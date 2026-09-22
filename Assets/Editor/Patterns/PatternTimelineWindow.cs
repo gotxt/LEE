@@ -46,7 +46,7 @@ namespace NHN.TraceStrike.Editor
                 if (next != pattern) Select(next);
                 if (GUILayout.Button("New", EditorStyles.toolbarButton))
                 {
-                    string path = EditorUtility.SaveFilePanelInProject("New pattern", "Pattern", "asset", "Choose an asset path");
+                    string path = EditorUtility.SaveFilePanelInProject("New pattern", "PatternData_NewPattern", "asset", "Choose an asset path");
                     if (!string.IsNullOrEmpty(path)) { var asset = CreateInstance<PatternSequence>(); AssetDatabase.CreateAsset(asset, path); Select(asset); }
                 }
                 if (GUILayout.Button("Add event", EditorStyles.toolbarButton) && pattern != null) EventMenu();

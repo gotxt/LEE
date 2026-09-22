@@ -159,14 +159,22 @@ namespace NHN.TraceStrike.Editor
         private void CreateEncounter()
         {
             string path = EditorUtility.SaveFilePanelInProject("Create Boss Encounter",
-                "BossEncounter", "asset", "Choose where to save the encounter.");
+                "BossData_NewBoss", "asset", "Choose where to save the encounter.");
             if (string.IsNullOrEmpty(path)) return;
             var asset = CreateInstance<BossEncounterDefinition>();
-            asset.id = System.IO.Path.GetFileNameWithoutExtension(path).ToLowerInvariant().Replace(' ', '-');
-            asset.displayName = System.IO.Path.GetFileNameWithoutExtension(path);
+            asset.displayName = EncounterDisplayNameFromPath(path);
+            asset.id = asset.displayName.ToLowerInvariant().Replace(' ', '-');
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
             SelectEncounter(asset);
+        }
+
+        internal static string EncounterDisplayNameFromPath(string path)
+        {
+            const string prefix = "BossData_";
+            string name = System.IO.Path.GetFileNameWithoutExtension(path);
+            if (name.StartsWith(prefix, StringComparison.Ordinal)) name = name.Substring(prefix.Length);
+            return string.IsNullOrWhiteSpace(name) ? "NewBoss" : name;
         }
 
         private void DrawTree()

@@ -43,7 +43,7 @@ namespace NHN.TraceStrike.Tests
         [Test]
         public void ShippedBossPatternsLoadWithAllManagedEventTypes()
         {
-            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             Assert.IsNotNull(catalog);
             Assert.IsNotEmpty(catalog.bosses);
             foreach (var boss in catalog.bosses)

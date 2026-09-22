@@ -18,7 +18,7 @@ namespace NHN.TraceStrike.Tests
     public sealed class TileWarningVisualTests
     {
         const string SpritePath = "Assets/Resources/Art/Warnings/danger_indicator_128x128.png";
-        static TileWarningVisual Prefab => Resources.Load<TileWarningVisual>("Art/Warnings/TileWarning");
+        static TileWarningVisual Prefab => Resources.Load<TileWarningVisual>("Art/Warnings/TileVisual_AttackWarning");
         static T Field<T>(TraceStrikeGame game, string name) =>
             (T)typeof(TraceStrikeGame).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(game);
         static void Set(TraceStrikeGame game, string name, object value) =>
@@ -81,7 +81,7 @@ namespace NHN.TraceStrike.Tests
             yield return new EnterPlayMode();
             var audio = new GameObject("Warning test audio", typeof(AudioListener));
             var game = Object.FindAnyObjectByType<TraceStrikeGame>();
-            var boss = Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+            var boss = Resources.Load<BossEncounterDefinition>("Patterns/BossData_CrimsonGolem");
             float previousTimeScale = Time.timeScale;
             try
             {

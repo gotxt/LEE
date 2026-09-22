@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 5479953439213508613}
   - component: {fileID: 1568566570725851640}
   m_Layer: 0
-  m_Name: CrimsonGolem
+  m_Name: BossVisual_CrimsonGolem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

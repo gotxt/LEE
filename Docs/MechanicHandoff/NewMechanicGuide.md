@@ -10,7 +10,7 @@
 
 - 같은 프로젝트의 최신 작업 폴더를 연결한다. `ProjectSettings/ProjectVersion.txt`, `git status --short`, 대상 파일의 diff부터 확인한다.
 - 현재 기믹 기반 구조에는 **아직 커밋하지 않은 수정과 신규 파일**이 있다. HEAD에서 만든 새 worktree에는 이 구조가 없을 수 있다. 새 작업에서 핵심 파일·에셋·`.meta`가 모두 있는지 확인하고, 누락이면 먼저 사용자에게 알린다. 코드가 없다고 구형 시스템을 새로 구현하지 않는다.
-- 같은 폴더를 사용하면 최신 변경을 읽을 수 있지만 Unity 에디터나 다른 작업과 같은 파일을 동시에 저장하지 않도록 조율한다. 특히 `CrimsonGolem.asset` 전체 덮어쓰기를 피한다.
+- 같은 폴더를 사용하면 최신 변경을 읽을 수 있지만 Unity 에디터나 다른 작업과 같은 파일을 동시에 저장하지 않도록 조율한다. 특히 `BossData_CrimsonGolem.asset` 전체 덮어쓰기를 피한다.
 - 문서보다 현재 코드와 에셋을 우선한다. 설명과 구현이 다르면 차이를 먼저 보고한다. 기존 문서의 과거 전장 크기·보스 외형 미지정 설명을 현재 상태로 오해하지 않는다.
 - 이전 작업의 변경을 되돌리거나 자동 커밋하지 않는다. 보스/패턴을 기본 생성기로 재생성하지 않는다.
 
@@ -47,7 +47,7 @@
 | [BossEncounterEditorWindow.Mechanics.cs](../../Assets/Editor/Patterns/BossEncounterEditorWindow.Mechanics.cs) | 기믹 추가 메뉴, 수정 전용 UI, 시험 경로와 기믹 프리뷰 |
 | [BossEncounterEditorWindow.cs](../../Assets/Editor/Patterns/BossEncounterEditorWindow.cs) / [PatternPreviewHost.cs](../../Assets/Editor/Patterns/PatternPreviewHost.cs) | 에디터 선택/프리뷰 수명과 시뮬레이션 호스트 |
 | [BossMechanicTests.cs](../../Assets/Tests/Editor/BossMechanicTests.cs) / [CrystalVisualTests.cs](../../Assets/Tests/Editor/CrystalVisualTests.cs) | 규칙·직렬화·Undo·실제 페이즈 전환 회귀 검사 |
-| [CrimsonGolem.asset](../../Assets/Resources/Patterns/CrimsonGolem.asset) / [BossCatalog.asset](../../Assets/Resources/Patterns/BossCatalog.asset) | 현재 콘텐츠, 기믹 연결, 플레이 가능한 보스 목록 |
+| [BossData_CrimsonGolem.asset](../../Assets/Resources/Patterns/BossData_CrimsonGolem.asset) / [BossCatalog_Main.asset](../../Assets/Resources/Patterns/BossCatalog_Main.asset) | 현재 콘텐츠, 기믹 연결, 플레이 가능한 보스 목록 |
 
 게임 배경은 [게임 설명](../PatternHandoff/GameOverview.md), 공격 제작은 [패턴 제작 가이드](../PatternHandoff/PatternAuthoringGuide.md), 기존 기믹의 사용법은 [수정 봉인 가이드](../BossMechanics.md)를 참고한다. 새 기믹의 사실 확인은 위 코드가 기준이다.
 
@@ -205,7 +205,7 @@ powershell -ExecutionPolicy Bypass -File Tools/VerifyPatternCompilation.ps1
 powershell -ExecutionPolicy Bypass -File Tools/RunPatternHeadlessTests.ps1
 ```
 
-- Python 명령은 사용 가능한 설치 경로로 바꿀 수 있다. 정적 검사는 **CrimsonGolem.asset의 참조/시간 등의 검사**이고 새 보스나 모든 기믹 규칙을 자동 검증하지 않는다.
+- Python 명령은 사용 가능한 설치 경로로 바꿀 수 있다. 정적 검사는 **BossData_CrimsonGolem.asset의 참조/시간 등의 검사**이고 새 보스나 모든 기믹 규칙을 자동 검증하지 않는다.
 - 컴파일 도구에는 설치된 Unity와 임포트된 Library/Bee 응답 파일이 필요하다. 헤드리스 도구보다 먼저 실행한다.
 - 헤드리스 하네스는 현재 `PatternRunnerTests`, `ArenaConfigurationTests`의 일부 씬 독립 검사만 실행한다. 새 기믹 검사나 Unity Test Runner를 대신하지 않는다.
 - Unity EditMode Test Runner에서 새 기믹 검사와 `BossMechanicTests`, `CrystalVisualTests`, 변경 범위에 따른 PatternRunner/PatternAsset/Arena/BossPresentation 검사를 실행한다.

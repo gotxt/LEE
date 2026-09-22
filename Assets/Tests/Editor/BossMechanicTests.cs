@@ -37,7 +37,7 @@ namespace NHN.TraceStrike.Tests
         [Test]
         public void ShippedEncounterHasFiveFixedCrystalsAndValidAttackAndVisualReferences()
         {
-            var shipped = Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+            var shipped = Resources.Load<BossEncounterDefinition>("Patterns/BossData_CrimsonGolem");
             Assert.IsEmpty(shipped.ValidateDefinition());
             Assert.IsTrue(shipped.phases.All(p => !p.legacyCrystals));
             var setting = shipped.phases[1].mechanics.OfType<CrystalSealMechanic>().Single();

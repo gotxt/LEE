@@ -11,7 +11,7 @@ namespace NHN.TraceStrike.Patterns
         IReadOnlyList<PatternClip> Clips { get; }
     }
 
-    [CreateAssetMenu(menuName = "Trace Strike/Shared Pattern Sequence")]
+    [CreateAssetMenu(fileName = "PatternData_NewPattern", menuName = "Trace Strike/Shared Pattern Sequence")]
     public sealed class PatternSequence : ScriptableObject, IPatternTimeline
     {
         [Min(0)] public float minimumDuration;

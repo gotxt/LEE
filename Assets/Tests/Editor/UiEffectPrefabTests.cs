@@ -16,10 +16,10 @@ namespace NHN.TraceStrike.Tests
     {
         private static GameObject Prefab(string name) => Resources.Load<GameObject>("Effects/Prefabs/Impact/" + name);
 
-        [TestCase("TileImpact", 1, 0.3f)]
-        [TestCase("CrystalSparks", 4, 0.117647f)]
-        [TestCase("DirtLaneEruption", 16, 0.38f)]
-        [TestCase("DirtAreaExplosion", 47, 0.5f)]
+        [TestCase("VFX_TileImpact", 1, 0.3f)]
+        [TestCase("VFX_CrystalSparks", 4, 0.117647f)]
+        [TestCase("VFX_DirtLaneEruption", 16, 0.38f)]
+        [TestCase("VFX_DirtAreaExplosion", 47, 0.5f)]
         public void PrefabsLoadGenerateUiGraphicsAndScaleToTile(string name, int count, float duration)
         {
             var prefab = Prefab(name);
@@ -44,7 +44,7 @@ namespace NHN.TraceStrike.Tests
         [Test]
         public void PlaybackIsRepeatableAndDoesNotConsumeGameplayRandomState()
         {
-            var instance = Object.Instantiate(Prefab("DirtAreaExplosion"));
+            var instance = Object.Instantiate(Prefab("VFX_DirtAreaExplosion"));
             var state = Random.state;
             float expectedRandom = Random.value;
             Random.state = state;
@@ -67,7 +67,7 @@ namespace NHN.TraceStrike.Tests
         [Test]
         public void TileImpactMatchesOriginalFallbackColorAndSize()
         {
-            var instance = Object.Instantiate(Prefab("TileImpact"));
+            var instance = Object.Instantiate(Prefab("VFX_TileImpact"));
             try
             {
                 var effect = instance.GetComponent<UiEffectPlayer>(); effect.Play(100);
@@ -104,7 +104,7 @@ namespace NHN.TraceStrike.Tests
             var host = (IPatternHost)game;
             var grid = (RectTransform)typeof(TraceStrikeGame).GetField("mainGrid", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(game);
             var cells = host.Walkable.Take(2).ToList();
-            var action = new VfxEvent { prefab = Prefab("DirtLaneEruption"),
+            var action = new VfxEvent { prefab = Prefab("VFX_DirtLaneEruption"),
                 tiles = new TileSelection { anchor = TileAnchor.Absolute, shape = TileShape.Cells, cells = cells } };
             var pattern = new EncounterPattern { minimumDuration = 0.5f };
             pattern.clips.Add(new PatternClip { duration = 0.4f, action = action });

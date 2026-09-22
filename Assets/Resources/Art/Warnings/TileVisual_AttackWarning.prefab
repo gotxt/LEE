@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1001}
   - component: {fileID: 1002}
   m_Layer: 5
-  m_Name: TileWarning
+  m_Name: TileVisual_AttackWarning
   m_TagString: Untagged
   m_IsActive: 1
 --- !u!224 &1001

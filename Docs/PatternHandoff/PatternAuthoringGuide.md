@@ -123,16 +123,16 @@ Hazard/Obstacle/Spawn의 `persist=true`는 이벤트 구간 뒤에도 남기지�
 
 | 프리팹 | 권장 VFX duration | 내용 |
 |---|---:|---|
-| TileImpact | 0.3초 이상 | 주황색 타일 섬광 |
-| CrystalSparks | 0.12초 이상 | 불꽃 파편 4개 |
-| DirtLaneEruption | 0.4초 이상 | 먼지와 흙 파편 16개 |
-| DirtAreaExplosion | 0.5초 이상 | 충격파·먼지·파편 합계 47개 |
+| VFX_TileImpact | 0.3초 이상 | 주황색 타일 섬광 |
+| VFX_CrystalSparks | 0.12초 이상 | 불꽃 파편 4개 |
+| VFX_DirtLaneEruption | 0.4초 이상 | 먼지와 흙 파편 16개 |
+| VFX_DirtAreaExplosion | 0.5초 이상 | 충격파·먼지·파편 합계 47개 |
 
 고급 편집에서 VFX 이벤트 선택 → `Selected Event → Element → Action → Prefab`에 지정한다. 이벤트 표시 이름이 Impact VFX인지보다 실제 타입이 VfxEvent인지가 중요하다. 프리팹이 있으면 이벤트 Sprite/Color 대신 프리팹 내부 설정을 쓴다.
 
 이 네 프리팹은 **Canvas UI용**이다. BossVfxEvent의 보스 소켓용 SpriteRenderer/ParticleSystem 효과와 섞지 않는다. 크기는 타일에 자동 맞춤되며 `UiEffectPlayer.sizeMultiplier`로 추가 조정한다. 이벤트를 길게 해도 효과가 반복되지는 않고, 짧으면 재생 도중 제거된다. Damage와 VFX의 duration은 달라도 된다.
 
-효과음은 `Assets/Resources/Effects/Audio/Warning.wav`, `Impact.wav`다. 넓은 영역의 모든 칸에 DirtAreaExplosion을 쓰면 타일 수×47개의 UI 입자를 만들 수 있으므로 성능/가독성을 확인한다.
+효과음은 `Assets/Resources/Effects/Audio/Warning.wav`, `Impact.wav`다. 넓은 영역의 모든 칸에 VFX_DirtAreaExplosion을 쓰면 타일 수×47개의 UI 입자를 만들 수 있으므로 성능/가독성을 확인한다.
 
 보스 전용 이벤트에는 BossActor 프리팹이 필요하다. 현재 크림슨 골렘에는 미지정이므로 존재하지 않는 Charge/Slam 상태나 소켓을 가정하지 않는다. Animator와 실제 상태가 있는지 확인한 뒤 같은 보스 프리팹에서 상태를 전환한다. 자세한 수명/겹침/미리보기 규칙은 [보스 본체 연출](../BossPresentation.md)을 따른다.
 
@@ -168,7 +168,7 @@ powershell -ExecutionPolicy Bypass -File Tools/VerifyPatternCompilation.ps1
 powershell -ExecutionPolicy Bypass -File Tools/RunPatternHeadlessTests.ps1
 ```
 
-`python`은 설치된 Python 실행 경로로 대체할 수 있다. 컴파일 도구는 Unity 설치와 임포트된 Library 응답 파일이 필요하다. 헤드리스 검사는 독립 컴파일 뒤 실행하며 Unity 전체 테스트의 대체가 아니다. 특히 **현재 Python 정적 검사는 CrimsonGolem.asset에 한정**되고 Unity 직렬화/장면 렌더링/새 보스 전체를 검증하지 않는다.
+`python`은 설치된 Python 실행 경로로 대체할 수 있다. 컴파일 도구는 Unity 설치와 임포트된 Library 응답 파일이 필요하다. 헤드리스 검사는 독립 컴파일 뒤 실행하며 Unity 전체 테스트의 대체가 아니다. 특히 **현재 Python 정적 검사는 BossData_CrimsonGolem.asset에 한정**되고 Unity 직렬화/장면 렌더링/새 보스 전체를 검증하지 않는다.
 
 Unity Test Runner의 EditMode 전체 검사를 사용한다. 관련 테스트는 PatternAssetTests, PatternRunnerTests, AttackStepEditingTests, ArenaConfigurationTests, ArenaRuntimeTests, BossPresentationTests, UiEffectPrefabTests다. 일부 검사는 Play Mode로 진입하거나 그래픽 장치가 필요하므로 `-nographics`만으로 충분하다고 가정하지 않는다. 사용자가 작업 중인 원본 에디터를 닫지 말고 필요하면 최신 Assets/Packages/ProjectSettings를 포함한 격리 사본을 사용한다.
 

@@ -16,7 +16,7 @@ namespace NHN.TraceStrike.Editor
         {
             Directory.CreateDirectory(Root);
             AssetDatabase.Refresh();
-            string encounterPath = Root + "/CrimsonGolem.asset";
+            string encounterPath = Root + "/BossData_CrimsonGolem.asset";
             BossEncounterDefinition existing =
                 AssetDatabase.LoadAssetAtPath<BossEncounterDefinition>(encounterPath);
             if (existing != null)
@@ -29,7 +29,7 @@ namespace NHN.TraceStrike.Editor
 
             var warning = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Effects/Audio/Warning.wav");
             var impact = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Effects/Audio/Impact.wav");
-            var impactPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Effects/Prefabs/Impact/TileImpact.prefab");
+            var impactPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Effects/Prefabs/Impact/VFX_TileImpact.prefab");
             var boss = ScriptableObject.CreateInstance<BossEncounterDefinition>();
             boss.id = "crimson-golem";
             boss.displayName = "크림슨 골렘";
@@ -98,17 +98,17 @@ namespace NHN.TraceStrike.Editor
             var crystalAttack = BossEncounterEditorWindow.CreateCrystalAttackPattern();
             boss.libraryPatterns.Add(crystalAttack);
             var seal = new CrystalSealMechanic { attackPatternId = crystalAttack.id,
-                activePrefab = Resources.Load<GameObject>("Art/Crystals/PhaseTwoCrystal") };
+                activePrefab = Resources.Load<GameObject>("Art/Crystals/MechanicVisual_CrystalSeal") };
             foreach (var cell in new[] { new Vector2Int(8, 13), new Vector2Int(13, 9),
                 new Vector2Int(11, 4), new Vector2Int(5, 4), new Vector2Int(3, 9) })
                 seal.crystals.Add(new CrystalPlacement { cell = cell });
             boss.phases[1].mechanics.Add(seal);
             AssetDatabase.CreateAsset(boss, encounterPath);
-            var catalog = AssetDatabase.LoadAssetAtPath<BossCatalog>(Root + "/BossCatalog.asset");
+            var catalog = AssetDatabase.LoadAssetAtPath<BossCatalog>(Root + "/BossCatalog_Main.asset");
             if (catalog == null)
             {
                 catalog = ScriptableObject.CreateInstance<BossCatalog>();
-                AssetDatabase.CreateAsset(catalog, Root + "/BossCatalog.asset");
+                AssetDatabase.CreateAsset(catalog, Root + "/BossCatalog_Main.asset");
             }
             catalog.bosses.Clear();
             catalog.bosses.Add(boss);

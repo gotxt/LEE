@@ -17,7 +17,7 @@ namespace NHN.TraceStrike.Editor
     {
         public const string PatternId = "p1-fist-ripple";
         public const string Art = "Assets/Art/Bosses/CrimsonGolem";
-        public const string EncounterPath = "Assets/Resources/Patterns/CrimsonGolem.asset";
+        public const string EncounterPath = "Assets/Resources/Patterns/BossData_CrimsonGolem.asset";
         const string Baseline = "23CFE68E71E0BCD2B8C37DEABAA30173845BE1FE7B0CB81E46317B920A22AEC6";
 
         public static void Build()
@@ -57,7 +57,7 @@ namespace NHN.TraceStrike.Editor
                 Add(pattern, "카메라", hit, .3f, new CameraEvent { shake = 9 - i * 2 }, key, true);
             }
             Add(pattern, "착지 먼지 (시각 효과만)", 1.2f, .5f, new VfxEvent {
-                prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Effects/Prefabs/Impact/DirtAreaExplosion.prefab"),
+                prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Effects/Prefabs/Impact/VFX_DirtAreaExplosion.prefab"),
                 tiles = new TileSelection { anchor = TileAnchor.Absolute, offset = new Vector2Int(19, 8), snapshotKey = "fist_contact_visual" }
             });
             Undo.RecordObject(boss, "Add Crimson Golem fist ripple");
@@ -124,7 +124,7 @@ namespace NHN.TraceStrike.Editor
             Frames(windup, sprites, new[] { 0f, .2f, .4f, .6f, .8f, 1.04f, 1.12f, 1.2f }, new[] { 0, 1, 2, 3, 4, 5, 6, 7 });
             var contact = Clip("FistContact");
             Frames(contact, sprites, new[] { 0f, .12f, .28f, .48f, .7f, .94f, 1.2f, 2f }, new[] { 7, 7, 8, 9, 10, 11, 0, 0 });
-            var controller = AnimatorController.CreateAnimatorControllerAtPath(Art + "/CrimsonGolem.controller");
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(Art + "/BossAnimator_CrimsonGolem.controller");
             foreach (var clip in new[] { idle, windup, contact })
             {
                 AssetDatabase.CreateAsset(clip, Art + "/" + clip.name + ".anim");
@@ -134,8 +134,8 @@ namespace NHN.TraceStrike.Editor
             AssetDatabase.SaveAssetIfDirty(controller);
             var shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
             if (shader == null) throw new InvalidOperationException("Sprite unlit shader missing.");
-            var material = new Material(shader); AssetDatabase.CreateAsset(material, Art + "/CrimsonGolem.mat");
-            var root = new GameObject("CrimsonGolem");
+            var material = new Material(shader); AssetDatabase.CreateAsset(material, Art + "/BossMaterial_CrimsonGolem.mat");
+            var root = new GameObject("BossVisual_CrimsonGolem");
             try
             {
                 var actor = root.AddComponent<BossActor>();
@@ -145,7 +145,7 @@ namespace NHN.TraceStrike.Editor
                 var socket = new GameObject("GroundImpact"); socket.transform.SetParent(root.transform, false);
                 actor.sockets.Add(new BossSocket { name = "GroundImpact", target = socket.transform });
                 actor.animator = rig.AddComponent<Animator>(); actor.animator.runtimeAnimatorController = controller;
-                return PrefabUtility.SaveAsPrefabAsset(root, Art + "/CrimsonGolem.prefab").GetComponent<BossActor>();
+                return PrefabUtility.SaveAsPrefabAsset(root, Art + "/BossVisual_CrimsonGolem.prefab").GetComponent<BossActor>();
             }
             finally { UnityEngine.Object.DestroyImmediate(root); }
         }
@@ -160,7 +160,7 @@ namespace NHN.TraceStrike.Editor
 
         static GameObject CreateWaveEffect(int wave, Color color)
         {
-            var root = new GameObject("FistRipple" + wave, typeof(RectTransform));
+            var root = new GameObject("VFX_CrimsonGolem_FistRipple" + wave, typeof(RectTransform));
             try
             {
                 var effect = root.AddComponent<UiEffectPlayer>();
@@ -168,7 +168,7 @@ namespace NHN.TraceStrike.Editor
                     lifetime = new Vector2(.35f, .35f), colors = new[] { color } });
                 effect.emitters.Add(new UiEffectEmitter { motion = UiEffectMotion.Spark, count = 3,
                     size = new Vector2(7, 12), lifetime = new Vector2(.18f, .3f), colors = new[] { color }, speed = new Vector2(35, 80) });
-                return PrefabUtility.SaveAsPrefabAsset(root, Art + "/FistRipple" + wave + ".prefab");
+                return PrefabUtility.SaveAsPrefabAsset(root, Art + "/" + root.name + ".prefab");
             }
             finally { UnityEngine.Object.DestroyImmediate(root); }
         }

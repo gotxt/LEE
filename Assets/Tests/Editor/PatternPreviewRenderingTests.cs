@@ -73,7 +73,7 @@ namespace NHN.TraceStrike.Tests
         [Test]
         public void AllThreeFistWavesHaveUniformTileStackingAfterEarlierWavesExpire()
         {
-            var boss = Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+            var boss = Resources.Load<BossEncounterDefinition>("Patterns/BossData_CrimsonGolem");
             var pattern = boss.FindPattern("p1-fist-ripple");
             string before = EditorJsonUtility.ToJson(boss);
             var root = new GameObject("Preview layering test");

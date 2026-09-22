@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a96e060000004acaa500000000000003, type: 3}
-  m_Name: BossCatalog
+  m_Name: BossCatalog_Main
   m_EditorClassIdentifier: 
   startingBoss: 0
   bosses:

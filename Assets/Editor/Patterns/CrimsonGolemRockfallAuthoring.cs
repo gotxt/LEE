@@ -15,7 +15,7 @@ namespace NHN.TraceStrike.Editor
     public static class CrimsonGolemRockfallAuthoring
     {
         public const string Id = "p1-alternating-rockfall";
-        public const string Path = "Assets/Resources/Patterns/CrimsonGolem.asset";
+        public const string Path = "Assets/Resources/Patterns/BossData_CrimsonGolem.asset";
         const string Art = "Assets/Art/Bosses/CrimsonGolem";
         const string Baseline = "E0339B62CDE92884B331A596005A54686FA24241C862DE5E31D56DA0FA82E9B4";
 
@@ -39,8 +39,8 @@ namespace NHN.TraceStrike.Editor
             var groups = new[] { floor.Where(c => ((c.x / 2 + c.y / 2) & 1) == 0).ToList(),
                 floor.Where(c => ((c.x / 2 + c.y / 2) & 1) != 0).ToList() };
             ValidateEscape(floor, groups);
-            var falling = Effect("RockfallFalling", true);
-            var impact = Effect("RockfallImpact", false);
+            var falling = Effect("VFX_CrimsonGolem_RockfallFalling", true);
+            var impact = Effect("VFX_CrimsonGolem_RockfallImpact", false);
             var warningSound = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Effects/Audio/Warning.wav");
             var impactSound = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Effects/Audio/Impact.wav");
             var pattern = new EncounterPattern { id = Id, name = "교차 낙석 · Alternating Rockfall", minimumDuration = 4.6f };

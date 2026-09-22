@@ -17,7 +17,7 @@ namespace NHN.TraceStrike.Tests
     public sealed class RockfallPatternTests
     {
         const string Id = "p1-alternating-rockfall";
-        static BossEncounterDefinition Boss => Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+        static BossEncounterDefinition Boss => Resources.Load<BossEncounterDefinition>("Patterns/BossData_CrimsonGolem");
         static T Field<T>(TraceStrikeGame game, string name) =>
             (T)typeof(TraceStrikeGame).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(game);
 
@@ -52,7 +52,7 @@ namespace NHN.TraceStrike.Tests
                 foreach (var selection in selections.Skip(1))
                 { Assert.AreNotSame(selections[0], selection); Assert.AreEqual(JsonUtility.ToJson(selections[0]), JsonUtility.ToJson(selection)); }
                 Assert.IsTrue(step.Members.All(c => c.attackGroupKey == step.Key));
-                var falling = step.Members.Single(c => c.action is VfxEvent v && v.prefab.name == "RockfallFalling");
+                var falling = step.Members.Single(c => c.action is VfxEvent v && v.prefab.name == "VFX_CrimsonGolem_RockfallFalling");
                 Assert.IsTrue(falling.attackAtImpact);
                 Assert.That(falling.start + falling.duration, Is.EqualTo(step.Damage.start).Within(.00001));
             }
@@ -89,8 +89,8 @@ namespace NHN.TraceStrike.Tests
         public void FallingStoneReachesGroundAtImpactWithBoundedParticleCount()
         {
             var vfx = Boss.FindPattern(Id).clips.Select(c => c.action).OfType<VfxEvent>();
-            var falling = vfx.First(v => v.prefab.name == "RockfallFalling").prefab;
-            var impact = vfx.First(v => v.prefab.name == "RockfallImpact").prefab;
+            var falling = vfx.First(v => v.prefab.name == "VFX_CrimsonGolem_RockfallFalling").prefab;
+            var impact = vfx.First(v => v.prefab.name == "VFX_CrimsonGolem_RockfallImpact").prefab;
             var instance = Object.Instantiate(falling);
             try
             {
@@ -143,7 +143,7 @@ namespace NHN.TraceStrike.Tests
                     stage.Render();
                     foreach (var effect in grid.GetComponentsInChildren<UiEffectPlayer>())
                     {
-                        bool fall = effect.name.StartsWith("RockfallFalling");
+                        bool fall = effect.name.StartsWith("VFX_CrimsonGolem_RockfallFalling");
                         float start = t < 2 ? (fall ? .85f : 1.2f) : (fall ? 3.05f : 3.4f);
                         effect.Sample(Mathf.Max(0, t - start));
                     }

@@ -44,7 +44,7 @@ namespace NHN.TraceStrike
         {
             StopMechanics();
             IsPatternPreview = false;
-            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             if (catalog == null || index < 0 || index >= catalog.bosses.Count || catalog.bosses[index] == null)
                 throw new InvalidOperationException("Missing boss catalog entry. Use Trace Strike/Patterns/Create Crimson Golem Encounter.");
             activeBoss = catalog.bosses[index];
@@ -55,7 +55,7 @@ namespace NHN.TraceStrike
 
         private int StartingBoss()
         {
-            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             return catalog != null ? catalog.startingBoss : 0;
         }
 
@@ -179,7 +179,7 @@ namespace NHN.TraceStrike
         public void PreviewPattern(BossEncounterDefinition encounter, EncounterPattern pattern)
         {
             if (encounter == null || pattern == null) return;
-            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             int catalogIndex = catalog != null ? catalog.bosses.IndexOf(encounter) : -1;
             if (catalogIndex < 0)
                 throw new InvalidOperationException("Add the encounter to BossCatalog before Play Mode preview.");

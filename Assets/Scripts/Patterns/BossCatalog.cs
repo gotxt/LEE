@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NHN.TraceStrike.Patterns
 {
-    [CreateAssetMenu(menuName = "Trace Strike/Boss Catalog")]
+    [CreateAssetMenu(fileName = "BossCatalog_Main", menuName = "Trace Strike/Boss Catalog")]
     public sealed class BossCatalog : ScriptableObject
     {
         [Min(0)] public int startingBoss;

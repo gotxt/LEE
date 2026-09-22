@@ -57,7 +57,7 @@ namespace NHN.TraceStrike.Tests
             yield return new EnterPlayMode();
             var game = Object.FindAnyObjectByType<TraceStrikeGame>();
             Assert.IsNotNull(game);
-            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             var boss = ScriptableObject.CreateInstance<BossEncounterDefinition>();
             boss.id = "runtime-arena-test";
             boss.arena.size = 50; boss.arena.shape = ArenaShape.Custom;
@@ -122,7 +122,7 @@ namespace NHN.TraceStrike.Tests
         {
             yield return new EnterPlayMode();
             var game = Object.FindAnyObjectByType<TraceStrikeGame>();
-            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             var boss = ScriptableObject.CreateInstance<BossEncounterDefinition>();
             var texture = new Texture2D(8, 4);
             var first = Sprite.Create(texture, new Rect(0, 0, 4, 4), Vector2.one * 0.5f);
@@ -180,7 +180,7 @@ namespace NHN.TraceStrike.Tests
         {
             yield return new EnterPlayMode();
             var game = Object.FindAnyObjectByType<TraceStrikeGame>();
-            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog");
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             var boss = ScriptableObject.CreateInstance<BossEncounterDefinition>();
             var source = new GameObject("Runtime boss source");
             var actor = source.AddComponent<BossActor>();

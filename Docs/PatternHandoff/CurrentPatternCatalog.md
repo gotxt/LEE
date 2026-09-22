@@ -1,14 +1,16 @@
 # 현재 제작된 패턴 목록
 
+2026-09-22: [에셋 파일명 정리](../AssetNaming.md)를 적용했다. 아래 파일 경로는 새 이름으로 갱신했지만 과거 검증 수치·해시는 각 기록 시점의 값이다. 이번 이름 변경으로 맵·패턴·기믹 설정은 바꾸지 않았다.
+
 기준일: **2026-09-20**. 이 문서는 실제 저장된 에셋을 읽은 스냅샷이며 자동으로 갱신되지 않는다. 다음 제작 작업 완료 시 변경 기록과 목록을 함께 갱신한다.
 
 **수정 봉인 이식 시점 안내:** 기존 맵/공격에 후속 사용자 편집이 있어 아래 과거 맵 크기·좌표·공격 수량은 현재 에셋과 다를 수 있다. 이번 작업은 그 편집을 보존하고 2페이즈 기믹과 보조 공격만 추가했다. 최신 기믹은 6절 및 [보스 기믹 가이드](../BossMechanics.md)를 기준으로 한다.
 
 - 프로젝트: `C:/GameMake/Unity6/LEE`
-- 원본: `Assets/Resources/Patterns/CrimsonGolem.asset`
-- 카탈로그: `Assets/Resources/Patterns/BossCatalog.asset`
+- 원본: `Assets/Resources/Patterns/BossData_CrimsonGolem.asset`
+- 카탈로그: `Assets/Resources/Patterns/BossCatalog_Main.asset`
 - 확인 당시 HEAD: `091d4c0`. **미커밋 사용자 편집과 이전 이펙트 작업을 포함한 작업 폴더**를 기준으로 했으므로 HEAD 내용과 같지 않다.
-- 확인 당시 CrimsonGolem.asset SHA-256: `FB901919CA9992D5B22581F8CDE9D14242228C4B3796CA2ECC269571B2C49482`
+- 확인 당시 BossData_CrimsonGolem.asset SHA-256: `FB901919CA9992D5B22581F8CDE9D14242228C4B3796CA2ECC269571B2C49482`
 - 기초 설명: [게임 설명](GameOverview.md), 변경 절차: [패턴 제작 가이드](PatternAuthoringGuide.md).
 
 ## 1. 보스·전장 현황
@@ -24,7 +26,7 @@
 | START / END | 생성 영역 제한 모두 켜짐. 원시 목록 각각 490칸, 실제 바닥과 교차하면 각각 481칸. 두 목록은 같은 집합. 생성되는 두 타일은 서로 다름 |
 | 표시 배율 | cameraZoom=2.019 / playerSizeRatio=0.78 |
 | 타일 이미지 | 기본 Sprite 미지정, 팔레트와 개별 이미지 목록 비어 있음. 기존 게임 타일 사용 |
-| 보스 외형 | `Assets/Art/Bosses/CrimsonGolem/CrimsonGolem.prefab`, portrait 미지정. 사용자 제공 12프레임 시트 사용 |
+| 보스 외형 | `Assets/Art/Bosses/CrimsonGolem/BossVisual_CrimsonGolem.prefab`, portrait 미지정. 사용자 제공 12프레임 시트 사용 |
 | 외형 배치 설정 | (19,8), size=1, animationLayer=0, idleState=`Base Layer.Idle` |
 | 중앙 비우기 | x=18~20, y=8~10의 3×3 영역은 바닥에서 제거되어 있다. 보스 원점 (19,8)도 빈 곳. 논리 Center=(19,19)는 바닥 위 |
 
@@ -74,7 +76,7 @@
 
 | 공격 | 영역 / 키 | 경고 | Damage | 부가 연출 |
 |---|---|---|---|---|
-| 1 | Center, 유효 49칸(원시 52), `glyph`, 탈출 보조 켜짐 | 0~2.0 | 2.0~2.3 | 경고/타격 SFX, 카메라, DirtAreaExplosion |
+| 1 | Center, 유효 49칸(원시 52), `glyph`, 탈출 보조 켜짐 | 0~2.0 | 2.0~2.3 | 경고/타격 SFX, 카메라, VFX_DirtAreaExplosion |
 | 2 | Center, 유효 42칸(원시 44), `attack_020f4cb4ef184521ba5682cee5125056`, 탈출 보조 켜짐 | 2.55~4.55 | 4.55~4.85 | 경고/타격 SFX, 카메라, 프리팹 없는 기본 VFX |
 | 3 | Absolute, 45칸, `attack_a7605c4fd3a1473fb851392ef5ca7601`, 탈출 보조 꺼짐 | 5.1~6.1 | 6.1~6.4 | 현재는 경고/타격 두 이벤트만 있음 |
 
@@ -102,7 +104,7 @@
 현재 저장 상태에서 알아둘 점:
 
 1. 공격 1의 Warning/Damage/VFX 원시 Cells는 현재 모두 52개다(이전 문서의 52/48/51과 다름). `glyph`를 공유하고 Warning이 먼저 계산하므로 실행은 Warning의 스냅샷 영역을 재사용한다. 현재 바닥과 교차한 주 영역은 탈출 보조 제외 전 49칸이다.
-2. 공격 1의 VFX는 `DirtAreaExplosion.prefab`로 지정되어 있다. 이벤트가 0.3초에 끝나므로 최대 0.5초짜리 효과의 끝부분은 잘린다. 필요하면 **VFX만** 0.5초 이상으로 조정할 수 있지만 이 문서 작성에서는 수정하지 않았다.
+2. 공격 1의 VFX는 `VFX_DirtAreaExplosion.prefab`로 지정되어 있다. 이벤트가 0.3초에 끝나므로 최대 0.5초짜리 효과의 끝부분은 잘린다. 필요하면 **VFX만** 0.5초 이상으로 조정할 수 있지만 이 문서 작성에서는 수정하지 않았다.
 3. 해당 효과는 타일당 47개의 UI 입자를 만들므로 49칸에서는 탈출 보조 제외 전 최대 2,303개가 생성된다. 이것은 입자 수 계산이지 성능 측정 결과는 아니다. 성능/가독성을 실제 플레이에서 확인해야 한다.
 
 ### 주먹 내려치기 · Fist Ripple / `p1-fist-ripple`
@@ -113,9 +115,9 @@
 
 | 공격 / 독립 키 | 반경 / 현재 바닥 수 | 경고 | 단발 Damage | UI VFX |
 |---|---|---|---|---|
-| 1 · 붉은 내측 파동 / `fist_ripple_1` | r=2 / 5칸 | 0.20~1.20 | 1.20~1.50 | 1.20~1.55, FistRipple1 |
-| 2 · 자주색 중간 파동 / `fist_ripple_2` | r=3 / 10칸 | 0.75~1.75 | 1.75~2.05 | 1.75~2.10, FistRipple2 |
-| 3 · 보라색 외측 파동 / `fist_ripple_3` | r=4 / 16칸 | 1.30~2.30 | 2.30~2.60 | 2.30~2.65, FistRipple3 |
+| 1 · 붉은 내측 파동 / `fist_ripple_1` | r=2 / 5칸 | 0.20~1.20 | 1.20~1.50 | 1.20~1.55, VFX_CrimsonGolem_FistRipple1 |
+| 2 · 자주색 중간 파동 / `fist_ripple_2` | r=3 / 10칸 | 0.75~1.75 | 1.75~2.05 | 1.75~2.10, VFX_CrimsonGolem_FistRipple2 |
+| 3 · 보라색 외측 파동 / `fist_ripple_3` | r=4 / 16칸 | 1.30~2.30 | 2.30~2.60 | 2.30~2.65, VFX_CrimsonGolem_FistRipple3 |
 
 각 Damage의 escapeGrace=0.18, ensureEscape=false. 경고는 겹치지만 타격 구간은 분리되어 있다. 지속 Hazard/장애물/Targeted 호출은 없다. 현재 (17,8)/(21,8) 등은 안쪽 인접 칸이 빈 바닥이므로 최초의 일괄적인 안쪽 회피 설명을 적용하지 않는다. 이번 낙석 작업에서는 기존 파동이나 맵을 수정하지 않았다. 경고 중 미리 이동하는 것이 기본 회피이며 유예 시간에 의존하는 설계가 아니다. P1에만 배치되어 정상 전투에서 P2 수정과 동시에 실행되지 않는다. P2로 옮기면 수정 위치·별도 타이머와의 조합 검증이 추가로 필요하다.
 
@@ -123,7 +125,7 @@
 
 - 0~1.20초: `BossAnimationEvent` → `Base Layer.FistWindup`, 준비/들어올리기/내려치기 프레임.
 - 1.20초: 타격 이벤트보다 먼저 `Base Layer.FistContact`로 전환. 0부터 세는 프레임 7(시트의 8번째, 착지 자세)에서 시작해 회복한다. transition=0, speed=1.
-- 1.20~1.70초: 충격 중심 한 칸에 DirtAreaExplosion을 지정해 두었으나, 현재 중심 (19,8)이 빈 바닥이므로 실제 유효 대상은 0칸이다. 시각 효과 이벤트이며 피해/안전 판정은 세 파동 영역에만 있다.
+- 1.20~1.70초: 충격 중심 한 칸에 VFX_DirtAreaExplosion을 지정해 두었으나, 현재 중심 (19,8)이 빈 바닥이므로 실제 유효 대상은 0칸이다. 시각 효과 이벤트이며 피해/안전 판정은 세 파동 영역에만 있다.
 - 경고색과 파동 프리팹 색은 빨강→자주→보라. 기존 Damage 표시는 빨강이지만 그 위의 전용 Canvas VFX가 파동별 색을 표현한다. 각 타일당 Flash 1+Spark 3개이며 BossVfx용 프리팹이 아니다.
 - 보스 프리팹에는 고정 `GroundImpact` 소켓만 있다. Sprite 프레임 애니메이션이므로 움직이는 주먹 뼈대/손 소켓이 있다고 가정하지 않는다.
 - 2.65초에 모든 공격 VFX가 끝나고 3.20초 패턴 종료/취소 때 Idle로 복귀한다. P1의 기존 완료 후 대기가 추가된다. 새 런타임 공격 타입이나 보스/패턴 ID 분기는 없다.
@@ -145,7 +147,7 @@
 - 회피: 처음 B에서 피하고 A의 판정이 끝난 1.50초 이후 A로 이동해 두 번째 공격을 피한다. 매 경고는 1.20초, Damage.escapeGrace=0.18초, ensureEscape=false. 747칸 전부를 BFS로 검사했으며 각 묶음의 타격 칸에서 반대 영역까지 최대 두 칸 이동이다. 각 공격마다 가장자리 2칸은 두 번 이동해야 한다. 경고 중 이동할 시간을 둔 설계이지 유예나 ensureEscape만으로 무조건 회피를 보장하는 주장은 아니다.
 - 겹침: 첫 착지 VFX도 1.60초에 끝나며 다음 경고는 2.20초에 시작한다. 지속 Hazard, 장애물, 하위 패턴, Background는 없다. P1에만 배치되어 P2 수정과 동시에 실행되지 않는다. P2로 옮길 경우 수정 장애물/별도 공격 타이머와의 합동 검사가 필요하다.
 - 보스 연출: 기존 사용자 제공 시트·프리팹·Animator를 그대로 사용한다. 0/2.20초에 `Base Layer.FistWindup`, 1.20/3.40초에 `Base Layer.FistContact`, 모두 transition=0/speed=1. 각 접촉 이벤트를 같은 시각의 Damage보다 먼저 실행해 시트의 8번째 착지 프레임 `Slam_07`로 전환한다. 첫 회복 끝부분은 2.20초의 두 번째 준비 동작이 인계한다. 새 공격 전용 런타임 코드나 ID 분기는 없다.
-- 타일 연출: `RockfallFalling.prefab`은 타일 위에서 내려오는 돌색 Chunk 1개(0.35초), `RockfallImpact.prefab`은 착지 Flash 1 + 작은 Chunk 1개(최대 0.4초)다. 기존 `UiEffectPlayer`를 사용하는 **Canvas 타일 VFX**이며 BossVfx/손 소켓 효과가 아니다. 1차 최대 하강 374개/착지 748개 입자다. 이는 수량 계산이지 성능 측정 결과가 아니다. 경고/타격 SFX 및 shake=7도 연결했다.
+- 타일 연출: `VFX_CrimsonGolem_RockfallFalling.prefab`은 타일 위에서 내려오는 돌색 Chunk 1개(0.35초), `VFX_CrimsonGolem_RockfallImpact.prefab`은 착지 Flash 1 + 작은 Chunk 1개(최대 0.4초)다. 기존 `UiEffectPlayer`를 사용하는 **Canvas 타일 VFX**이며 BossVfx/손 소켓 효과가 아니다. 1차 최대 하강 374개/착지 748개 입자다. 이는 수량 계산이지 성능 측정 결과가 아니다. 경고/타격 SFX 및 shake=7도 연결했다.
 - 종료: 두 번째 착지 VFX는 3.80초에 끝나고, 마지막 회복 뒤 4.60초에 패턴이 끝난다. 완료·취소 때 각 lease가 표시/소리/카메라 자원을 해제하고 보스가 Idle로 복귀한다. 그 후 기존 P1 완료 후 대기가 붙는다.
 - 팀원 편집: 간편 공격 2개에서 영역/경고/타격/VFX를 수정한다. 타격 시각을 바꾸면 **고급 편집의 해당 BossAnimation 준비/착지 시각도 함께 맞춰야 한다**. 하강 VFX는 타격 연결(`attackAtImpact=true`)과 -0.35초 상대 오프셋을 갖는다. 하강 길이를 바꾸면 프리팹의 lifetime/offset/velocityY도 함께 조정해야 접촉 시점에 도달한다.
 - 최종 반영: 미저장 편집 보존 승인 후 Unity 종료와 잠금 해제를 확인하고 에셋에 신규 패턴/이벤트 블록만 추가했다. 기본 생성기로 기존 보스를 재생성하지 않았다. `CrimsonGolemRockfallAuthoring`은 명시적으로 호출하는 1회 추가 도구이며 기존 ID가 있으면 다시 생성하지 않는다.
@@ -217,7 +219,7 @@ Combined의 두 항목 모두 radius=5다. Cross/Diagonal/Horizontal/Vertical의
 
 - 지정 위치 5개: (17,5), (28,13), (24,27), (10,27), (6,13). 중앙 보스에서 약 12칸 거리의 좌우 대칭 오각형으로 배치했다. 2페이즈 진입 즉시 생성되며 에디터에서 추가·이동·삭제 가능하다.
 - 수정 타일은 통과 가능. 완성된 경로 공격에 포함된 수정들을 모두 비활성화한다. 활성 수정이 남아 있던 공격은 보스 체력을 1 아래로 내릴 수 없다. **마지막 수정 해제 공격 다음 공격부터 처치 가능**하다.
-- 공유 공격 ID `crystal-seal-attack`: Origin 기준 2칸 체크무늬, 경고 0~0.7초, 타격 0.7~1.0초(유예 0.18초), CrystalSparks VFX 0.7~1.05초.
+- 공유 공격 ID `crystal-seal-attack`: Origin 기준 2칸 체크무늬, 경고 0~0.7초, 타격 0.7~1.0초(유예 0.18초), VFX_CrystalSparks VFX 0.7~1.05초.
 - 기본 첫 대기/공격 시작 간격은 모두 5초. 수정별로 공격과 시간을 따로 지정할 수 있다. 주 타임라인과 같은 inputLocked 일시정지 규칙을 사용한다.
 - 비활성화는 진행 중 경고·타격을 정리하고 어두운 외형을 남긴다. 모두 해제해도 자동 처치는 하지 않는다.
 - 편집·미리보기·개발 확장 규칙: [보스 기믹 가이드](../BossMechanics.md).
@@ -225,7 +227,7 @@ Combined의 두 항목 모두 radius=5다. Cross/Diagonal/Horizontal/Vertical의
 
 ### 2페이즈 수정 외형 — 2026-09-20 교체
 
-- 표시 프리팹: `Assets/Resources/Art/Crystals/PhaseTwoCrystal.prefab`. 사용자가 제공한 `red.png`를 `Body`, `hole.png`를 `Shadow`로 사용한다. 두 파일은 원본과 SHA-256이 같은 64×64 PNG이며 별도 가공하지 않았다. Point 필터, mipmap 없음, 압축 없음으로 임포트한다.
+- 표시 프리팹: `Assets/Resources/Art/Crystals/MechanicVisual_CrystalSeal.prefab`. 사용자가 제공한 `red.png`를 `Body`, `hole.png`를 `Shadow`로 사용한다. 두 파일은 원본과 SHA-256이 같은 64×64 PNG이며 별도 가공하지 않았다. Point 필터, mipmap 없음, 압축 없음으로 임포트한다.
 - 두 이미지의 원래 64×64 배치를 동일한 좌표계로 겹친다. 실제 수정 높이는 기본 약 0.80타일, 그림자는 약 0.46×0.11타일이다. 하단 끝점은 타일 중심보다 약 0.14타일 아래에 놓인다. 현재 타일 크기로 프리팹 루트를 다시 맞추므로 전장 줌에도 함께 대응한다.
 - `Shadow`는 `Body`보다 먼저 그리며 Image 색의 **A=0.42**로 설정했다(42% 불투명도). 원본 검은색을 반투명 접촉 그림자로 표시한다. `Body`는 원본 색상/불투명도 그대로이며 기존 붉은 Outline은 제거했다.
 - 수정 아래 타일 전체를 어둡게 덮던 기존 색상 덮어쓰기도 제거했다. 실제 바닥 이미지 위에 그림자가 보이게 한 표시 변경이며 바닥/장애물 데이터는 그대로다.
@@ -241,7 +243,7 @@ Combined의 두 항목 모두 radius=5다. Cross/Diagonal/Horizontal/Vertical의
 | 여러 번 공격하는 단일 패턴 | P1_Cross_0, Fist Ripple, Alternating Rockfall에서 사용 |
 | 플레이어 위치 고정 조준 / 하위 패턴 호출 | P2 → Targeted에서 사용 |
 | 장판/벽/소환/제거/Signal | Example_Devices에 예제로 저장, 일반 주 패턴에서는 미사용 |
-| 타일 이펙트 프리팹 | P1_Cross_0의 DirtAreaExplosion, Fist Ripple 3색 파동, Rockfall 하강/착지. 기타 주 VFX는 기본 표시 |
+| 타일 이펙트 프리팹 | P1_Cross_0의 VFX_DirtAreaExplosion, Fist Ripple 3색 파동, Rockfall 하강/착지. 기타 주 VFX는 기본 표시 |
 | BossAnimation/BossVfx/BossMotion | Fist Ripple에 BossAnimation 2개, Rockfall에 4개. BossVfx/BossMotion은 미사용. 같은 프리팹과 3개 Animator 상태 재사용 |
 | Background timeline | 두 페이즈 모두 비활성/빈 목록 |
 | 공유 PatternSequence 호출 | 현재 보스에 사용 없음 |
@@ -250,7 +252,7 @@ Combined의 두 항목 모두 radius=5다. Cross/Diagonal/Horizontal/Vertical의
 
 ### 공통 타일 위험 표시 — 2026-09-20 교체
 
-- 프리팹: `Assets/Resources/Art/Warnings/TileWarning.prefab`. 사용자 제공 `danger_indicator_128x128.png`를 원본 그대로 사용한다(SHA-256 `D806DD699F324E1DD960A4CCC7E8ED0C86F8FC56E047BCFF09C75AEAF87FC8F4`). 128×128 Single Sprite, Point 필터, 압축/mipmap 없음, 투명 배경 유지.
+- 프리팹: `Assets/Resources/Art/Warnings/TileVisual_AttackWarning.prefab`. 사용자 제공 `danger_indicator_128x128.png`를 원본 그대로 사용한다(SHA-256 `D806DD699F324E1DD960A4CCC7E8ED0C86F8FC56E047BCFF09C75AEAF87FC8F4`). 128×128 Single Sprite, Point 필터, 압축/mipmap 없음, 투명 배경 유지.
 - 적용 대상은 타임라인의 `WarningEvent`와 기존 수정/조준/문양 경고다. 두 표시 경로가 같은 `TileWarningVisual` 프리팹을 사용한다. 보스나 패턴 ID를 분기하지 않으며 각 공격의 영역·snapshotKey·경고 시간·피격 유예는 변경하지 않았다.
 - 빨간 테두리와 느낌표는 경고 시작부터 온전한 크기로 보인다. 타일 안쪽 여백과 위치는 기존 경고 표시를 따른다. 이미지 자체의 색은 흰색 tint/불투명도 1로 원본 빨강을 유지하고, 뒤쪽 `Warning Progress`만 커져 남은 경고 시간을 표시한다. 타임라인은 15→100%, 기존 수정 경고는 0→100% 진행 크기를 사용한다.
 - 패턴 에디터의 Warning Color는 진행 표시 색으로 계속 적용한다. 진행 표시 알파는 기존 경고색 알파×`progressOpacity`(프리팹 기본 0.65)다. 느낌표를 보라색으로 곱하여 원본 색이 검게 변하는 방식은 사용하지 않는다. 팀원은 프리팹의 `Indicator` Sprite/Color와 `Progress Opacity`를 조정할 수 있다.
@@ -265,7 +267,7 @@ Combined의 두 항목 모두 radius=5다. Cross/Diagonal/Horizontal/Vertical의
 - 실패 2개는 작업 시작 전에도 존재한 `FistRippleTests`의 현재 바닥 수량 차이(내측 8→5, 첫 VFX 9→5)다. 맵/파동 데이터나 기존 기대값을 이 작업에서 변경하지 않았다. 초기 신규 검사의 CLR 객체 참조 비교는 Unity 에셋 GUID/로컬 파일 ID/경로 대조로 보완한 뒤 위 전체 검사를 다시 실행했다.
 - 신규 검사는 원본 스프라이트 참조·Point/무압축/투명 임포트, 진행값 0~1과 96/160 크기의 타일에서 이미지 크기/원색 유지, 경고색의 진행 표시 적용, 실제 낙석 경고 영역 수와 겹친 경고의 독립 정리, 경고→타격 전환, 기존 Damage 표시 보존, 프리뷰 중단/재시작을 확인했다. 실제 P2 진입 후 수정 폭발 경고의 표시·정상 종료·재시작 정리도 확인했다.
 - 최종 원본에서 `Tools/VerifyPatternCompilation.ps1` 런타임/에디터 컴파일 통과(기존 경고 7개). `Tools/ValidatePatternAssets.py`도 **21개 인라인 타임라인/170개 이벤트**의 GUID/타이밍/타입/호출 검사 통과.
-- 사용자 PNG와 프로젝트 PNG의 SHA-256 일치, 검증 복사본과 원본 코드/프리팹 일치를 확인했다. `CrimsonGolem.asset`, `BossCatalog.asset`, `PhaseTwoCrystal.prefab`은 작업 전후 해시가 동일하며 기존 미커밋 변경을 보존했다.
+- 사용자 PNG와 프로젝트 PNG의 SHA-256 일치, 검증 복사본과 원본 코드/프리팹 일치를 확인했다. `BossData_CrimsonGolem.asset`, `BossCatalog_Main.asset`, `MechanicVisual_CrystalSeal.prefab`은 작업 전후 해시가 동일하며 기존 미커밋 변경을 보존했다.
 - 실제 게임 호스트의 낙석/수정 경고를 자동 렌더하여 투명 배경과 타일 배치를 확인했다. `Logs/PatternValidation/DangerIndicator/RockfallWarning.png`, `CrystalWarning.png`. 캡처를 위한 플레이어/시점과 시간 고정은 테스트 인스턴스에만 적용했으며 저장 에셋의 스폰/줌/시간표는 변경하지 않았다.
 - 미검증: 수동 조작 실시간 플레이, 모든 패턴 조합의 시각 가독성, 극단적 프레임 지연 및 저사양·장시간 성능. 편집기의 영역 색칠을 게임 렌더 검증으로 대신하지 않았다.
 
@@ -275,7 +277,7 @@ Combined의 두 항목 모두 radius=5다. Cross/Diagonal/Horizontal/Vertical의
 - 신규 `CrystalVisualTests` **4개 모두 통과**. 원본 Sprite/임포트 설정, 그림자 A=0.42와 그리기 순서, 96/160 크기의 타일 대응, 본체 맥동 시 끝점·그림자 고정, 실제 P1→P2 전환의 생성/위치/장애물 표시, 재배치 시 인스턴스 재사용, P1 재시작·허브 복귀 시 숨김을 검사했다. 수정 아래 바닥색 보존과 기존 공격 타이머 설정도 확인했다.
 - 실패 2개는 이번 변경 전에도 존재했던 `FistRippleTests`의 현재 바닥과 이전 기대 수량 차이다. `EveryHitCellHasOneStepInwardEscapeOnActualFloor`는 기대 8/실제 5, `RuntimeWavesRenderAndCleanUpWithVisiblePrefabHealthBar`는 기대 9/실제 5다. 이번 외형 작업에서 맵·공격 영역이나 해당 기대값을 변경하지 않았다.
 - 최종 원본에서 `Tools/VerifyPatternCompilation.ps1`의 런타임/에디터 컴파일을 실행했다(기존 경고 7개, 오류 없음). `Tools/ValidatePatternAssets.py`도 실행해 **21개 인라인 타임라인/170개 이벤트**의 GUID/시간/타입/호출 검사를 통과했다.
-- `CrimsonGolem.asset`과 `BossCatalog.asset`의 SHA-256이 작업 시작 시점과 동일하다. PNG 2개는 각각 사용자 원본과 해시가 일치하며, 최종 Unity 검사에 사용한 런타임 코드도 원본과 동일하다. 기존 사용자 미커밋 변경을 보존했다.
+- `BossData_CrimsonGolem.asset`과 `BossCatalog_Main.asset`의 SHA-256이 작업 시작 시점과 동일하다. PNG 2개는 각각 사용자 원본과 해시가 일치하며, 최종 Unity 검사에 사용한 런타임 코드도 원본과 동일하다. 기존 사용자 미커밋 변경을 보존했다.
 - 실제 게임 호스트에서 2페이즈 진입과 수정 재배치 후 화면을 자동 렌더하여 본체/접촉 그림자 배치를 확인했다. 파일: `Logs/PatternValidation/CrystalVisuals/PhaseTwoCrystal_Entry.png`, `PhaseTwoCrystal_Relocated.png`. 캡처용 플레이어/시점 조정은 테스트 인스턴스에만 적용했으며 저장된 스폰·줌·맵은 변경하지 않았다.
 - 미검증: 수동 조작 실시간 플레이, 장시간 전투 및 주 패턴과 수정 공격의 모든 조합, 효과음 청취, 저사양 성능. 과거 패턴 제작 당시 통과 기록을 이번 외형 검증으로 대체하지 않았다.
 

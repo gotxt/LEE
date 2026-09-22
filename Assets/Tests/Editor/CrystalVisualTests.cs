@@ -17,7 +17,7 @@ namespace NHN.TraceStrike.Tests
 {
     public sealed class CrystalVisualTests
     {
-        static CrystalVisual Prefab => Resources.Load<CrystalVisual>("Art/Crystals/PhaseTwoCrystal");
+        static CrystalVisual Prefab => Resources.Load<CrystalVisual>("Art/Crystals/MechanicVisual_CrystalSeal");
         static T Field<T>(TraceStrikeGame game, string name) =>
             (T)typeof(TraceStrikeGame).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(game);
         static void Set(TraceStrikeGame game, string name, object value) =>
@@ -197,7 +197,7 @@ namespace NHN.TraceStrike.Tests
             yield return new EnterPlayMode();
             var listener = new GameObject("Crystal phase integration audio", typeof(AudioListener));
             var game = Object.FindAnyObjectByType<TraceStrikeGame>();
-            var source = Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+            var source = Resources.Load<BossEncounterDefinition>("Patterns/BossData_CrimsonGolem");
             string sourceBefore = EditorJsonUtility.ToJson(source);
             bool dirtyBefore = EditorUtility.IsDirty(source);
             var fixture = Object.Instantiate(source);

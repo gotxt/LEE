@@ -19,7 +19,7 @@ namespace NHN.TraceStrike.Tests
     public sealed class FistRippleTests
     {
         const string Id = "p1-fist-ripple";
-        static BossEncounterDefinition Boss => Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+        static BossEncounterDefinition Boss => Resources.Load<BossEncounterDefinition>("Patterns/BossData_CrimsonGolem");
         static T Field<T>(TraceStrikeGame game, string name) =>
             (T)typeof(TraceStrikeGame).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(game);
 

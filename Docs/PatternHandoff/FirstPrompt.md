@@ -13,7 +13,7 @@ Unity 버전: 6000.5.3f1 (작업 시 ProjectSettings/ProjectVersion.txt도 확�
 2. C:/GameMake/Unity6/LEE/Docs/PatternHandoff/PatternAuthoringGuide.md
 3. C:/GameMake/Unity6/LEE/Docs/PatternHandoff/CurrentPatternCatalog.md
 
-필요한 세부 설명은 위 문서에 연결된 AttackDesigner.md, PatternEditor.md, BossPresentation.md, EffectPrefabs.md를 읽고, 실제 Assets/Resources/Patterns/CrimsonGolem.asset와 BossCatalog.asset 및 관련 스크립트와 대조해줘. 문서 기준일 이후 변경될 수 있으므로 충돌 시 현재 코드/에셋을 확인하고 차이를 먼저 알려줘.
+필요한 세부 설명은 위 문서에 연결된 AttackDesigner.md, PatternEditor.md, BossPresentation.md, EffectPrefabs.md를 읽고, 실제 Assets/Resources/Patterns/BossData_CrimsonGolem.asset와 BossCatalog_Main.asset 및 관련 스크립트와 대조해줘. 문서 기준일 이후 변경될 수 있으므로 충돌 시 현재 코드/에셋을 확인하고 차이를 먼저 알려줘.
 
 목표는 여러 보스와 다양한 공격을 비개발 팀원도 기존 보스 패턴 에디터에서 계속 수정할 수 있게 제작하는 것이야. 보스마다 종합 데이터 안에 전장, 페이즈, 여러 패턴이 있고, 각 패턴은 시간에 따라 여러 이벤트가 순차/동시 실행되는 구조를 유지해줘.
 

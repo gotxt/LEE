@@ -12,7 +12,7 @@ import re
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "Assets"
-ENCOUNTER = ASSETS / "Resources" / "Patterns" / "CrimsonGolem.asset"
+ENCOUNTER = ASSETS / "Resources" / "Patterns" / "BossData_CrimsonGolem.asset"
 
 
 def numeric(block, name):

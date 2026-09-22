@@ -4,7 +4,7 @@
 
 보스 통합형 시간축 패턴 에디터: Unity 메뉴 `Trace Strike > Patterns > Boss Encounter Editor`.
 보스 하나의 에셋 안에서 전장, 페이즈, 보조 패턴과 모든 공격 타임라인을 편집합니다.
-기본 보스 에셋은 `Assets/Resources/Patterns/CrimsonGolem.asset`이며, `BossCatalog.startingBoss`로 시작 보스를 선택합니다.
+기본 보스 에셋은 `Assets/Resources/Patterns/BossData_CrimsonGolem.asset`이며, `BossCatalog.startingBoss`로 시작 보스를 선택합니다. 파일명은 [역할별 에셋 이름 규칙](Docs/AssetNaming.md)을 따릅니다.
 이벤트 종류, 타일 편집, 보스 추가, 확장 API, 검증 상태는 [패턴 에디터 가이드](Docs/PatternEditor.md)를 참고하세요.
 
 아래 기존 개발 기록에는 이전 버전의 화면비, 체력, 튜토리얼 및 미니맵 설명이 포함되어 있습니다. 현재 패턴 동작은 위 가이드와 보스/패턴 에셋을 기준으로 확인하세요.

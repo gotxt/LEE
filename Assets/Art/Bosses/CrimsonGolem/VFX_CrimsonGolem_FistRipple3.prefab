@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6332939740563986061}
   - component: {fileID: 7939500773505538589}
   m_Layer: 0
-  m_Name: FistRipple3
+  m_Name: VFX_CrimsonGolem_FistRipple3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -21,7 +21,7 @@ namespace NHN.TraceStrike.Tests
         [Test]
         public void ExistingCrossIsRecognizedWithoutChangingData()
         {
-            var existing = Resources.Load<BossEncounterDefinition>("Patterns/CrimsonGolem");
+            var existing = Resources.Load<BossEncounterDefinition>("Patterns/BossData_CrimsonGolem");
             Assert.IsNotNull(existing, "The shipped encounter must import as a BossEncounterDefinition");
             var pattern = existing.AllPatterns().First(p => p.name == "P1_Cross_0");
             string before = EditorJsonUtility.ToJson(existing);

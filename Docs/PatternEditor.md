@@ -1,5 +1,7 @@
 # 보스 인카운터·패턴 에디터
 
+에셋 파일명은 [역할별 영어 이름 규칙](AssetNaming.md)을 따른다. 보스 데이터는 `BossData_…`, 독립 공유 패턴은 `PatternData_…`로 생성하며, 보스 안의 패턴·기믹은 계속 인라인으로 저장한다.
+
 ## 시작
 
 Unity 6000.5.3f1에서 `Trace Strike > Patterns > Boss Encounter Editor`를 연다.
@@ -145,13 +147,13 @@ MoveObjectEvent는 막대 끝에서 목적지를 유지하고 시퀀스 종료/�
 4. `Add Phase`로 페이즈를 만들고 체력, 첫 대기, 순차/무작위 선택, 반복 간격과 가속을 설정한다.
 5. 페이즈 오른쪽 `+`로 공격 패턴을 만든다. 상태가 유지되는 특수 규칙은 `+ 기믹 추가`, 단순 반복 시퀀스는 `Background timeline`을 사용한다.
 6. 반복해서 쓰는 조각은 HELPER PATTERNS에 만들고 CallEncounterPatternEvent로 호출한다.
-7. Resources/Patterns/BossCatalog의 bosses 목록에 추가한다. startingBoss 인덱스를 변경하면 그 보스로 일반 게임을 시작한다.
+7. Resources/Patterns/BossCatalog_Main의 bosses 목록에 추가한다. startingBoss 인덱스를 변경하면 그 보스로 일반 게임을 시작한다.
 
 새 보스 추가만으로 기존 휴면 허브의 스테이지 선택 UI/잠금 정책이 확장되지는 않는다. 현재 진입 선택은 BossCatalog가 담당한다.
 첫 페이즈 체력이 0이면 다음 페이즈로 전환하고 마지막 페이즈에서 0이 되면 클리어한다.
 최고 기록은 보스 id별로 분리하며 기본 골렘은 기존 PlayerPrefs 기록 키를 유지한다.
 
-기존 골렘의 주 공격 문양과 위치 지정 견제는 이제 `CrimsonGolem.asset` 하나에 인라인 패턴으로 저장해 실행한다.
+기존 골렘의 주 공격 문양과 위치 지정 견제는 이제 `BossData_CrimsonGolem.asset` 하나에 인라인 패턴으로 저장해 실행한다.
 2페이즈의 기존 수정 4개/체력 절반 재배치는 **수정 봉인 기믹**으로 교체했다. 지정 위치의 5개 수정은 통과 가능하며 완성된 경로 공격으로 해제한다. 모두 해제하는 공격까지 체력 1 보호가 유지되고 다음 공격부터 처치할 수 있다. 편집 방법과 확장 계약은 [보스 기믹 가이드](BossMechanics.md)를 참고한다.
 기존 위치 지정 견제 코루틴은 문양 예고를 잠시 지연시켰지만 새 패턴은 작성한 절대 시간대로 병렬 발동한다. 전체 난이도가 이전과 프레임 단위로 동일하다는 의미는 아니다.
 기본 타일 공격 효과음은 에셋으로 편집할 수 있도록 Warning/Impact WAV가 포함되어 있다.
