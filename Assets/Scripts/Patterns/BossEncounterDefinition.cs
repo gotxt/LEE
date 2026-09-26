@@ -211,11 +211,20 @@ namespace NHN.TraceStrike.Patterns
             foreach (var pattern in AllPatterns()) ValidateBossEvents(pattern, inspected, errors);
 
             var ids = new HashSet<string>();
+            HashSet<Vector2Int> floor = arena != null && arena.size >= 5 &&
+                arena.size <= TrailFieldModel.MaxSize ? arena.GetCells() : null;
             foreach (EncounterPattern pattern in AllPatterns())
             {
                 if (string.IsNullOrWhiteSpace(pattern.id)) errors.Add("Every pattern requires an ID.");
                 else if (!ids.Add(pattern.id)) errors.Add("Duplicate pattern ID: " + pattern.id);
                 errors.AddRange(PatternValidation.Errors(pattern, FindPattern));
+                if (floor != null && pattern.locationGroups != null)
+                    foreach (var group in pattern.locationGroups)
+                        if (group != null && group.source == PatternLocationSource.RandomWalkable &&
+                            group.restrictRandomCells && group.randomCells != null)
+                            foreach (var cell in group.randomCells)
+                                if (!floor.Contains(cell))
+                                    errors.Add(pattern.name + "/" + group.name + ": random candidate is not a floor tile: " + cell);
             }
 
             if (phases != null)

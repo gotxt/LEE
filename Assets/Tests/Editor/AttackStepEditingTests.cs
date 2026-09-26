@@ -77,6 +77,98 @@ namespace NHN.TraceStrike.Tests
         }
 
         [Test]
+        public void SequentialAttacksShareOneRandomLocationButKeepTheirOwnOffsets()
+        {
+            var group = new PatternLocationGroup { id = "shared-random", source = PatternLocationSource.RandomWalkable };
+            Pattern.locationGroups.Add(group);
+            var first = AttackStepEditing.Add(Pattern, 0);
+            first.Tiles.locationGroupId = group.id;
+            first.Tiles.cells.Add(Vector2Int.zero);
+            AttackStepEditing.SynchronizeArea(first);
+            var second = AttackStepEditing.Duplicate(Pattern, first, 2);
+            second.Tiles.cells.Clear(); second.Tiles.cells.Add(Vector2Int.right);
+            AttackStepEditing.SynchronizeArea(second);
+
+            using (var host = new PatternPreviewHost(boss.arena))
+            using (var context = new PatternContext(host, host.CenterCell, locationSeed: 42))
+            using (var runner = new PatternRunner(Pattern, context))
+            {
+                Vector2Int origin = context.Location(group.id);
+                CollectionAssert.Contains(host.Traversable.ToArray(), origin);
+                runner.Advance(0);
+                CollectionAssert.AreEquivalent(new[] { origin }, host.marks.Values.SelectMany(m => m.Cells));
+                host.player = origin + Vector2Int.up;
+                runner.Advance(2f);
+                CollectionAssert.AreEquivalent(host.Walkable.Contains(origin + Vector2Int.right)
+                    ? new[] { origin + Vector2Int.right } : new Vector2Int[0],
+                    host.marks.Values.SelectMany(m => m.Cells));
+                Assert.AreEqual(origin, context.Location(group.id));
+                Assert.AreNotEqual(first.Key, second.Key, "Each attack still needs its own warning/damage area snapshot.");
+            }
+        }
+
+        [Test]
+        public void CopyingPatternPreservesLocationGroupsAndReferences()
+        {
+            var group = new PatternLocationGroup { id = "spot", name = "첫 위치", source = PatternLocationSource.FixedCell,
+                fixedCell = new Vector2Int(9, 8) };
+            Pattern.locationGroups.Add(group);
+            var step = AttackStepEditing.Add(Pattern, 0);
+            step.Tiles.locationGroupId = group.id;
+            AttackStepEditing.SynchronizeArea(step);
+            var copy = (EncounterPattern)typeof(BossEncounterEditorWindow)
+                .GetMethod("ClonePattern", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { Pattern });
+            Assert.AreNotSame(group, copy.locationGroups[0]);
+            Assert.AreEqual(group.id, copy.locationGroups[0].id);
+            Assert.AreEqual(group.id, AttackStepEditing.Find(copy).Single().Tiles.locationGroupId);
+            Assert.IsEmpty(PatternValidation.Errors(copy));
+        }
+
+        [Test]
+        public void AssigningSharedLocationKeepsThePaintedAreaThenMovesWithItsGroup()
+        {
+            var group = new PatternLocationGroup { id = "fixed-group", source = PatternLocationSource.FixedCell,
+                fixedCell = new Vector2Int(9, 8) };
+            Pattern.locationGroups.Add(group);
+            var step = AttackStepEditing.Add(Pattern, 0);
+            step.Tiles.cells.Add(new Vector2Int(6, 8));
+            AttackStepEditing.SynchronizeArea(step);
+            var window = ScriptableObject.CreateInstance<BossEncounterEditorWindow>();
+            try
+            {
+                var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                typeof(BossEncounterEditorWindow).GetMethod("SelectEncounter", flags).Invoke(window, new object[] { boss });
+                typeof(BossEncounterEditorWindow).GetField("node", flags).SetValue(window,
+                    System.Enum.Parse(typeof(BossEncounterEditorWindow).GetNestedType("NodeKind", BindingFlags.NonPublic), "Pattern"));
+                typeof(BossEncounterEditorWindow).GetField("phaseIndex", flags).SetValue(window, 0);
+                typeof(BossEncounterEditorWindow).GetField("patternIndex", flags).SetValue(window, 0);
+                var positions = (System.Collections.Generic.Dictionary<string, Vector2Int>)
+                    typeof(BossEncounterEditorWindow).GetField("previewLocations", flags).GetValue(window);
+                positions[group.id] = group.fixedCell;
+                typeof(BossEncounterEditorWindow).GetMethod("AssignLocationGroup", flags)
+                    .Invoke(window, new object[] { step.Tiles, group.id });
+                AttackStepEditing.SynchronizeArea(step);
+                Assert.AreEqual(new Vector2Int(-3, 0), step.Tiles.cells.Single());
+                var host = new PatternPreviewHost(boss.arena);
+                using (var context = new PatternContext(host, host.CenterCell))
+                {
+                    context.InitializeLocations(Pattern.locationGroups);
+                    CollectionAssert.AreEquivalent(new[] { new Vector2Int(6, 8) }, step.Tiles.Resolve(context));
+                }
+                group.fixedCell = new Vector2Int(10, 8);
+                using (var context = new PatternContext(host, host.CenterCell))
+                {
+                    context.InitializeLocations(Pattern.locationGroups);
+                    CollectionAssert.AreEquivalent(new[] { new Vector2Int(7, 8) }, step.Tiles.Resolve(context));
+                    CollectionAssert.AreEquivalent(step.Tiles.Resolve(context),
+                        ((DamageEvent)step.Damage.action).tiles.Resolve(context));
+                }
+                host.Dispose();
+            }
+            finally { Object.DestroyImmediate(window); }
+        }
+
+        [Test]
         public void ChangingLegacyTimingMovesItsSoundCameraAndVfxButNotOtherEvents()
         {
             var a = AttackStepEditing.Add(Pattern, 0);
@@ -164,7 +256,13 @@ namespace NHN.TraceStrike.Tests
         [UnityTest]
         public IEnumerator SimpleAndAdvancedWindowViewsRenderWithoutGuiErrors()
         {
-            var step = AttackStepEditing.Add(Pattern, 0); step.Tiles.cells.Add(new Vector2Int(8, 8));
+            var group = new PatternLocationGroup { id = "gui-location", source = PatternLocationSource.RandomWalkable,
+                restrictRandomCells = true,
+                randomCells = new System.Collections.Generic.List<Vector2Int> { new Vector2Int(8, 8) } };
+            Pattern.locationGroups.Add(group);
+            var step = AttackStepEditing.Add(Pattern, 0);
+            step.Tiles.locationGroupId = group.id;
+            step.Tiles.cells.Add(Vector2Int.zero);
             AttackStepEditing.SynchronizeArea(step);
             var window = ScriptableObject.CreateInstance<BossEncounterEditorWindow>();
             try

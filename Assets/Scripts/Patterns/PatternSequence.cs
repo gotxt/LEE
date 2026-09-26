@@ -31,6 +31,19 @@ namespace NHN.TraceStrike.Patterns
         public IReadOnlyList<PatternClip> Clips => clips;
     }
 
+    public enum PatternLocationSource { Center, PlayerAtStart, CallerOrigin, FixedCell, RandomWalkable }
+
+    [Serializable]
+    public sealed class PatternLocationGroup
+    {
+        public string id = Guid.NewGuid().ToString("N");
+        public string name = "위치 그룹";
+        public PatternLocationSource source = PatternLocationSource.RandomWalkable;
+        public Vector2Int fixedCell;
+        public bool restrictRandomCells;
+        [HideInInspector] public List<Vector2Int> randomCells = new List<Vector2Int>();
+    }
+
     [Serializable]
     public sealed class EncounterPattern : IPatternTimeline
     {
@@ -38,6 +51,7 @@ namespace NHN.TraceStrike.Patterns
         public string name = "New Pattern";
         public bool enabled = true;
         [Min(0)] public float minimumDuration = 1f;
+        public List<PatternLocationGroup> locationGroups = new List<PatternLocationGroup>();
         public List<PatternClip> clips = new List<PatternClip>();
 
         public string TimelineName => name;
@@ -114,21 +128,61 @@ namespace NHN.TraceStrike.Patterns
         public readonly int Depth;
         public readonly Func<string, EncounterPattern> ResolveEncounterPattern;
         public readonly Dictionary<string, HashSet<Vector2Int>> Selections = new Dictionary<string, HashSet<Vector2Int>>();
+        private readonly Dictionary<string, Vector2Int> locations = new Dictionary<string, Vector2Int>();
+        private readonly System.Random locationRandom;
         private readonly Dictionary<string, List<IDisposable>> resources = new Dictionary<string, List<IDisposable>>();
         private readonly string scope = Guid.NewGuid().ToString("N");
         public string ObjectKey(string key) => key == "$boss" ? key : scope + "/" + key;
         public PatternContext(IPatternHost host, Vector2Int origin, int depth = 0,
-            Func<string, EncounterPattern> resolveEncounterPattern = null)
+            Func<string, EncounterPattern> resolveEncounterPattern = null, int? locationSeed = null)
         {
             Host = host;
             Origin = origin;
             Depth = depth;
             ResolveEncounterPattern = resolveEncounterPattern;
+            locationRandom = new System.Random(locationSeed ?? Guid.NewGuid().GetHashCode());
         }
 
         public PatternContext CreateChild(Vector2Int origin)
         {
-            return new PatternContext(Host, origin, Depth + 1, ResolveEncounterPattern);
+            return new PatternContext(Host, origin, Depth + 1, ResolveEncounterPattern, locationRandom.Next());
+        }
+        public Vector2Int Location(string id)
+        {
+            if (locations.TryGetValue(id, out var cell)) return cell;
+            throw new InvalidOperationException("Missing pattern location group: " + id);
+        }
+        public bool TryGetLocation(string id, out Vector2Int cell) => locations.TryGetValue(id, out cell);
+        public void InitializeLocations(IReadOnlyList<PatternLocationGroup> groups)
+        {
+            if (groups == null) return;
+            foreach (var group in groups)
+            {
+                if (group == null || string.IsNullOrWhiteSpace(group.id) || locations.ContainsKey(group.id))
+                    throw new InvalidOperationException("Invalid or duplicate pattern location group.");
+                Vector2Int cell;
+                switch (group.source)
+                {
+                    case PatternLocationSource.Center: cell = Host.CenterCell; break;
+                    case PatternLocationSource.PlayerAtStart: cell = Host.PlayerCell; break;
+                    case PatternLocationSource.CallerOrigin: cell = Origin; break;
+                    case PatternLocationSource.FixedCell: cell = group.fixedCell; break;
+                    case PatternLocationSource.RandomWalkable:
+                        var traversable = new HashSet<Vector2Int>(Host.Traversable);
+                        var choices = group.restrictRandomCells
+                            ? new List<Vector2Int>(group.randomCells ?? new List<Vector2Int>())
+                            : new List<Vector2Int>(traversable);
+                        choices.RemoveAll(candidate => !traversable.Contains(candidate));
+                        choices = new List<Vector2Int>(new HashSet<Vector2Int>(choices));
+                        choices.Sort((a, b) => a.y != b.y ? a.y.CompareTo(b.y) : a.x.CompareTo(b.x));
+                        if (choices.Count == 0)
+                            throw new InvalidOperationException("No traversable candidate tile for random pattern location.");
+                        cell = choices[locationRandom.Next(choices.Count)];
+                        break;
+                    default: throw new InvalidOperationException("Unknown pattern location source.");
+                }
+                locations.Add(group.id, cell);
+            }
         }
         public T Own<T>(T resource, string key = "") where T : IDisposable
         {
@@ -185,6 +239,20 @@ namespace NHN.TraceStrike.Patterns
             { errors.Add(pattern.name + ": recursive pattern call or depth > 16."); return; }
             if (!Finite(pattern.minimumDuration) || pattern.minimumDuration < 0)
                 errors.Add(pattern.name + ": invalid duration.");
+            var groupIds = new HashSet<string>();
+            if (pattern.locationGroups != null)
+                foreach (var group in pattern.locationGroups)
+                {
+                    if (group == null || string.IsNullOrWhiteSpace(group.id))
+                        errors.Add(pattern.name + ": location group needs an ID.");
+                    else if (!groupIds.Add(group.id))
+                        errors.Add(pattern.name + ": duplicate location group ID " + group.id + ".");
+                    if (group != null && !Enum.IsDefined(typeof(PatternLocationSource), group.source))
+                        errors.Add(pattern.name + ": invalid location source.");
+                    if (group != null && group.source == PatternLocationSource.RandomWalkable &&
+                        group.restrictRandomCells && (group.randomCells == null || group.randomCells.Count == 0))
+                        errors.Add(pattern.name + ": random location group needs at least one candidate tile.");
+                }
             foreach (var clip in pattern.clips)
             {
                 if (clip == null || !clip.enabled) continue;
@@ -193,6 +261,10 @@ namespace NHN.TraceStrike.Patterns
                 if (clip.action == null)
                 { errors.Add(pattern.name + "/" + clip.label + ": missing event type."); continue; }
                 clip.action.Validate(errors, clip.duration);
+                var tiles = EventTiles(clip.action);
+                if (tiles != null && !string.IsNullOrEmpty(tiles.locationGroupId) &&
+                    !groupIds.Contains(tiles.locationGroupId))
+                    errors.Add(pattern.name + "/" + clip.label + ": missing location group " + tiles.locationGroupId + ".");
                 if (clip.action is CallEncounterPatternEvent local)
                 {
                     EncounterPattern child = resolver?.Invoke(local.patternId);
@@ -221,12 +293,17 @@ namespace NHN.TraceStrike.Patterns
                     errors.Add(sequence.name + "/" + clip.label + ": invalid timing.");
                 if (clip.action == null) { errors.Add(sequence.name + "/" + clip.label + ": missing event type."); continue; }
                 clip.action.Validate(errors, clip.duration);
+                var tiles = EventTiles(clip.action);
+                if (tiles != null && !string.IsNullOrEmpty(tiles.locationGroupId))
+                    errors.Add(sequence.name + "/" + clip.label + ": location groups require a boss encounter pattern.");
                 if (clip.action is CallPatternEvent call) Visit(call.pattern, path, errors, depth + 1);
                 else if (clip.action is CallEncounterPatternEvent)
                     errors.Add(sequence.name + ": encounter-local calls are only valid inside a Boss Encounter Definition.");
             }
             path.Remove(sequence);
         }
+        private static TileSelection EventTiles(PatternEvent action) =>
+            action.GetType().GetField("tiles")?.GetValue(action) as TileSelection;
         private static bool Finite(float n) => !float.IsNaN(n) && !float.IsInfinity(n);
     }
 }

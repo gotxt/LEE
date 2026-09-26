@@ -247,9 +247,12 @@ namespace NHN.TraceStrike.Editor
                 if (GUILayout.Button("현재 모양을 유지하고 직접 칠하기"))
                 {
                     BeginPaint("Convert event area to cells");
-                    var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
-                    using (var context = new PatternContext(host, PreviewOrigin))
+                    using (var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer })
+                    using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
+                    {
+                        context.InitializeLocations(CurrentPattern()?.locationGroups);
                         tiles.cells = tiles.Resolve(context).Select(c => c - PaintOrigin(tiles)).ToList();
+                    }
                     tiles.shape = TileShape.Cells;
                     Changed();
                 }

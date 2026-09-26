@@ -25,7 +25,7 @@ namespace NHN.TraceStrike.Patterns
             : this(ValidatedClips(sequence), sequence.Duration, context) { }
 
         public PatternRunner(EncounterPattern sequence, PatternContext context)
-            : this(ValidatedClips(sequence, context.ResolveEncounterPattern), sequence.Duration, context) { }
+            : this(ValidatedClips(sequence, context), sequence.Duration, context) { }
 
         private static IReadOnlyList<PatternClip> ValidatedClips(PatternSequence sequence)
         {
@@ -35,10 +35,11 @@ namespace NHN.TraceStrike.Patterns
         }
 
         private static IReadOnlyList<PatternClip> ValidatedClips(EncounterPattern sequence,
-            Func<string, EncounterPattern> resolver)
+            PatternContext context)
         {
-            var errors = PatternValidation.Errors(sequence, resolver);
+            var errors = PatternValidation.Errors(sequence, context.ResolveEncounterPattern);
             if (errors.Count > 0) throw new InvalidOperationException(string.Join("\n", errors));
+            context.InitializeLocations(sequence.locationGroups);
             return sequence.clips;
         }
 

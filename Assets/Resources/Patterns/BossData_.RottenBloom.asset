@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96e060000004acaa500000000000002, type: 3}
+  m_Name: BossData_.RottenBloom
+  m_EditorClassIdentifier: Assembly-CSharp::NHN.TraceStrike.Patterns.BossEncounterDefinition
+  id: rotten-bloom
+  displayName: "\uBD80\uD328\uD654"
+  portrait: {fileID: 0}
+  bossVisual:
+    prefab: {fileID: 0}
+    position: {x: 8, y: 8}
+    size: 1
+    animationLayer: 0
+    idleState: 
+  arena:
+    size: 17
+    shape: 0
+    floorCells: []
+    defaultTileSprite: {fileID: 0}
+    tilePalette: []
+    tileImages: []
+    cameraZoom: 2.05
+    playerSizeRatio: 0.78
+    overridePlayerStart: 0
+    playerStart: {x: 8, y: 8}
+    restrictStartCells: 0
+    startCells: []
+    restrictEndCells: 0
+    endCells: []
+  libraryPatterns: []
+  phases:
+  - name: Phase
+    health: 150
+    initialDelay: 2.4
+    interval: 1.85
+    acceleration: 0.1
+    minimumInterval: 0.45
+    shuffle: 0
+    patterns:
+    - id: 2e4a09d96e2a457498b3f9423272e343
+      name: New Pattern
+      enabled: 1
+      minimumDuration: 1
+      clips: []
+    backgroundEnabled: 0
+    background:
+      id: 8635e8c71a954397806ecb934619ad28
+      name: Background
+      enabled: 1
+      minimumDuration: 1
+      clips: []
+    mechanics: []
+    legacyCrystals: 0
+  references:
+    version: 2
+    RefIds: []

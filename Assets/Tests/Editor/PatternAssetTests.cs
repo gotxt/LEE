@@ -109,6 +109,28 @@ namespace NHN.TraceStrike.Tests
             }
             finally { Object.DestroyImmediate(a); Object.DestroyImmediate(b); }
         }
+        [Test]
+        public void PatternLocationGroupsSurviveEditorJsonRoundTrip()
+        {
+            var original = ScriptableObject.CreateInstance<BossEncounterDefinition>();
+            var restored = ScriptableObject.CreateInstance<BossEncounterDefinition>();
+            try
+            {
+                var pattern = original.phases[0].patterns[0];
+                pattern.locationGroups.Add(new PatternLocationGroup { id = "random-area", name = "폭발 기준",
+                    source = PatternLocationSource.RandomWalkable, restrictRandomCells = true,
+                    randomCells = new System.Collections.Generic.List<Vector2Int> { new Vector2Int(8, 8) } });
+                pattern.clips.Add(new PatternClip { action = new WarningEvent { tiles = new TileSelection
+                    { locationGroupId = "random-area" } } });
+                EditorJsonUtility.FromJsonOverwrite(EditorJsonUtility.ToJson(original), restored);
+                var copy = restored.phases[0].patterns[0];
+                Assert.AreEqual("폭발 기준", copy.locationGroups[0].name);
+                Assert.IsTrue(copy.locationGroups[0].restrictRandomCells);
+                CollectionAssert.AreEquivalent(new[] { new Vector2Int(8, 8) }, copy.locationGroups[0].randomCells);
+                Assert.AreEqual("random-area", ((WarningEvent)copy.clips[0].action).tiles.locationGroupId);
+            }
+            finally { Object.DestroyImmediate(original); Object.DestroyImmediate(restored); }
+        }
 
         [Test]
         public void PreviewGridCellsSharePixelSnappedBordersWithoutGaps()

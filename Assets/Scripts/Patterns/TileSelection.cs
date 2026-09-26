@@ -17,13 +17,16 @@ namespace NHN.TraceStrike.Patterns
         public List<Vector2Int> cells = new List<Vector2Int> { Vector2Int.zero };
         [Tooltip("Reuse the first resolved cells under this key within this sequence. Warning and damage should share a key.")]
         public string snapshotKey = "";
+        // A location is sampled once per pattern run; snapshotKey still owns one attack's final tile area.
+        [HideInInspector] public string locationGroupId = "";
         public bool ensureEscape;
 
         public HashSet<Vector2Int> Resolve(PatternContext context)
         {
             if (!string.IsNullOrEmpty(snapshotKey) && context.Selections.TryGetValue(snapshotKey, out var saved))
                 return new HashSet<Vector2Int>(saved);
-            Vector2Int origin = (anchor == TileAnchor.Center ? context.Host.CenterCell :
+            Vector2Int origin = (!string.IsNullOrEmpty(locationGroupId) ? context.Location(locationGroupId) :
+                anchor == TileAnchor.Center ? context.Host.CenterCell :
                 anchor == TileAnchor.Player ? context.Host.PlayerCell :
                 anchor == TileAnchor.Origin ? context.Origin : Vector2Int.zero) + offset;
             var result = new HashSet<Vector2Int>();

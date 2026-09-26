@@ -124,6 +124,50 @@ namespace NHN.TraceStrike.Tests
             }
         }
         [Test]
+        public void PlayerLocationGroupIsCapturedAtPatternStart()
+        {
+            var h = new Host { player = Vector2Int.right };
+            var pattern = new EncounterPattern { minimumDuration = 2 };
+            pattern.locationGroups.Add(new PatternLocationGroup
+                { id = "target", source = PatternLocationSource.PlayerAtStart });
+            pattern.clips.Add(Clip(1, 0.2f, new WarningEvent { tiles = new TileSelection
+                { locationGroupId = "target", shape = TileShape.Cells } }));
+            using (var context = new PatternContext(h, Vector2Int.zero))
+            using (var runner = new PatternRunner(pattern, context))
+            {
+                Assert.AreEqual(Vector2Int.right, context.Location("target"));
+                h.player = Vector2Int.up;
+                runner.Advance(1);
+                Assert.AreEqual(Vector2Int.right, context.Location("target"));
+            }
+        }
+        [Test]
+        public void UnknownLocationGroupIsRejectedBeforeExecution()
+        {
+            var h = new Host();
+            var pattern = new EncounterPattern();
+            pattern.clips.Add(Clip(0, 1, new WarningEvent { tiles = new TileSelection
+                { locationGroupId = "missing" } }));
+            Assert.IsNotEmpty(PatternValidation.Errors(pattern));
+            Assert.Throws<InvalidOperationException>(() =>
+                new PatternRunner(pattern, new PatternContext(h, Vector2Int.zero)));
+        }
+        [Test]
+        public void RestrictedRandomLocationUsesOnlyTraversableCandidateTiles()
+        {
+            var h = new Host();
+            var group = new PatternLocationGroup { id = "candidate", source = PatternLocationSource.RandomWalkable,
+                restrictRandomCells = true, randomCells = new List<Vector2Int> { Vector2Int.right, new Vector2Int(99, 99) } };
+            var pattern = new EncounterPattern();
+            pattern.locationGroups.Add(group);
+            using (var context = new PatternContext(h, Vector2Int.zero, locationSeed: 123))
+            using (var runner = new PatternRunner(pattern, context))
+                Assert.AreEqual(Vector2Int.right, context.Location(group.id));
+
+            group.randomCells.Clear();
+            Assert.IsNotEmpty(PatternValidation.Errors(pattern));
+        }
+        [Test]
         public void RuntimeStateIsNotSharedBetweenSimultaneousRuns()
         {
             var action = new DamageEvent(); var h1 = new Host(); var h2 = new Host();

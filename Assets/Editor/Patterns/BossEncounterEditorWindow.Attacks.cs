@@ -31,12 +31,16 @@ namespace NHN.TraceStrike.Editor
                     if (GUILayout.Button("패턴 복제", GUILayout.Width(85))) { DuplicateCurrentPattern(); GUIUtility.ExitGUI(); }
             }
             EditorGUILayout.HelpBox("① 공격 추가 → ② 목록에서 공격 선택 → ③ 맵에 영역 칠하기 → ④ 시간 조절 후 재생\n경고와 타격은 자동 연결됩니다. 같은 시간에 배치하면 동시에 공격합니다. 변경 후 상단의 ‘저장’을 누르세요.", MessageType.None);
+            DrawLocationGroups(pattern);
             using (new EditorGUILayout.HorizontalScope())
             {
                 if (GUILayout.Button("+ 다음 공격"))
                 {
                     BeginPaint("Add attack step");
                     var added = AttackStepEditing.Add(pattern, steps.Count == 0 ? 0 : steps.Max(s => s.End) + 0.25f);
+                    added.Tiles.locationGroupId = selected?.Tiles.locationGroupId ??
+                        (pattern.locationGroups?.Count == 1 ? pattern.locationGroups[0].id : "");
+                    AttackStepEditing.SynchronizeArea(added);
                     if (previewOriginOverride)
                     { added.Tiles.anchor = TileAnchor.Origin; AttackStepEditing.SynchronizeArea(added); }
                     added.Warning.attackName = (steps.Count + 1) + "차 공격";
@@ -117,7 +121,9 @@ namespace NHN.TraceStrike.Editor
                 var step = steps[i]; float y = area.y + 25 + i * 30;
                 Rect row = new Rect(area.x, y, area.width, 27);
                 if (step == selected) EditorGUI.DrawRect(row, new Color(0.22f, 0.32f, 0.4f, 0.75f));
-                GUI.Label(new Rect(area.x + 4, y, 184, 25), $"{i + 1}. {step.Name}" + (step.Warning.enabled ? "" : " (꺼짐)"));
+                string groupName = pattern.locationGroups?.FirstOrDefault(g => g != null && g.id == step.Tiles.locationGroupId)?.name;
+                GUI.Label(new Rect(area.x + 4, y, 184, 25), $"{i + 1}. {step.Name}" +
+                    (string.IsNullOrEmpty(groupName) ? "" : " [" + groupName + "]") + (step.Warning.enabled ? "" : " (꺼짐)"));
                 Rect warning = new Rect(area.x + 190 + step.Warning.start * pixelsPerSecond, y + 3,
                     Mathf.Max(2, step.Warning.duration * pixelsPerSecond), 20);
                 Rect impact = new Rect(area.x + 190 + step.Damage.start * pixelsPerSecond, y + 3,
@@ -157,9 +163,13 @@ namespace NHN.TraceStrike.Editor
             EditorGUILayout.HelpBox($"경고 {step.Warning.start:0.##}초 → 타격 {step.Damage.start:0.##}초\n다른 공격과 시간이 겹쳐도 괜찮습니다.", MessageType.None);
             EditorGUILayout.LabelField("공격 영역", EditorStyles.boldLabel);
             var tiles = step.Tiles;
+            DrawLocationGroupPicker(pattern, tiles);
             EditorGUI.BeginChangeCheck();
             int shape = EditorGUILayout.Popup("영역 모양", (int)tiles.shape, new[] { "직접 칠하기", "전체 바닥", "십자", "마름모 테두리", "대각선", "십자 + 마름모", "가로 줄무늬", "세로 줄무늬", "정사각형", "체크무늬" });
-            int anchor = EditorGUILayout.Popup("위치 기준", (int)tiles.anchor, new[] { "맵 중앙", "경고 시작 시 플레이어", "기믹 / 호출 위치", "맵 고정 좌표" });
+            int anchor = (int)tiles.anchor;
+            if (string.IsNullOrEmpty(tiles.locationGroupId))
+                anchor = EditorGUILayout.Popup("개별 위치 기준", anchor, new[] { "맵 중앙", "경고 시작 시 플레이어", "기믹 / 호출 위치", "맵 고정 좌표" });
+            else EditorGUILayout.LabelField("위치 기준", "위의 공유 그룹을 따름");
             Vector2Int offset = EditorGUILayout.Vector2IntField("위치 보정 (칸)", tiles.offset);
             int radius = tiles.radius;
             if (shape == (int)TileShape.Diamond || shape == (int)TileShape.Combined || shape == (int)TileShape.Rectangle || shape == (int)TileShape.Checker)
@@ -170,9 +180,12 @@ namespace NHN.TraceStrike.Editor
                 BeginPaint("Edit attack area");
                 if (shape == (int)TileShape.Cells && tiles.shape != TileShape.Cells)
                 {
-                    var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
-                    using (var context = new PatternContext(host, PreviewOrigin))
+                    using (var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer })
+                    using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
+                    {
+                        context.InitializeLocations(pattern.locationGroups);
                         tiles.cells = tiles.Resolve(context).Select(c => c - PaintOrigin(tiles)).ToList();
+                    }
                 }
                 tiles.shape = (TileShape)shape; tiles.anchor = (TileAnchor)anchor;
                 tiles.offset = offset; tiles.radius = radius; tiles.ensureEscape = escape;
@@ -180,7 +193,7 @@ namespace NHN.TraceStrike.Editor
             }
             if (tiles.shape == TileShape.Cells && tiles.cells.Count == 0)
                 EditorGUILayout.HelpBox("아직 공격 영역이 없습니다. 오른쪽 맵을 클릭·드래그해서 칠하세요.", MessageType.Warning);
-            EditorGUILayout.LabelField("경고·타격·연결된 이펙트가 같은 영역을 사용합니다. 다른 공격의 영역에는 영향을 주지 않습니다.", EditorStyles.wordWrappedMiniLabel);
+            EditorGUILayout.LabelField("경고·타격·연결된 이펙트는 같은 영역을 사용합니다. 같은 위치 그룹의 다른 공격은 기준 위치만 공유하고 영역·시간은 따로 설정합니다.", EditorStyles.wordWrappedMiniLabel);
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("소리 (선택 사항)", EditorStyles.boldLabel);
             DrawAttackSound(pattern, step, false);
@@ -210,8 +223,16 @@ namespace NHN.TraceStrike.Editor
         private HashSet<Vector2Int> SelectionOverlay(TileSelection tiles)
         {
             if (tiles == null || !showSelectedAttackArea) return null;
-            var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
-            using (var context = new PatternContext(host, PreviewOrigin)) return tiles.Resolve(context);
+            try
+            {
+                using (var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer })
+                using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
+                {
+                    context.InitializeLocations(CurrentPattern()?.locationGroups);
+                    return tiles.Resolve(context);
+                }
+            }
+            catch (System.InvalidOperationException) { return null; }
         }
     }
 }

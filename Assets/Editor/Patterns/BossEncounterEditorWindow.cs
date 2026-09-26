@@ -89,6 +89,8 @@ namespace NHN.TraceStrike.Editor
             DisposePreview();
             encounter = value;
             previewOriginOverride = false; selectedDevice = -1; originPhase = originMechanic = -1;
+            selectedLocationGroup = -1;
+            editRandomLocationCells = false;
             if (value != null && value.arena != null)
                 previewPlayer = value.arena.overridePlayerStart ? value.arena.playerStart : value.arena.CenterCell;
             serialized = value != null ? new SerializedObject(value) : null;
@@ -127,6 +129,7 @@ namespace NHN.TraceStrike.Editor
                         if (pattern != null && attackEditorMode == 0) DrawAttackDesigner(pattern);
                         else
                         {
+                            if (pattern != null) DrawLocationGroups(pattern);
                             if (pattern != null) DrawTimeline(pattern);
                             else DrawOverview();
                             DrawLowerPanel(pattern);
@@ -250,6 +253,8 @@ namespace NHN.TraceStrike.Editor
             phaseIndex = phase;
             patternIndex = pattern;
             selectedClip = -1;
+            selectedLocationGroup = -1;
+            editRandomLocationCells = false;
             playhead = 0f;
             playing = false;
             RebuildPreview();
@@ -444,6 +449,13 @@ namespace NHN.TraceStrike.Editor
                     SerializedProperty clips = property.FindPropertyRelative("clips");
                     SerializedProperty selectedProperty = clips.GetArrayElementAtIndex(selectedClip);
                     EditorGUILayout.PropertyField(selectedProperty, true);
+                    TileSelection eventTiles = SelectedTiles(pattern);
+                    if (eventTiles != null)
+                    {
+                        DrawLocationGroupPicker(pattern, eventTiles);
+                        if (!string.IsNullOrEmpty(eventTiles.locationGroupId))
+                            EditorGUILayout.LabelField("이 이벤트의 위치 기준은 공유 위치 그룹이 우선합니다.", EditorStyles.wordWrappedMiniLabel);
+                    }
                     DrawEncounterCallPicker(pattern, selectedProperty);
                     using (new EditorGUILayout.HorizontalScope())
                     {
@@ -534,9 +546,28 @@ namespace NHN.TraceStrike.Editor
                 if (GUILayout.Button("기믹 배치로 돌아가기"))
                 { SelectNode(NodeKind.Mechanic, originPhase, originMechanic); GUIUtility.ExitGUI(); }
             }
+            if (pattern.locationGroups != null && pattern.locationGroups.Any(g => g != null &&
+                g.source == PatternLocationSource.RandomWalkable))
+            {
+                if (GUILayout.Button("랜덤 위치 다시 뽑기"))
+                {
+                    playing = false;
+                    previewLocationSeed = unchecked(previewLocationSeed + 1);
+                    RebuildPreview(); GUIUtility.ExitGUI();
+                }
+            }
             TileSelection selectedTiles = SelectedTiles(pattern);
-            DrawEventPaintTools(selectedTiles);
-            var paintedCells = SelectionOverlay(selectedTiles);
+            PatternLocationGroup editingLocation = EditingRandomLocationGroup(pattern);
+            if (editingLocation != null)
+            {
+                randomLocationBrush = GUILayout.Toolbar(randomLocationBrush, new[] { "랜덤 후보 추가", "후보 지우개" });
+                EditorGUILayout.LabelField("파란 칸 중 한 곳을 패턴 시작 때 뽑습니다. 우클릭 또는 Shift+드래그로 지울 수도 있습니다.",
+                    EditorStyles.wordWrappedMiniLabel);
+            }
+            else DrawEventPaintTools(selectedTiles);
+            var paintedCells = editingLocation == null ? SelectionOverlay(selectedTiles) : null;
+            var locationCandidates = editingLocation?.randomCells != null
+                ? new HashSet<Vector2Int>(editingLocation.randomCells) : null;
             float edge = Mathf.Max(Mathf.Min(300f, position.width * 0.32f), encounter.arena.GridSize * 14f);
             Rect board = GUILayoutUtility.GetRect(edge, edge, GUILayout.ExpandWidth(false));
             var tileSprites = encounter.arena.BuildTileSpriteLookup();
@@ -552,6 +583,8 @@ namespace NHN.TraceStrike.Editor
                 EditorGUI.DrawRect(rect, color);
                 if (previewHost != null && previewHost.Walkable.Contains(cell) &&
                     PatternPreviewGridGUI.DrawTileSprite(rect, encounter.arena.ResolveTileSprite(cell, tileSprites))) Repaint();
+                if (locationCandidates != null && locationCandidates.Contains(cell))
+                    EditorGUI.DrawRect(rect, new Color(0.16f, 0.72f, 0.95f, 0.4f));
                 if (orderedMarks != null)
                     foreach (var mark in orderedMarks)
                         if (mark.Cells.Contains(cell)) EditorGUI.DrawRect(rect, mark.Color);
@@ -565,8 +598,12 @@ namespace NHN.TraceStrike.Editor
                 bossPreview.Render();
                 GUI.DrawTexture(board, bossPreview.Texture, ScaleMode.StretchToFill, true);
             }
-            HandleEventPainting(board, selectedTiles);
-            EditorGUILayout.LabelField("클릭·드래그: 칠하기 · 우클릭/Shift: 지우기 · 플레이어 이동: 위치 도구",
+            DrawPreviewLocations(pattern, board, selectedTiles);
+            if (editingLocation != null) HandleRandomLocationPainting(board, editingLocation);
+            else HandleEventPainting(board, selectedTiles);
+            EditorGUILayout.LabelField(editingLocation != null
+                ? "클릭·드래그: 랜덤 후보 타일 편집 · 우클릭/Shift: 지우기"
+                : "클릭·드래그: 칠하기 · 우클릭/Shift: 지우기 · 플레이어 이동: 위치 도구",
                 EditorStyles.wordWrappedMiniLabel);
             if (!string.IsNullOrEmpty(previewError))
                 EditorGUILayout.HelpBox(previewError, MessageType.Warning);
@@ -760,7 +797,10 @@ namespace NHN.TraceStrike.Editor
                 id = source.id,
                 name = source.name,
                 enabled = source.enabled,
-                minimumDuration = source.minimumDuration
+                minimumDuration = source.minimumDuration,
+                locationGroups = source.locationGroups?.Where(group => group != null)
+                    .Select(group => JsonUtility.FromJson<PatternLocationGroup>(JsonUtility.ToJson(group))).ToList()
+                    ?? new List<PatternLocationGroup>()
             };
             foreach (PatternClip clip in source.clips) copy.clips.Add(CloneClip(clip, true));
             return copy;
@@ -821,11 +861,8 @@ namespace NHN.TraceStrike.Editor
 
         private Vector2Int PaintOrigin(TileSelection tiles)
         {
-            Vector2Int center = new Vector2Int(encounter.arena.GridSize / 2,
-                encounter.arena.GridSize / 2);
-            return (tiles.anchor == TileAnchor.Absolute ? Vector2Int.zero :
-                tiles.anchor == TileAnchor.Player ? previewPlayer :
-                tiles.anchor == TileAnchor.Origin ? PreviewOrigin : center) + tiles.offset;
+            return (string.IsNullOrEmpty(tiles.locationGroupId)
+                ? LegacyPaintBase(tiles) : PreviewLocation(tiles.locationGroupId)) + tiles.offset;
         }
 
         private void RebuildPreview()
@@ -843,8 +880,13 @@ namespace NHN.TraceStrike.Editor
                     bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true);
                     previewHost.boss = bossPreview.Presentation;
                 }
-                previewRunner = new PatternRunner(pattern, new PatternContext(previewHost,
-                    PreviewOrigin, 0, encounter.FindPattern));
+                var context = new PatternContext(previewHost,
+                    PreviewOrigin, 0, encounter.FindPattern, previewLocationSeed);
+                previewRunner = new PatternRunner(pattern, context);
+                if (pattern.locationGroups != null)
+                    foreach (var group in pattern.locationGroups)
+                        if (group != null && context.TryGetLocation(group.id, out var cell))
+                            previewLocations[group.id] = cell;
                 previewRunner.Advance(0f);
                 float remaining = playhead;
                 while (remaining > 0f && !previewRunner.IsComplete)
@@ -863,6 +905,7 @@ namespace NHN.TraceStrike.Editor
 
         private void DisposePreview()
         {
+            previewLocations.Clear();
             if (previewHost != null) previewHost.RequiredCellsProvider = null;
             try { mechanicPreview?.Dispose(); } catch { }
             mechanicPreview = null;

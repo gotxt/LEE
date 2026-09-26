@@ -1994,6 +1994,7 @@ MonoBehaviour:
     name: Targeted
     enabled: 1
     minimumDuration: 0.85
+    locationGroups: []
     clips:
     - enabled: 1
       label: Target warning
@@ -2026,6 +2027,7 @@ MonoBehaviour:
     name: Example_Devices
     enabled: 1
     minimumDuration: 6
+    locationGroups: []
     clips:
     - enabled: 1
       label: Spawn device
@@ -2085,6 +2087,7 @@ MonoBehaviour:
     name: "\uC218\uC815 \uC8FC\uBCC0 \uACF5\uACA9"
     enabled: 1
     minimumDuration: 1.05
+    locationGroups: []
     clips:
     - enabled: 1
       label: Crystal Warning
@@ -2126,6 +2129,7 @@ MonoBehaviour:
       name: "\uC7A1 \uD328\uD134"
       enabled: 0
       minimumDuration: 2.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -2185,6 +2189,7 @@ MonoBehaviour:
       name: "\uD53C\uC790"
       enabled: 0
       minimumDuration: 2.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -2406,6 +2411,7 @@ MonoBehaviour:
       name: P1_Diagonal_1
       enabled: 0
       minimumDuration: 2.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -2465,6 +2471,7 @@ MonoBehaviour:
       name: P1_Diamond_0
       enabled: 0
       minimumDuration: 2.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -2525,6 +2532,7 @@ MonoBehaviour:
         \uC2E4\uD589)"
       enabled: 0
       minimumDuration: 2.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -2746,6 +2754,7 @@ MonoBehaviour:
       name: "\uC8FC\uBA39 \uB0B4\uB824\uCE58\uAE30 \xB7 Fist Ripple"
       enabled: 1
       minimumDuration: 3.2
+      locationGroups: []
       clips:
       - enabled: 1
         label: "\uC8FC\uBA39 \uB4E4\uC5B4\uC62C\uB9AC\uAE30"
@@ -2940,6 +2949,7 @@ MonoBehaviour:
       name: "\uAD50\uCC28 \uB099\uC11D \xB7 Alternating Rockfall"
       enabled: 1
       minimumDuration: 2.48
+      locationGroups: []
       clips:
       - enabled: 1
         label: "1 \xB7 \uBE68\uAC04 \uBB36\uC74C \uB099\uC11D \uC900\uBE44"
@@ -3105,10 +3115,11 @@ MonoBehaviour:
         attackName: 
     backgroundEnabled: 0
     background:
-      id: 082aa40bdcaa4fa389d71300e18faaa2
+      id: 2ddc684917e640679e5175177b39de16
       name: Background
       enabled: 1
       minimumDuration: 1
+      locationGroups: []
       clips: []
     mechanics:
     - rid: 5560175835719663616
@@ -3119,12 +3130,13 @@ MonoBehaviour:
     interval: 1.05
     acceleration: 0.1
     minimumInterval: 0.45
-    shuffle: 0
+    shuffle: 1
     patterns:
     - id: p2-combined-0
       name: "\uBC94\uC704 \uD655\uC7A5"
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -3629,6 +3641,7 @@ MonoBehaviour:
       name: P2_Combined_1
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -3697,6 +3710,7 @@ MonoBehaviour:
       name: P2_Cross_0
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -3765,6 +3779,7 @@ MonoBehaviour:
       name: "\uCCB4\uD06C"
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -3833,6 +3848,7 @@ MonoBehaviour:
       name: P2_Diagonal_0
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -3901,6 +3917,7 @@ MonoBehaviour:
       name: P2_Diagonal_1
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -3969,6 +3986,14 @@ MonoBehaviour:
       name: "\uB2E4\uC774\uC544\uBAAC\uB4DC \uC5C5\uADF8\uB808\uC774\uB4DC"
       enabled: 1
       minimumDuration: 1.3
+      locationGroups:
+      - id: eea50951508844eaa4acf766d9acb745
+        name: "\uC704\uCE58 \uADF8\uB8F9 1"
+        source: 4
+        fixedCell: {x: 0, y: 0}
+        restrictRandomCells: 0
+        randomCells:
+        - {x: 30, y: 23}
       clips:
       - enabled: 1
         label: Warning
@@ -4280,6 +4305,7 @@ MonoBehaviour:
       name: P2_Diamond_1
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -4287,7 +4313,7 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 95
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -4296,7 +4322,7 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 96
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -4305,8 +4331,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 97
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact SFX
@@ -4314,8 +4340,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 98
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact VFX
@@ -4323,8 +4349,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 99
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Camera
@@ -4332,8 +4358,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 100
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Targeted subpattern
@@ -4348,6 +4374,7 @@ MonoBehaviour:
       name: P2_Horizontal_0
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -4416,6 +4443,7 @@ MonoBehaviour:
       name: P2_Horizontal_1
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -4484,6 +4512,7 @@ MonoBehaviour:
       name: P2_Vertical_0
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -4552,6 +4581,7 @@ MonoBehaviour:
       name: P2_Vertical_1
       enabled: 1
       minimumDuration: 1.3
+      locationGroups: []
       clips:
       - enabled: 1
         label: Warning
@@ -4616,12 +4646,13 @@ MonoBehaviour:
         attackGroupKey: 
         attackAtImpact: 0
         attackName: 
-    backgroundEnabled: 0
+    backgroundEnabled: 1
     background:
-      id: phase-2-background
+      id: 9fe8a116ff654420b334f6b64ab635ab
       name: Background
       enabled: 1
       minimumDuration: 1
+      locationGroups: []
       clips: []
     mechanics:
     - rid: 9000000000000000104
@@ -4640,6 +4671,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: target
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 0.7, g: 0.3, b: 1, a: 0.7}
     - rid: 2
@@ -4653,6 +4685,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: target
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Targeted
@@ -4683,6 +4716,7 @@ MonoBehaviour:
           - {x: 0, y: 0}
           - {x: 2, y: -2}
           snapshotKey: 
+          locationGroupId: 
           ensureEscape: 0
         key: wall
         persist: 0
@@ -4697,6 +4731,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: 
+          locationGroupId: 
           ensureEscape: 0
         key: pool
         reason: Pool
@@ -5271,6 +5306,7 @@ MonoBehaviour:
           - {x: 13, y: -10}
           - {x: 13, y: -11}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 11
@@ -5835,6 +5871,7 @@ MonoBehaviour:
           - {x: 13, y: -10}
           - {x: 13, y: -11}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Cross
@@ -6403,6 +6440,7 @@ MonoBehaviour:
           - {x: 13, y: -10}
           - {x: 13, y: -11}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 15
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -6964,6 +7002,7 @@ MonoBehaviour:
           - {x: 14, y: 6}
           - {x: 12, y: 6}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 23
@@ -7526,6 +7565,7 @@ MonoBehaviour:
           - {x: 14, y: 6}
           - {x: 12, y: 6}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diagonal
@@ -8092,6 +8132,7 @@ MonoBehaviour:
           - {x: 14, y: 6}
           - {x: 12, y: 6}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
     - rid: 27
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8109,6 +8150,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 29
@@ -8127,6 +8169,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Diagonal
@@ -8149,6 +8192,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 33
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8166,6 +8210,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 35
@@ -8184,6 +8229,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Diamond
@@ -8206,6 +8252,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 39
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8223,6 +8270,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 41
@@ -8241,6 +8289,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -8263,6 +8312,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
     - rid: 45
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8280,6 +8330,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 47
@@ -8298,6 +8349,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -8320,6 +8372,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
     - rid: 51
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8343,6 +8396,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 54
@@ -8361,6 +8415,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Combined
@@ -8383,6 +8438,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 58
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8406,6 +8462,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 61
@@ -8424,6 +8481,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Cross
@@ -8446,6 +8504,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 65
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8468,6 +8527,7 @@ MonoBehaviour:
           radius: 18
           cells: []
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 68
@@ -8485,6 +8545,7 @@ MonoBehaviour:
           radius: 18
           cells: []
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Cross
@@ -8506,6 +8567,7 @@ MonoBehaviour:
           radius: 18
           cells: []
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 0
     - rid: 72
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8529,6 +8591,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 75
@@ -8547,6 +8610,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Diagonal
@@ -8569,6 +8633,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 79
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8592,6 +8657,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 82
@@ -8610,6 +8676,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Diagonal
@@ -8632,6 +8699,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 86
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8649,12 +8717,13 @@ MonoBehaviour:
       data:
         tiles:
           shape: 3
-          anchor: 0
-          offset: {x: 0, y: 0}
+          anchor: 2
+          offset: {x: -13, y: -6}
           radius: 5
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: eea50951508844eaa4acf766d9acb745
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 89
@@ -8667,12 +8736,13 @@ MonoBehaviour:
       data:
         tiles:
           shape: 3
-          anchor: 0
-          offset: {x: 0, y: 0}
+          anchor: 2
+          offset: {x: -13, y: -6}
           radius: 5
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: eea50951508844eaa4acf766d9acb745
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Diamond
@@ -8689,12 +8759,13 @@ MonoBehaviour:
         color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
         tiles:
           shape: 3
-          anchor: 0
-          offset: {x: 0, y: 0}
+          anchor: 2
+          offset: {x: -13, y: -6}
           radius: 5
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: eea50951508844eaa4acf766d9acb745
           ensureEscape: 1
     - rid: 93
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8718,6 +8789,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 96
@@ -8736,6 +8808,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Diamond
@@ -8758,6 +8831,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 100
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8781,6 +8855,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 103
@@ -8799,6 +8874,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Horizontal
@@ -8821,6 +8897,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 107
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8844,6 +8921,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 110
@@ -8862,6 +8940,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Horizontal
@@ -8884,6 +8963,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 114
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8907,6 +8987,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 117
@@ -8925,6 +9006,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Vertical
@@ -8947,6 +9029,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 121
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8970,6 +9053,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 124
@@ -8988,6 +9072,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Vertical
@@ -9010,6 +9095,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+          locationGroupId: 
           ensureEscape: 1
     - rid: 128
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -9626,6 +9712,7 @@ MonoBehaviour:
           - {x: 20, y: 9}
           - {x: 20, y: 8}
           snapshotKey: rockfall_a
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.18, b: 0.24, a: 0.6}
     - rid: 1003
@@ -10228,6 +10315,7 @@ MonoBehaviour:
           - {x: 20, y: 9}
           - {x: 20, y: 8}
           snapshotKey: rockfall_a
+          locationGroupId: 
           ensureEscape: 0
     - rid: 1005
       type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -10821,6 +10909,7 @@ MonoBehaviour:
           - {x: 20, y: 9}
           - {x: 20, y: 8}
           snapshotKey: rockfall_a
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: "1 \xB7 \uBE68\uAC04 \uBB36\uC74C \uB099\uC11D"
@@ -11419,6 +11508,7 @@ MonoBehaviour:
           - {x: 20, y: 9}
           - {x: 20, y: 8}
           snapshotKey: rockfall_a
+          locationGroupId: 
           ensureEscape: 0
     - rid: 1007
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -12030,6 +12120,7 @@ MonoBehaviour:
           - {x: 25, y: 31}
           - {x: 26, y: 32}
           snapshotKey: rockfall_b
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.18, b: 0.24, a: 0.6}
     - rid: 1012
@@ -12628,6 +12719,7 @@ MonoBehaviour:
           - {x: 25, y: 31}
           - {x: 26, y: 32}
           snapshotKey: rockfall_b
+          locationGroupId: 
           ensureEscape: 0
     - rid: 1014
       type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -13217,6 +13309,7 @@ MonoBehaviour:
           - {x: 25, y: 31}
           - {x: 26, y: 32}
           snapshotKey: rockfall_b
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: "2 \xB7 \uBE48 \uBB36\uC74C \uBC18\uC804 \uB099\uC11D"
@@ -13811,6 +13904,7 @@ MonoBehaviour:
           - {x: 25, y: 31}
           - {x: 26, y: 32}
           snapshotKey: rockfall_b
+          locationGroupId: 
           ensureEscape: 0
     - rid: 1016
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -13839,12 +13933,13 @@ MonoBehaviour:
       data:
         tiles:
           shape: 3
-          anchor: 3
+          anchor: 1
           offset: {x: 19, y: 8}
-          radius: 2
+          radius: 4
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_1
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
     - rid: 5560175782844694531
@@ -13857,12 +13952,13 @@ MonoBehaviour:
       data:
         tiles:
           shape: 3
-          anchor: 3
+          anchor: 1
           offset: {x: 19, y: 8}
-          radius: 2
+          radius: 4
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_1
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: "1 \xB7 \uBD89\uC740 \uB0B4\uCE21 \uD30C\uB3D9"
@@ -13874,12 +13970,13 @@ MonoBehaviour:
         color: {r: 1, g: 0.12, b: 0.2, a: 0.95}
         tiles:
           shape: 3
-          anchor: 3
+          anchor: 1
           offset: {x: 19, y: 8}
-          radius: 2
+          radius: 4
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_1
+          locationGroupId: 
           ensureEscape: 0
     - rid: 5560175782844694534
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -13902,6 +13999,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_2
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 0.85, g: 0.12, b: 0.62, a: 0.95}
     - rid: 5560175782844694537
@@ -13920,6 +14018,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_2
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: "2 \xB7 \uC790\uC8FC\uC0C9 \uC911\uAC04 \uD30C\uB3D9"
@@ -13937,6 +14036,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_2
+          locationGroupId: 
           ensureEscape: 0
     - rid: 5560175782844694540
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -13959,6 +14059,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_3
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 0.52, g: 0.2, b: 1, a: 0.95}
     - rid: 5560175782844694543
@@ -13977,6 +14078,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_3
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: "3 \xB7 \uBCF4\uB77C\uC0C9 \uC678\uCE21 \uD30C\uB3D9"
@@ -13994,6 +14096,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_ripple_3
+          locationGroupId: 
           ensureEscape: 0
     - rid: 5560175782844694546
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -14019,6 +14122,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: fist_contact_visual
+          locationGroupId: 
           ensureEscape: 0
     - rid: 5560175835719663616
       type: {class: CrystalSealMechanic, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -14041,7 +14145,7 @@ MonoBehaviour:
           overrideTiming: 0
           initialDelay: 5
           interval: 5
-        attackPatternId: 
+        attackPatternId: crystal-seal-attack
         initialDelay: 1
         interval: 5
         activePrefab: {fileID: 0}
@@ -14061,6 +14165,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_0afac15f10b743288ee17f31149d5ead
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066131
@@ -14074,6 +14179,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_0afac15f10b743288ee17f31149d5ead
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -14091,6 +14197,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_0afac15f10b743288ee17f31149d5ead
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066133
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -14118,6 +14225,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_54280aaac12c410888736b87f81996e3
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066137
@@ -14131,6 +14239,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_54280aaac12c410888736b87f81996e3
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -14148,6 +14257,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_54280aaac12c410888736b87f81996e3
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066139
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -14175,6 +14285,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_d853de7038a34547a1d5ed3c8ae7bcb8
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066143
@@ -14188,6 +14299,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_d853de7038a34547a1d5ed3c8ae7bcb8
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -14205,6 +14317,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_d853de7038a34547a1d5ed3c8ae7bcb8
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066145
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -14668,6 +14781,7 @@ MonoBehaviour:
           - {x: -1, y: 0}
           - {x: 0, y: 0}
           snapshotKey: attack_1bbd1bdf21a84e719f9a9d7cf9848585
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066149
@@ -15117,6 +15231,7 @@ MonoBehaviour:
           - {x: -1, y: 0}
           - {x: 0, y: 0}
           snapshotKey: attack_1bbd1bdf21a84e719f9a9d7cf9848585
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diagonal
@@ -15570,6 +15685,7 @@ MonoBehaviour:
           - {x: -1, y: 0}
           - {x: 0, y: 0}
           snapshotKey: attack_1bbd1bdf21a84e719f9a9d7cf9848585
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066151
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -16141,6 +16257,7 @@ MonoBehaviour:
           - {x: 14, y: 6}
           - {x: 12, y: 6}
           snapshotKey: attack_a7ab2e5d29c445629bb71a28ef2dceab
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066155
@@ -16698,6 +16815,7 @@ MonoBehaviour:
           - {x: 14, y: 6}
           - {x: 12, y: 6}
           snapshotKey: attack_a7ab2e5d29c445629bb71a28ef2dceab
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diagonal
@@ -17259,6 +17377,7 @@ MonoBehaviour:
           - {x: 14, y: 6}
           - {x: 12, y: 6}
           snapshotKey: attack_a7ab2e5d29c445629bb71a28ef2dceab
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066157
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -17722,6 +17841,7 @@ MonoBehaviour:
           - {x: 0, y: -1}
           - {x: 1, y: -1}
           snapshotKey: attack_1a84dae9e4ae4989b7ab9cadab660425
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066161
@@ -18171,6 +18291,7 @@ MonoBehaviour:
           - {x: 0, y: -1}
           - {x: 1, y: -1}
           snapshotKey: attack_1a84dae9e4ae4989b7ab9cadab660425
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diagonal
@@ -18624,6 +18745,7 @@ MonoBehaviour:
           - {x: 0, y: -1}
           - {x: 1, y: -1}
           snapshotKey: attack_1a84dae9e4ae4989b7ab9cadab660425
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066163
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -18646,11 +18768,12 @@ MonoBehaviour:
         tiles:
           shape: 3
           anchor: 0
-          offset: {x: 0, y: 0}
+          offset: {x: -13, y: -6}
           radius: 10
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_fad092142666411cb35d2cdb5f4e9d96
+          locationGroupId: eea50951508844eaa4acf766d9acb745
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066239
@@ -18659,11 +18782,12 @@ MonoBehaviour:
         tiles:
           shape: 3
           anchor: 0
-          offset: {x: 0, y: 0}
+          offset: {x: -13, y: -6}
           radius: 10
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_fad092142666411cb35d2cdb5f4e9d96
+          locationGroupId: eea50951508844eaa4acf766d9acb745
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -18676,11 +18800,12 @@ MonoBehaviour:
         tiles:
           shape: 3
           anchor: 0
-          offset: {x: 0, y: 0}
+          offset: {x: -13, y: -6}
           radius: 10
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_fad092142666411cb35d2cdb5f4e9d96
+          locationGroupId: eea50951508844eaa4acf766d9acb745
           ensureEscape: 0
     - rid: 7548210458879066241
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -18708,6 +18833,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_879b03e8d21c4c37997dee7f3967be50
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066245
@@ -18721,6 +18847,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_879b03e8d21c4c37997dee7f3967be50
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -18738,6 +18865,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_879b03e8d21c4c37997dee7f3967be50
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066247
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -18765,6 +18893,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_dcec25463c044d4490215bf753d164bd
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066251
@@ -18778,6 +18907,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_dcec25463c044d4490215bf753d164bd
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -18795,6 +18925,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_dcec25463c044d4490215bf753d164bd
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066253
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -18822,6 +18953,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_520c385336c04df59b0abaef31c39a3c
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066257
@@ -18835,6 +18967,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_520c385336c04df59b0abaef31c39a3c
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -18852,6 +18985,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_520c385336c04df59b0abaef31c39a3c
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066259
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -18864,6 +18998,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_a1f55d5a068a48b2aed4eaee94d8a369
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066260
@@ -18877,6 +19012,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_a1f55d5a068a48b2aed4eaee94d8a369
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -18894,6 +19030,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_a1f55d5a068a48b2aed4eaee94d8a369
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066262
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -18906,6 +19043,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_8a0dd0f72c6849de8e25a5edab305371
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066263
@@ -18919,6 +19057,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_8a0dd0f72c6849de8e25a5edab305371
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Diamond
@@ -18936,6 +19075,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_8a0dd0f72c6849de8e25a5edab305371
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066265
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -18948,6 +19088,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_43ed1225a4cf447e97eb927652e1a653
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066266
@@ -18961,6 +19102,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_43ed1225a4cf447e97eb927652e1a653
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -18978,6 +19120,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_43ed1225a4cf447e97eb927652e1a653
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066268
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19005,6 +19148,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_c72ea14258a2431ab520ec8845dba64d
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066272
@@ -19018,6 +19162,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_c72ea14258a2431ab520ec8845dba64d
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -19035,6 +19180,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_c72ea14258a2431ab520ec8845dba64d
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066274
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19062,6 +19208,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_c45af4fe080b48049eab1208fccd137f
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066278
@@ -19075,6 +19222,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_c45af4fe080b48049eab1208fccd137f
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -19092,6 +19240,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_c45af4fe080b48049eab1208fccd137f
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066280
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19119,6 +19268,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_942e786df50d44c887ea58b6377423e2
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066284
@@ -19132,6 +19282,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_942e786df50d44c887ea58b6377423e2
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -19149,6 +19300,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_942e786df50d44c887ea58b6377423e2
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066286
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19176,6 +19328,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_b94a0137152243c781bc4b2afc9ead76
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066290
@@ -19189,6 +19342,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_b94a0137152243c781bc4b2afc9ead76
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -19206,6 +19360,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_b94a0137152243c781bc4b2afc9ead76
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066292
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19233,6 +19388,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_d830300f64d9437082b664195f406ee4
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066296
@@ -19246,6 +19402,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_d830300f64d9437082b664195f406ee4
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -19263,6 +19420,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_d830300f64d9437082b664195f406ee4
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066298
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19290,6 +19448,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_3282919ee27b46e3995ddf92638593e7
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066302
@@ -19303,6 +19462,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_3282919ee27b46e3995ddf92638593e7
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -19320,6 +19480,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_3282919ee27b46e3995ddf92638593e7
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066304
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19347,6 +19508,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_75f761193b434e77ba9ed083be6c3291
+          locationGroupId: 
           ensureEscape: 0
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 7548210458879066308
@@ -19360,6 +19522,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_75f761193b434e77ba9ed083be6c3291
+          locationGroupId: 
           ensureEscape: 0
         escapeGrace: 0.18
         reason: Combined
@@ -19377,6 +19540,7 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: attack_75f761193b434e77ba9ed083be6c3291
+          locationGroupId: 
           ensureEscape: 0
     - rid: 7548210458879066310
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -19403,6 +19567,7 @@ MonoBehaviour:
           radius: 2
           cells: []
           snapshotKey: crystal_seal_blast
+          locationGroupId: 
           ensureEscape: 1
         color: {r: 0.95, g: 0.15, b: 0.3, a: 0.8}
     - rid: 9000000000000000102
@@ -19415,6 +19580,7 @@ MonoBehaviour:
           radius: 2
           cells: []
           snapshotKey: crystal_seal_blast
+          locationGroupId: 
           ensureEscape: 1
         escapeGrace: 0.18
         reason: Crystal Blast
@@ -19431,6 +19597,7 @@ MonoBehaviour:
           radius: 2
           cells: []
           snapshotKey: crystal_seal_blast
+          locationGroupId: 
           ensureEscape: 1
     - rid: 9000000000000000104
       type: {class: CrystalSealMechanic, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
