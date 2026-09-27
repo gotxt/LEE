@@ -29,7 +29,7 @@ namespace NHN.TraceStrike.Patterns
         {
             IPatternLease lease = null;
             return new CallbackAction {
-                begin = () => lease = c.Own(c.Host.Mark(tiles.Resolve(c), color, true)),
+                begin = () => lease = c.Own(c.Host.Mark(tiles.Capture(c), color, true)),
                 tick = (t, dt) => lease?.SetProgress(duration <= 0 ? 1 : t / duration),
                 end = cancelled => lease?.Dispose()
             };

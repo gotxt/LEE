@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NHN.TraceStrike.Patterns
 {
-    public enum TileShape { Cells, All, Cross, Diamond, Diagonal, Combined, Horizontal, Vertical, Rectangle, Checker }
+    public enum TileShape { Cells, All, Cross, Diamond, Diagonal, Combined, Horizontal, Vertical, Rectangle, Checker, PlayerRegion }
     public enum TileAnchor { Center, Player, Origin, Absolute }
 
     [Serializable]
@@ -20,11 +20,24 @@ namespace NHN.TraceStrike.Patterns
         // A location is sampled once per pattern run; snapshotKey still owns one attack's final tile area.
         [HideInInspector] public string locationGroupId = "";
         public bool ensureEscape;
+        public List<string> regionIds = new List<string>();
 
-        public HashSet<Vector2Int> Resolve(PatternContext context)
+        public HashSet<Vector2Int> Resolve(PatternContext context) => Resolve(context, false);
+        public HashSet<Vector2Int> Capture(PatternContext context) => Resolve(context, true);
+
+        private HashSet<Vector2Int> Resolve(PatternContext context, bool capture)
         {
             if (!string.IsNullOrEmpty(snapshotKey) && context.Selections.TryGetValue(snapshotKey, out var saved))
                 return new HashSet<Vector2Int>(saved);
+            if (shape == TileShape.PlayerRegion)
+            {
+                if (!capture || string.IsNullOrWhiteSpace(snapshotKey))
+                    throw new InvalidOperationException("영역 공격: Warning이 먼저 같은 키의 영역을 고정해야 합니다.");
+                var region = EncounterRegionRules.Capture(this, context);
+                // Empty selections are snapshots too: entering a petal later must not retarget.
+                context.Selections[snapshotKey] = new HashSet<Vector2Int>(region);
+                return region;
+            }
             Vector2Int origin = (!string.IsNullOrEmpty(locationGroupId) ? context.Location(locationGroupId) :
                 anchor == TileAnchor.Center ? context.Host.CenterCell :
                 anchor == TileAnchor.Player ? context.Host.PlayerCell :

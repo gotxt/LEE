@@ -128,6 +128,7 @@ namespace NHN.TraceStrike.Patterns
         public readonly int Depth;
         public readonly Func<string, EncounterPattern> ResolveEncounterPattern;
         public readonly Dictionary<string, HashSet<Vector2Int>> Selections = new Dictionary<string, HashSet<Vector2Int>>();
+        public readonly Dictionary<string, string> SelectedRegionIds = new Dictionary<string, string>();
         private readonly Dictionary<string, Vector2Int> locations = new Dictionary<string, Vector2Int>();
         private readonly System.Random locationRandom;
         private readonly Dictionary<string, List<IDisposable>> resources = new Dictionary<string, List<IDisposable>>();
@@ -209,6 +210,7 @@ namespace NHN.TraceStrike.Patterns
                 try { Remove(key); }
                 catch (Exception error) { if (errors == null) errors = new List<Exception>(); errors.Add(error); }
             Selections.Clear();
+            SelectedRegionIds.Clear();
             if (errors != null) throw new AggregateException(errors);
         }
     }
@@ -240,6 +242,7 @@ namespace NHN.TraceStrike.Patterns
             if (!Finite(pattern.minimumDuration) || pattern.minimumDuration < 0)
                 errors.Add(pattern.name + ": invalid duration.");
             var groupIds = new HashSet<string>();
+            EncounterRegionRules.ValidateTimeline(pattern.clips, errors);
             if (pattern.locationGroups != null)
                 foreach (var group in pattern.locationGroups)
                 {
@@ -286,6 +289,7 @@ namespace NHN.TraceStrike.Patterns
             if (sequence == null) { errors.Add("Missing sequence."); return; }
             if (depth > 16 || !path.Add(sequence)) { errors.Add(sequence.name + ": recursive pattern call or depth > 16."); return; }
             if (!Finite(sequence.minimumDuration) || sequence.minimumDuration < 0) errors.Add(sequence.name + ": invalid duration.");
+            EncounterRegionRules.ValidateTimeline(sequence.clips, errors);
             foreach (var clip in sequence.clips)
             {
                 if (clip == null || !clip.enabled) continue;

@@ -52,6 +52,28 @@ namespace NHN.TraceStrike.Tests
         }
 
         [UnityTest]
+        public IEnumerator RottenBloomFootprintBlocksMovementAndResetsForOtherBosses()
+        {
+            yield return new EnterPlayMode();
+            var game = Object.FindAnyObjectByType<TraceStrikeGame>();
+            var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
+            int bloomIndex = catalog.bosses.FindIndex(boss => boss != null && boss.id == "rotten-bloom");
+            Assert.GreaterOrEqual(bloomIndex, 0);
+            Call(game, "StartStage", bloomIndex);
+            var model = Field<TrailFieldModel>(game, "model");
+            Assert.AreEqual(16, Field<System.Collections.Generic.HashSet<Vector2Int>>(game, "bossOccupiedCells").Count);
+            Assert.IsTrue(model.IsWalkable(new Vector2Int(14, 15)));
+            Assert.IsFalse(model.IsTraversable(new Vector2Int(14, 15)));
+            Assert.IsTrue(model.TryPlacePlayer(new Vector2Int(13, 15)));
+            Assert.AreEqual(MoveResult.Blocked, model.TryMove(Vector2Int.right));
+            int otherIndex = catalog.bosses.FindIndex(boss => boss != null && boss.id != "rotten-bloom");
+            Assert.GreaterOrEqual(otherIndex, 0);
+            Call(game, "StartStage", otherIndex);
+            Assert.IsEmpty(Field<System.Collections.Generic.HashSet<Vector2Int>>(game, "bossOccupiedCells"));
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
         public IEnumerator LargeArenaSpawnsRendersAndReturnsToLegacyArena()
         {
             yield return new EnterPlayMode();

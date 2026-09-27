@@ -106,6 +106,7 @@ namespace NHN.TraceStrike
         private readonly HashSet<Vector2Int> targetedCells = new HashSet<Vector2Int>();
         private readonly Dictionary<Vector2Int, SpecialTileType> specialTiles = new Dictionary<Vector2Int, SpecialTileType>();
         private readonly List<Vector2Int> crystalCells = new List<Vector2Int>();
+        private readonly HashSet<Vector2Int> bossOccupiedCells = new HashSet<Vector2Int>();
         private readonly Dictionary<Vector2Int, int> crystalWarningCounts = new Dictionary<Vector2Int, int>();
         private readonly Dictionary<Vector2Int, int> crystalFiringCounts = new Dictionary<Vector2Int, int>();
         private readonly Dictionary<Vector2Int, Dictionary<int, float>> crystalTelegraphProgress =
@@ -1710,10 +1711,13 @@ namespace NHN.TraceStrike
             battleCameraInitialized = false;
             currentFieldSize = activeBoss.arena.size;
             activeBoss.arena.ApplyTo(model);
+            bossOccupiedCells.Clear();
+            if (activeBoss.bossVisual != null)
+                bossOccupiedCells.UnionWith(activeBoss.bossVisual.OccupiedCells());
             ApplyEncounterArenaLayout();
             RandomizeFloorTileLayout();
             ApplyFloorTileLayout();
-            model.SetBlockedCells(crystalCells);
+            model.SetBlockedCells(CombinedWalls());
             model.BeginRound(round, true, activeBoss.arena.overridePlayerStart ? (Vector2Int?)activeBoss.arena.playerStart : null);
             BuildEncounterBossVisual();
             GenerateSpecialTiles();
@@ -1860,7 +1864,7 @@ namespace NHN.TraceStrike
             crystalTelegraphProgress.Clear();
             crystalCells.Clear();
             var center = model.CenterCell;
-            List<Vector2Int> fixedLayout = CrystalRules.CreateCardinalLayout(model.Walkable, center);
+            List<Vector2Int> fixedLayout = CrystalRules.CreateCardinalLayout(model.Traversable, center);
             foreach (Vector2Int original in fixedLayout)
             {
                 Vector2Int cell = original;
@@ -1870,7 +1874,7 @@ namespace NHN.TraceStrike
                         cell.x == center.x ? 0 : cell.x > center.x ? -1 : 1,
                         cell.y == center.y ? 0 : cell.y > center.y ? -1 : 1);
                     Vector2Int adjusted = cell + inward;
-                    if (model.IsWalkable(adjusted) && adjusted != model.Player && !crystalCells.Contains(adjusted))
+                    if (model.IsTraversable(adjusted) && adjusted != model.Player && !crystalCells.Contains(adjusted))
                     {
                         cell = adjusted;
                     }
@@ -1891,6 +1895,7 @@ namespace NHN.TraceStrike
             crystalFiringCounts.Clear();
             crystalTelegraphProgress.Clear();
             var excluded = new HashSet<Vector2Int> { model.Player, model.Start, model.End };
+            excluded.UnionWith(bossOccupiedCells);
             foreach (var wall in timelineWalls.Values) excluded.UnionWith(wall);
             foreach (Vector2Int oldCrystal in crystalCells)
             {
@@ -2179,7 +2184,7 @@ namespace NHN.TraceStrike
             activePhaseIndex++;
             crystalLayoutVersion++;
             crystalCells.Clear();
-            model.SetBlockedCells(null);
+            model.SetBlockedCells(CombinedWalls());
             RefreshCrystalVisuals();
             patternVersion++;
             bossAttackCount = 0;

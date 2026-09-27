@@ -8,8 +8,9 @@ using UnityEngine;
 namespace NHN.TraceStrike.Editor
 {
     // A sandbox model: editor scrubbing never changes the scene or plays prefabs/audio.
-    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost, IDisposable
+    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost, IEncounterRegionHost, IDisposable
     {
+        public IReadOnlyList<EncounterTileRegion> TileRegions { get; private set; }
         // Back to front. Dictionary slot reuse must never determine visual stacking.
         public enum PreviewLayer { Obstacle, Hazard, Warning, Damage, Effect }
 
@@ -34,6 +35,7 @@ namespace NHN.TraceStrike.Editor
         public Func<IEnumerable<Vector2Int>> RequiredCellsProvider { get; set; }
         private readonly TrailFieldModel model = new TrailFieldModel();
         private readonly Dictionary<int, HashSet<Vector2Int>> walls = new Dictionary<int, HashSet<Vector2Int>>();
+        private readonly HashSet<Vector2Int> permanentBlocked = new HashSet<Vector2Int>();
         private int id;
         private bool disposed;
         public PatternPreviewHost(int size, ArenaShape shape = ArenaShape.Rounded)
@@ -42,6 +44,13 @@ namespace NHN.TraceStrike.Editor
         }
         public PatternPreviewHost(BossArenaDefinition arena)
         { arena.ApplyTo(model); player = arena.overridePlayerStart ? arena.playerStart : model.CenterCell; }
+        public PatternPreviewHost(BossEncounterDefinition encounter) : this(encounter.arena)
+        {
+            TileRegions = encounter.tileRegions;
+            if (encounter.bossVisual != null)
+                permanentBlocked.UnionWith(encounter.bossVisual.OccupiedCells());
+            RebuildWalls();
+        }
         public Vector2Int PlayerCell => player;
         public Vector2Int CenterCell => model.CenterCell;
         public IReadOnlyCollection<Vector2Int> Walkable => model.Walkable;
@@ -78,6 +87,7 @@ namespace NHN.TraceStrike.Editor
         public IPatternLease Block(IReadOnlyCollection<Vector2Int> cells)
         {
             var blocked = new HashSet<Vector2Int>(cells);
+            blocked.ExceptWith(permanentBlocked);
             var required = RequiredCellsProvider?.Invoke();
             if (required != null) blocked.ExceptWith(required);
             int token = ++id; walls[token] = blocked; RebuildWalls();
@@ -85,7 +95,7 @@ namespace NHN.TraceStrike.Editor
             return new PreviewLease(() => { walls.Remove(token); RebuildWalls(); visual.Dispose(); });
         }
         private void RebuildWalls()
-        { var cells = new HashSet<Vector2Int>(); foreach (var wall in walls.Values) cells.UnionWith(wall); model.SetBlockedCells(cells); }
+        { var cells = new HashSet<Vector2Int>(permanentBlocked); foreach (var wall in walls.Values) cells.UnionWith(wall); model.SetBlockedCells(cells); }
         public IPatternLease Spawn(string key, GameObject prefab, Vector2Int cell, Sprite sprite, Color color)
         { log.Add("Spawn " + (prefab != null ? prefab.name : "sprite") + " " + cell); return AddMark(new[] { cell }, color, PreviewLayer.Effect); }
         public IPatternLease ShowDevice(Vector2Int cell, GameObject prefab, Sprite sprite, Color tint) =>

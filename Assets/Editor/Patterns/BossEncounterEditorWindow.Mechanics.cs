@@ -258,7 +258,7 @@ namespace NHN.TraceStrike.Editor
                 mechanicPreviewHealth = encounter.phases[phaseIndex].health;
                 var errors = new List<string>(); CurrentMechanic.Validate(encounter, errors);
                 if (errors.Count > 0) { previewError = string.Join("\n", errors); return; }
-                previewHost = new PatternPreviewHost(encounter.arena)
+                previewHost = new PatternPreviewHost(encounter)
                 { player = previewPlayer, RequiredCellsProvider = () => mechanicPreview?.RequiredCells };
                 if (encounter.bossVisual?.prefab != null)
                 { bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true); previewHost.boss = bossPreview.Presentation; }

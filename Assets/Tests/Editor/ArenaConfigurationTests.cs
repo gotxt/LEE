@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NHN.TraceStrike.Patterns;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace NHN.TraceStrike.Tests
 {
@@ -19,6 +20,103 @@ namespace NHN.TraceStrike.Tests
                 if (arena.ContainsBounds(cell)) arena.floorCells.Add(cell);
             }
             return arena;
+        }
+
+        [Test]
+        public void BossFootprintBlocksExactlySixteenTilesInRuntimeAndPreviewModels()
+        {
+            var boss = Resources.Load<BossEncounterDefinition>("Patterns/BossData_.RottenBloom");
+            Assert.IsNotNull(boss);
+            var occupied = boss.bossVisual.OccupiedCells();
+            Assert.AreEqual(16, occupied.Count);
+            for (int y = 15; y <= 18; y++)
+            for (int x = 14; x <= 17; x++)
+                Assert.Contains(new Vector2Int(x, y), new List<Vector2Int>(occupied));
+            var model = new TrailFieldModel(); boss.arena.ApplyTo(model);
+            model.SetBlockedCells(occupied);
+            model.BeginRound(0, true, boss.arena.playerStart);
+            Assert.AreEqual(boss.arena.playerStart, model.Player);
+            Assert.AreEqual(boss.arena.startCells[0], model.Start);
+            Assert.AreEqual(boss.arena.endCells[0], model.End);
+            Assert.IsFalse(model.TryPlacePlayer(new Vector2Int(15, 15)));
+            using (var preview = new Editor.PatternPreviewHost(boss))
+            {
+                CollectionAssert.IsSubsetOf(occupied, preview.Walkable);
+                foreach (var cell in occupied) CollectionAssert.DoesNotContain(preview.Traversable, cell);
+            }
+        }
+
+        [Test]
+        public void BossFootprintValidationRejectsSpawnOverlap()
+        {
+            var root = new GameObject("Footprint validation boss");
+            try
+            {
+                var visual = new BossVisualDefinition
+                {
+                    prefab = root.AddComponent<BossActor>(),
+                    position = new Vector2(8, 8),
+                    footprintSize = new Vector2Int(4, 4)
+                };
+                var arena = Square(17);
+                arena.overridePlayerStart = true; arena.playerStart = new Vector2Int(8, 8);
+                var errors = new List<string>(); visual.Validate(errors, arena);
+                Assert.IsTrue(errors.Exists(error => error.Contains("spawn")));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(root); }
+        }
+
+        [Test]
+        public void RottenBloomVisibleSpriteFillsAndCentersOnFourByFourFootprint()
+        {
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
+                Assert.Ignore("Graphics device required for boss sprite alignment test.");
+            var boss = Resources.Load<BossEncounterDefinition>("Patterns/BossData_.RottenBloom");
+            Assert.IsNotNull(boss);
+            var readback = new Texture2D(512, 512, TextureFormat.RGBA32, false);
+            var occupied = boss.bossVisual.OccupiedCells();
+            int minX = int.MaxValue, maxX = int.MinValue, minY = int.MaxValue, maxY = int.MinValue;
+            foreach (var cell in occupied)
+            {
+                minX = Math.Min(minX, cell.x); maxX = Math.Max(maxX, cell.x);
+                minY = Math.Min(minY, cell.y); maxY = Math.Max(maxY, cell.y);
+            }
+            try
+            {
+                using (var stage = new BossRenderStage(boss.bossVisual, boss.arena.GridSize, true))
+                {
+                    stage.Render();
+                    float tilePixels = stage.Texture.width / (float)boss.arena.GridSize;
+                    float cameraCenter = (boss.arena.GridSize - 1) * 0.5f;
+                    int captureX = Mathf.RoundToInt(stage.Texture.width * 0.5f +
+                        ((minX + maxX) * 0.5f - cameraCenter) * tilePixels - 256);
+                    int captureY = Mathf.RoundToInt(stage.Texture.height * 0.5f +
+                        ((minY + maxY) * 0.5f - cameraCenter) * tilePixels - 256);
+                    var previous = RenderTexture.active;
+                    try
+                    {
+                        RenderTexture.active = stage.Texture;
+                        readback.ReadPixels(new Rect(captureX, captureY, 512, 512), 0, 0);
+                        readback.Apply();
+                    }
+                    finally { RenderTexture.active = previous; }
+                }
+                var pixels = readback.GetPixels32();
+                int left = 512, right = -1, bottom = 512, top = -1;
+                for (int y = 0; y < 512; y++)
+                for (int x = 0; x < 512; x++)
+                    if (pixels[y * 512 + x].a > 25)
+                    {
+                        left = Math.Min(left, x); right = Math.Max(right, x);
+                        bottom = Math.Min(bottom, y); top = Math.Max(top, y);
+                    }
+                Assert.Greater(right, left, "Boss sprite must render.");
+                Assert.That(right - left + 1, Is.InRange(244, 268), "Visible width should fill four tiles.");
+                Assert.That(top - bottom + 1, Is.InRange(244, 268), "Visible height should fill four tiles.");
+                Assert.That((left + right) * 0.5f, Is.EqualTo(256).Within(8), "Horizontal centre should match the occupied tiles.");
+                Assert.That((bottom + top) * 0.5f, Is.EqualTo(256).Within(8), "Vertical centre should match the occupied tiles.");
+            }
+            finally { UnityEngine.Object.DestroyImmediate(readback); }
         }
 
         [Test]

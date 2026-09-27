@@ -168,7 +168,7 @@ namespace NHN.TraceStrike.Editor
             if (pattern == null) return PreviewOrigin;
             try
             {
-                using (var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer })
+                using (var host = new PatternPreviewHost(encounter) { player = previewPlayer })
                 using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
                 {
                     context.InitializeLocations(pattern.locationGroups);

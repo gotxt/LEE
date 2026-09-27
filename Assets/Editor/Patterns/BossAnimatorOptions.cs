@@ -99,7 +99,7 @@ namespace NHN.TraceStrike.Editor
     }
     [CustomPropertyDrawer(typeof(BossVisualDefinition))]
     public sealed class BossVisualDrawer : BossFieldsDrawer
-    { protected override string[] Fields => new[] { "prefab", "position", "size", "animationLayer", "idleState" }; }
+    { protected override string[] Fields => new[] { "prefab", "position", "size", "footprintSize", "animationLayer", "idleState" }; }
     [CustomPropertyDrawer(typeof(BossAnimationEvent))]
     public sealed class BossAnimationDrawer : BossFieldsDrawer
     { protected override string[] Fields => new[] { "state", "transition", "speed" }; }

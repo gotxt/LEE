@@ -11,7 +11,7 @@ namespace NHN.TraceStrike.Editor
 {
     public sealed partial class BossEncounterEditorWindow : EditorWindow
     {
-        private enum NodeKind { Encounter, Arena, Phase, Pattern, Background, LibraryPattern, Mechanic }
+        private enum NodeKind { Encounter, Arena, Phase, Pattern, Background, LibraryPattern, Mechanic, Regions }
 
         [SerializeField] private BossEncounterDefinition encounter;
         [SerializeField] private NodeKind node = NodeKind.Encounter;
@@ -65,6 +65,7 @@ namespace NHN.TraceStrike.Editor
 
         private void OnDisable()
         {
+            regionStroke.Cancel();
             mechanicTrailStroke.Cancel();
             mapStroke.Cancel();
             eventStroke.Cancel();
@@ -83,6 +84,8 @@ namespace NHN.TraceStrike.Editor
 
         private void SelectEncounter(BossEncounterDefinition value)
         {
+            regionStroke.Cancel();
+            selectedRegion = 0;
             mechanicTrailStroke.Cancel();
             mapStroke.Cancel();
             eventStroke.Cancel();
@@ -120,6 +123,7 @@ namespace NHN.TraceStrike.Editor
                     {
                         DrawArenaPainter();
                     }
+                    else if (node == NodeKind.Regions) DrawRegionPainter();
                     else if (node == NodeKind.Mechanic) DrawMechanicEditor();
                     else
                     {
@@ -188,6 +192,7 @@ namespace NHN.TraceStrike.Editor
                 treeScroll = EditorGUILayout.BeginScrollView(treeScroll);
                 TreeButton("● " + encounter.displayName, NodeKind.Encounter, -1, -1);
                 TreeButton("  ▣ 전장 (Arena)", NodeKind.Arena, -1, -1);
+                TreeButton("  ▧ 보스 공통 영역", NodeKind.Regions, -1, -1);
 
                 EditorGUILayout.Space(5f);
                 using (new EditorGUILayout.HorizontalScope())
@@ -245,6 +250,7 @@ namespace NHN.TraceStrike.Editor
         private void SelectNode(NodeKind kind, int phase, int pattern)
         {
             if (node == kind && phaseIndex == phase && patternIndex == pattern) return;
+            regionStroke.Cancel();
             mechanicTrailStroke.Cancel();
             mapStroke.Cancel();
             eventStroke.Cancel();
@@ -557,6 +563,7 @@ namespace NHN.TraceStrike.Editor
                 }
             }
             TileSelection selectedTiles = SelectedTiles(pattern);
+            DrawRegionSnapshot(selectedTiles);
             PatternLocationGroup editingLocation = EditingRandomLocationGroup(pattern);
             if (editingLocation != null)
             {
@@ -829,6 +836,7 @@ namespace NHN.TraceStrike.Editor
 
         private void Changed(bool rebuildPreview = true)
         {
+            regionEscapeReport = null;
             SynchronizeSimpleAttack();
             EditorUtility.SetDirty(encounter);
             serialized = new SerializedObject(encounter);
@@ -874,7 +882,7 @@ namespace NHN.TraceStrike.Editor
             previewError = null;
             try
             {
-                previewHost = new PatternPreviewHost(encounter.arena) { player = previewPlayer };
+                previewHost = new PatternPreviewHost(encounter) { player = previewPlayer };
                 if (encounter.bossVisual?.prefab != null)
                 {
                     bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true);
@@ -882,6 +890,7 @@ namespace NHN.TraceStrike.Editor
                 }
                 var context = new PatternContext(previewHost,
                     PreviewOrigin, 0, encounter.FindPattern, previewLocationSeed);
+                previewContext = context;
                 previewRunner = new PatternRunner(pattern, context);
                 if (pattern.locationGroups != null)
                     foreach (var group in pattern.locationGroups)
@@ -905,6 +914,7 @@ namespace NHN.TraceStrike.Editor
 
         private void DisposePreview()
         {
+            previewContext = null;
             previewLocations.Clear();
             if (previewHost != null) previewHost.RequiredCellsProvider = null;
             try { mechanicPreview?.Dispose(); } catch { }

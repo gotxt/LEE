@@ -19,7 +19,7 @@ namespace NHN.TraceStrike.Editor
         private Vector2 mapScroll, tilePreviewScroll;
         private Vector2Int strokeOrigin;
 
-        private void OnLostFocus() { mapStroke.Cancel(); eventStroke.Cancel(); mechanicTrailStroke.Cancel(); }
+        private void OnLostFocus() { mapStroke.Cancel(); eventStroke.Cancel(); mechanicTrailStroke.Cancel(); regionStroke.Cancel(); }
 
         private void BeginPaint(string label)
         {
@@ -103,6 +103,7 @@ namespace NHN.TraceStrike.Editor
             var tileSprites = encounter.arena.BuildTileSpriteLookup();
             var starts = new HashSet<Vector2Int>(encounter.arena.startCells);
             var ends = new HashSet<Vector2Int>(encounter.arena.endCells);
+            var bossCells = encounter.bossVisual?.OccupiedCells() ?? new HashSet<Vector2Int>();
             for (int y = 0; y < encounter.arena.GridSize; y++)
             for (int x = 0; x < encounter.arena.GridSize; x++)
             {
@@ -116,6 +117,8 @@ namespace NHN.TraceStrike.Editor
                 if (cells.Contains(cell))
                 {
                     if (PatternPreviewGridGUI.DrawTileSprite(rect, encounter.arena.ResolveTileSprite(cell, tileSprites))) Repaint();
+                    if (bossCells.Contains(cell))
+                        EditorGUI.DrawRect(rect, new Color(0.54f, 0.18f, 0.48f, 0.46f));
                     if (showMapRegions && (start || end))
                         EditorGUI.DrawRect(rect, start && end ? new Color(0.8f, 0.72f, 0.22f, 0.5f) :
                             start ? new Color(0.2f, 0.65f, 0.35f, 0.5f) : new Color(0.85f, 0.45f, 0.16f, 0.5f));
@@ -235,6 +238,13 @@ namespace NHN.TraceStrike.Editor
 
         private void DrawEventPaintTools(TileSelection tiles)
         {
+            if (tiles?.shape == TileShape.PlayerRegion)
+            {
+                eventBrush = 2;
+                EditorGUILayout.HelpBox("맵 클릭: 테스트 플레이어 위치 변경 (실제 스폰은 그대로). 재생 도중에는 공격 영역을 다시 고르지 않습니다.\n새 위치로 다시 판정하려면 ‘처음으로’를 누르세요. 꽃잎 타일은 ‘보스 공통 영역’에서 편집합니다.", MessageType.None);
+                if (attackEditorMode != 0) DrawRegionCandidates(tiles);
+                return;
+            }
             eventBrush = GUILayout.Toolbar(eventBrush, new[] { "영역 칠하기", "지우개", "플레이어 위치" });
             if (tiles == null)
             {
@@ -247,7 +257,7 @@ namespace NHN.TraceStrike.Editor
                 if (GUILayout.Button("현재 모양을 유지하고 직접 칠하기"))
                 {
                     BeginPaint("Convert event area to cells");
-                    using (var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer })
+                    using (var host = new PatternPreviewHost(encounter) { player = previewPlayer })
                     using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
                     {
                         context.InitializeLocations(CurrentPattern()?.locationGroups);
@@ -277,8 +287,15 @@ namespace NHN.TraceStrike.Editor
                 {
                     var cell = new Vector2Int(x, y);
                     if (PatternPreviewGridGUI.CellRect(board, x, y, encounter.arena.GridSize).Contains(e.mousePosition) &&
-                        floor.Contains(cell))
-                    { previewPlayer = cell; RebuildPreview(); e.Use(); return; }
+                        floor.Contains(cell) && !(encounter.bossVisual?.OccupiedCells().Contains(cell) ?? false))
+                    {
+                        previewPlayer = cell;
+                        if (tiles?.shape == TileShape.PlayerRegion && (playing || playhead > 0) &&
+                            previewHost != null && previewRunner != null && !previewRunner.IsComplete)
+                            previewHost.player = cell;
+                        else RebuildPreview();
+                        e.Use(); return;
+                    }
                 }
                 return;
             }

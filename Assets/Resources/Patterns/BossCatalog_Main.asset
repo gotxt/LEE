@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingBoss: 0
   bosses:
-  - {fileID: 11400000, guid: a96e060000004acaa5000000000000c8, type: 2}
   - {fileID: 11400000, guid: 0da4b75de809b874eb215a120865f749, type: 2}
+  - {fileID: 11400000, guid: a96e060000004acaa5000000000000c8, type: 2}

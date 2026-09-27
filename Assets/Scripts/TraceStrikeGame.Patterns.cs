@@ -6,8 +6,9 @@ using UnityEngine.UI;
 
 namespace NHN.TraceStrike
 {
-    public sealed partial class TraceStrikeGame : IPatternHost
+    public sealed partial class TraceStrikeGame : IPatternHost, IEncounterRegionHost
     {
+        IReadOnlyList<EncounterTileRegion> IEncounterRegionHost.TileRegions => activeBoss?.tileRegions;
         private BossEncounterDefinition activeBoss;
         private int activePhaseIndex;
         private BossPhaseDefinition ActivePhase => activeBoss.phases[activePhaseIndex];
@@ -252,6 +253,7 @@ namespace NHN.TraceStrike
             var accepted = new HashSet<Vector2Int>(cells);
             accepted.IntersectWith(model.Walkable);
             accepted.Remove(model.Player); accepted.Remove(model.Start); accepted.Remove(model.End);
+            accepted.ExceptWith(bossOccupiedCells);
             accepted.ExceptWith(model.Trail);
             if (mechanicSession != null) accepted.ExceptWith(mechanicSession.RequiredCells);
             var combined = CombinedWalls(); combined.UnionWith(accepted);
@@ -266,7 +268,8 @@ namespace NHN.TraceStrike
 
         private HashSet<Vector2Int> CombinedWalls()
         {
-            var combined = new HashSet<Vector2Int>(crystalCells);
+            var combined = new HashSet<Vector2Int>(bossOccupiedCells);
+            combined.UnionWith(crystalCells);
             foreach (var wall in timelineWalls.Values) combined.UnionWith(wall);
             return combined;
         }

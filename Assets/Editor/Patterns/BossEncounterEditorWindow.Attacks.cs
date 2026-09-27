@@ -163,33 +163,46 @@ namespace NHN.TraceStrike.Editor
             EditorGUILayout.HelpBox($"경고 {step.Warning.start:0.##}초 → 타격 {step.Damage.start:0.##}초\n다른 공격과 시간이 겹쳐도 괜찮습니다.", MessageType.None);
             EditorGUILayout.LabelField("공격 영역", EditorStyles.boldLabel);
             var tiles = step.Tiles;
-            DrawLocationGroupPicker(pattern, tiles);
+            if (tiles.shape != TileShape.PlayerRegion) DrawLocationGroupPicker(pattern, tiles);
             EditorGUI.BeginChangeCheck();
-            int shape = EditorGUILayout.Popup("영역 모양", (int)tiles.shape, new[] { "직접 칠하기", "전체 바닥", "십자", "마름모 테두리", "대각선", "십자 + 마름모", "가로 줄무늬", "세로 줄무늬", "정사각형", "체크무늬" });
-            int anchor = (int)tiles.anchor;
-            if (string.IsNullOrEmpty(tiles.locationGroupId))
-                anchor = EditorGUILayout.Popup("개별 위치 기준", anchor, new[] { "맵 중앙", "경고 시작 시 플레이어", "기믹 / 호출 위치", "맵 고정 좌표" });
-            else EditorGUILayout.LabelField("위치 기준", "위의 공유 그룹을 따름");
-            Vector2Int offset = EditorGUILayout.Vector2IntField("위치 보정 (칸)", tiles.offset);
-            int radius = tiles.radius;
-            if (shape == (int)TileShape.Diamond || shape == (int)TileShape.Combined || shape == (int)TileShape.Rectangle || shape == (int)TileShape.Checker)
-                radius = EditorGUILayout.IntSlider("반경 (칸)", tiles.radius, 0, TrailFieldModel.MaxSize);
-            bool escape = EditorGUILayout.Toggle(new GUIContent("탈출 경로 확보", "실행 시 플레이어가 피할 수 있도록 일부 공격 타일을 제외할 수 있습니다."), tiles.ensureEscape);
-            if (EditorGUI.EndChangeCheck())
+            int shape = EditorGUILayout.Popup("영역 모양", (int)tiles.shape, new[] { "직접 칠하기", "전체 바닥", "십자", "마름모 테두리", "대각선", "십자 + 마름모", "가로 줄무늬", "세로 줄무늬", "정사각형", "체크무늬", "플레이어가 속한 공통 영역" });
+            if (shape == (int)TileShape.PlayerRegion)
             {
-                BeginPaint("Edit attack area");
-                if (shape == (int)TileShape.Cells && tiles.shape != TileShape.Cells)
+                if (EditorGUI.EndChangeCheck())
                 {
-                    using (var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer })
-                    using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
-                    {
-                        context.InitializeLocations(pattern.locationGroups);
-                        tiles.cells = tiles.Resolve(context).Select(c => c - PaintOrigin(tiles)).ToList();
-                    }
+                    BeginPaint("Use named region selection"); tiles.shape = TileShape.PlayerRegion;
+                    tiles.locationGroupId = ""; tiles.offset = Vector2Int.zero; tiles.ensureEscape = false;
+                    Changed();
                 }
-                tiles.shape = (TileShape)shape; tiles.anchor = (TileAnchor)anchor;
-                tiles.offset = offset; tiles.radius = radius; tiles.ensureEscape = escape;
-                eventBrush = 0; Changed();
+                DrawRegionCandidates(tiles);
+            }
+            else
+            {
+                int anchor = (int)tiles.anchor;
+                if (string.IsNullOrEmpty(tiles.locationGroupId))
+                    anchor = EditorGUILayout.Popup("개별 위치 기준", anchor, new[] { "맵 중앙", "경고 시작 시 플레이어", "기믹 / 호출 위치", "맵 고정 좌표" });
+                else EditorGUILayout.LabelField("위치 기준", "위의 공유 그룹을 따름");
+                Vector2Int offset = EditorGUILayout.Vector2IntField("위치 보정 (칸)", tiles.offset);
+                int radius = tiles.radius;
+                if (shape == (int)TileShape.Diamond || shape == (int)TileShape.Combined || shape == (int)TileShape.Rectangle || shape == (int)TileShape.Checker)
+                    radius = EditorGUILayout.IntSlider("반경 (칸)", tiles.radius, 0, TrailFieldModel.MaxSize);
+                bool escape = EditorGUILayout.Toggle(new GUIContent("탈출 경로 확보", "실행 시 플레이어가 피할 수 있도록 일부 공격 타일을 제외할 수 있습니다."), tiles.ensureEscape);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    BeginPaint("Edit attack area");
+                    if (shape == (int)TileShape.Cells && tiles.shape != TileShape.Cells)
+                    {
+                        using (var host = new PatternPreviewHost(encounter) { player = previewPlayer })
+                        using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
+                        {
+                            context.InitializeLocations(pattern.locationGroups);
+                            tiles.cells = tiles.Capture(context).Select(c => c - PaintOrigin(tiles)).ToList();
+                        }
+                    }
+                    tiles.shape = (TileShape)shape; tiles.anchor = (TileAnchor)anchor;
+                    tiles.offset = offset; tiles.radius = radius; tiles.ensureEscape = escape;
+                    eventBrush = 0; Changed();
+                }
             }
             if (tiles.shape == TileShape.Cells && tiles.cells.Count == 0)
                 EditorGUILayout.HelpBox("아직 공격 영역이 없습니다. 오른쪽 맵을 클릭·드래그해서 칠하세요.", MessageType.Warning);
@@ -223,13 +236,16 @@ namespace NHN.TraceStrike.Editor
         private HashSet<Vector2Int> SelectionOverlay(TileSelection tiles)
         {
             if (tiles == null || !showSelectedAttackArea) return null;
+            if (tiles.shape == TileShape.PlayerRegion && previewContext != null &&
+                previewContext.Selections.TryGetValue(tiles.snapshotKey, out var frozen))
+                return new HashSet<Vector2Int>(frozen);
             try
             {
-                using (var host = new PatternPreviewHost(encounter.arena) { player = previewPlayer })
+                using (var host = new PatternPreviewHost(encounter) { player = previewPlayer })
                 using (var context = new PatternContext(host, PreviewOrigin, locationSeed: previewLocationSeed))
                 {
                     context.InitializeLocations(CurrentPattern()?.locationGroups);
-                    return tiles.Resolve(context);
+                    return tiles.Capture(context);
                 }
             }
             catch (System.InvalidOperationException) { return null; }

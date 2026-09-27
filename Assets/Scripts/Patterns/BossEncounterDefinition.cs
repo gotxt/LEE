@@ -148,6 +148,7 @@ namespace NHN.TraceStrike.Patterns
         public Sprite portrait;
         public BossVisualDefinition bossVisual = new BossVisualDefinition();
         public BossArenaDefinition arena = new BossArenaDefinition();
+        public List<EncounterTileRegion> tileRegions = new List<EncounterTileRegion>();
         [Tooltip("Reusable helper timelines owned by this encounter and callable from phase patterns.")]
         public List<EncounterPattern> libraryPatterns = new List<EncounterPattern>();
         public List<BossPhaseDefinition> phases = new List<BossPhaseDefinition>
@@ -207,6 +208,8 @@ namespace NHN.TraceStrike.Patterns
             }
             if (phases == null || phases.Count == 0) errors.Add("Boss requires at least one phase.");
             bossVisual?.Validate(errors, arena);
+            if (arena != null && arena.size >= 5 && arena.size <= TrailFieldModel.MaxSize)
+                EncounterRegionRules.ValidateDefinitions(this, errors);
             var inspected = new HashSet<IPatternTimeline>();
             foreach (var pattern in AllPatterns()) ValidateBossEvents(pattern, inspected, errors);
 
@@ -269,6 +272,7 @@ namespace NHN.TraceStrike.Patterns
         private void ValidateBossEvents(IPatternTimeline timeline, HashSet<IPatternTimeline> inspected, List<string> errors)
         {
             if (timeline == null || !inspected.Add(timeline)) return;
+            EncounterRegionRules.ValidateReferences(timeline, this, errors);
             foreach (var clip in timeline.Clips)
             {
                 if (clip == null || !clip.enabled) continue;
