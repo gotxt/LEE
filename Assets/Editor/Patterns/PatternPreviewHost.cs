@@ -8,11 +8,14 @@ using UnityEngine;
 namespace NHN.TraceStrike.Editor
 {
     // A sandbox model: editor scrubbing never changes the scene or plays prefabs/audio.
-    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost, IEncounterRegionHost, IDisposable
+    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost, IEncounterRegionHost, ISpecialTileHost, IDisposable
     {
         public IReadOnlyList<EncounterTileRegion> TileRegions { get; private set; }
         // Back to front. Dictionary slot reuse must never determine visual stacking.
-        public enum PreviewLayer { Obstacle, Hazard, Warning, Damage, Effect }
+        public enum PreviewLayer { SpecialTile = -1, Obstacle, Hazard, Warning, Damage, Effect }
+        private SpecialTileField specialTileField = new SpecialTileField(null);
+        public SpecialTilePlayerState TileState { get; } = new SpecialTilePlayerState();
+        public int FireMovesRemaining => TileState.FireMovesRemaining;
 
         public sealed class PreviewMark
         {
@@ -43,7 +46,10 @@ namespace NHN.TraceStrike.Editor
             model.CreateField((int)shape, size);
         }
         public PatternPreviewHost(BossArenaDefinition arena)
-        { arena.ApplyTo(model); player = arena.overridePlayerStart ? arena.playerStart : model.CenterCell; }
+        {
+            arena.ApplyTo(model); player = arena.overridePlayerStart ? arena.playerStart : model.CenterCell;
+            specialTileField.Dispose(); specialTileField = new SpecialTileField(arena.specialTiles);
+        }
         public PatternPreviewHost(BossEncounterDefinition encounter) : this(encounter.arena)
         {
             TileRegions = encounter.tileRegions;
@@ -60,7 +66,23 @@ namespace NHN.TraceStrike.Editor
         // Take once per board draw, not per tile. Newer marks win within a layer.
         public IReadOnlyList<PreviewMark> GetOrderedMarks() => marks
             .OrderBy(pair => pair.Value.Layer).ThenBy(pair => pair.Key)
-            .Select(pair => pair.Value).ToArray();
+            .Select(pair => pair.Value).Concat(Walkable.Where(c => specialTileField.At(c) != null)
+                .GroupBy(c => specialTileField.At(c)).Select(group => new PreviewMark(group.ToArray(), group.Key.color, PreviewLayer.SpecialTile)))
+            .OrderBy(mark => mark.Layer).ToArray();
+
+        public IPatternLease PlaceSpecialTiles(SpecialTileDefinition tile, IReadOnlyCollection<Vector2Int> cells)
+        {
+            var valid = new HashSet<Vector2Int>(cells); valid.IntersectWith(Walkable); valid.ExceptWith(permanentBlocked);
+            return specialTileField.Add(tile, valid);
+        }
+        public bool TryStep(Vector2Int direction, out PlayerTileStep step)
+        {
+            step = default;
+            if (disposed || TileState.IsStunned || Math.Abs(direction.x) + Math.Abs(direction.y) != 1 || !Traversable.Contains(player + direction)) return false;
+            var next = player + direction;
+            step = TileState.Enter(player, next, specialTileField.At(next)); player = next;
+            return true;
+        }
 
         private sealed class PreviewLease : IPatternLease
         {
@@ -109,6 +131,7 @@ namespace NHN.TraceStrike.Editor
         {
             if (disposed) return;
             disposed = true;
+            specialTileField.Dispose(); TileState.Reset();
             RequiredCellsProvider = null;
             marks.Clear(); walls.Clear(); RebuildWalls();
             boss = null;

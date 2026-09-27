@@ -8,6 +8,7 @@ namespace NHN.TraceStrike
     public sealed partial class TraceStrikeGame : IMechanicPresentationHost
     {
         private BossMechanicSession mechanicSession;
+        private RectTransform mechanicVisualRoot;
 
         private void StartMechanics()
         {
@@ -17,14 +18,29 @@ namespace NHN.TraceStrike
         }
         private void StopMechanics()
         {
+            IsEnraged = false;
             try { mechanicSession?.Dispose(); }
             catch (Exception error) { Debug.LogException(error, this); }
             mechanicSession = null;
+        }
+        private void AdvanceMechanics(float delta)
+        {
+            if (inputLocked) return;
+            mechanicSession?.Advance(delta);
+            if (!IsEnraged && mechanicSession != null && mechanicSession.IsEnraged)
+            {
+                IsEnraged = true;
+                patternCursor = 0;
+                statusText.text = "광폭화";
+                PatternSignal?.Invoke("combat.enraged", "");
+            }
+            RefreshMechanicHealthLabel();
         }
         private void RefreshMechanicHealthLabel()
         {
             if (bossHealthText == null) return;
             bossHealthText.text = bossHealth + " / " + bossMaxHealth;
+            if (IsEnraged) bossHealthText.text += "  [광폭화]";
             if (mechanicSession != null && !string.IsNullOrEmpty(mechanicSession.Status))
                 bossHealthText.text += "  [" + mechanicSession.Status + "]";
         }
@@ -56,6 +72,8 @@ namespace NHN.TraceStrike
             try
             {
                 var instance = timelineObjects[key];
+                // Persistent devices stay below warnings even when growing/spawning mid-warning.
+                if (mechanicVisualRoot != null) instance.SetParent(mechanicVisualRoot, false);
                 if (prefab != null)
                 {
                     var crystal = instance.GetComponent<CrystalVisual>();

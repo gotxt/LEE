@@ -17,11 +17,13 @@ namespace NHN.TraceStrike.Patterns
 
     public abstract class BossMechanicRuntime : IDisposable
     {
+        public virtual bool IsEnraged => false;
         public virtual int MinimumBossHealth => 0;
         public virtual string Status => "";
         public virtual IEnumerable<Vector2Int> RequiredCells { get { yield break; } }
         public abstract void Advance(float delta);
         public virtual void OnPlayerAttack(IReadOnlyCollection<Vector2Int> completedTrail) { }
+        public virtual void OnPlayerStep(PlayerTileStep step) { }
         public abstract void Dispose();
     }
 
@@ -46,6 +48,7 @@ namespace NHN.TraceStrike.Patterns
     {
         private readonly List<BossMechanicRuntime> runtimes = new List<BossMechanicRuntime>();
         public IReadOnlyList<BossMechanicRuntime> Runtimes => runtimes;
+        public bool IsEnraged => runtimes.Exists(runtime => runtime.IsEnraged);
         public int MinimumBossHealth
         {
             get { int floor = 0; foreach (var runtime in runtimes) floor = Math.Max(floor, runtime.MinimumBossHealth); return floor; }
@@ -78,6 +81,11 @@ namespace NHN.TraceStrike.Patterns
             try { foreach (var runtime in runtimes) runtime.OnPlayerAttack(completedTrail); }
             catch (Exception error) { DisposeAfterFailure(error); throw; }
             return Math.Max(floor, Math.Max(0, health - Math.Max(0, damage)));
+        }
+        public void OnPlayerStep(PlayerTileStep step)
+        {
+            try { foreach (var runtime in runtimes) runtime.OnPlayerStep(step); }
+            catch (Exception error) { DisposeAfterFailure(error); throw; }
         }
         private void DisposeAfterFailure(Exception failure)
         {

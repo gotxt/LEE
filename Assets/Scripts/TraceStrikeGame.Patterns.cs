@@ -23,6 +23,7 @@ namespace NHN.TraceStrike
         private float timelineWait;
         private string pendingTimelineDamage;
         public bool IsPatternPreview { get; private set; }
+        public bool IsEnraged { get; private set; }
         private readonly Dictionary<int, HashSet<Vector2Int>> timelineWalls = new Dictionary<int, HashSet<Vector2Int>>();
         private readonly Dictionary<int, HashSet<Vector2Int>> timelineDanger = new Dictionary<int, HashSet<Vector2Int>>();
         private readonly Dictionary<int, KeyValuePair<HashSet<Vector2Int>, string>> timelineHazards =
@@ -77,7 +78,7 @@ namespace NHN.TraceStrike
             pendingTimelineDamage = null;
         }
 
-        private void OnDisable() { CancelTimeline(); StopMechanics(); }
+        private void OnDisable() { CancelTimeline(); StopMechanics(); StopSpecialTiles(); }
 
         private void TickTimeline()
         {
@@ -93,9 +94,10 @@ namespace NHN.TraceStrike
             try
             {
                 float dt = Time.deltaTime;
-                if (!IsPatternPreview) mechanicSession?.Advance(dt);
+                if (!IsPatternPreview) AdvanceMechanics(dt);
                 if (!IsPatternPreview && ActivePhase.backgroundEnabled &&
-                    ActivePhase.background != null && ActivePhase.background.enabled)
+                    ActivePhase.background != null && (ActivePhase.background.CanSchedule(IsEnraged) ||
+                    (backgroundTimeline != null && !backgroundTimeline.IsComplete)))
                 {
                     if (backgroundTimeline == null || backgroundTimeline.IsComplete)
                         backgroundTimeline = NewRunner(ActivePhase.background);
@@ -145,14 +147,14 @@ namespace NHN.TraceStrike
         {
             int enabledCount = 0;
             foreach (EncounterPattern pattern in ActivePhase.patterns)
-                if (pattern != null && pattern.enabled) enabledCount++;
+                if (pattern != null && pattern.CanSchedule(IsEnraged)) enabledCount++;
             if (enabledCount == 0) return null;
 
             int target = ActivePhase.shuffle
                 ? UnityEngine.Random.Range(0, enabledCount)
                 : patternCursor++ % enabledCount;
             foreach (EncounterPattern pattern in ActivePhase.patterns)
-                if (pattern != null && pattern.enabled && target-- == 0) return pattern;
+                if (pattern != null && pattern.CanSchedule(IsEnraged) && target-- == 0) return pattern;
             return null;
         }
 

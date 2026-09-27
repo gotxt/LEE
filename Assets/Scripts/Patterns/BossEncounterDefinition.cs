@@ -24,6 +24,7 @@ namespace NHN.TraceStrike.Patterns
         [Tooltip("Brush palette only. Reordering or removing entries does not change painted tiles.")]
         public List<Sprite> tilePalette = new List<Sprite>();
         [HideInInspector] public List<ArenaTileImage> tileImages = new List<ArenaTileImage>();
+        public List<SpecialTilePlacement> specialTiles = new List<SpecialTilePlacement>();
         [Range(0.5f, 3f)] public float cameraZoom = 2.05f;
         [Range(0.25f, 1.5f)] public float playerSizeRatio = 0.78f;
 
@@ -43,6 +44,13 @@ namespace NHN.TraceStrike.Patterns
             if (tileImages == null) tileImages = new List<ArenaTileImage>();
             tileImages.RemoveAll(entry => entry == null || entry.cell == cell);
             if (sprite != null) tileImages.Add(new ArenaTileImage { cell = cell, sprite = sprite });
+        }
+
+        public void SetSpecialTile(Vector2Int cell, SpecialTileDefinition tile)
+        {
+            specialTiles ??= new List<SpecialTilePlacement>();
+            specialTiles.RemoveAll(entry => entry == null || entry.cell == cell);
+            if (tile != null) specialTiles.Add(new SpecialTilePlacement { cell = cell, tile = tile });
         }
 
         // Build once per board refresh, not once per rendered tile. Store sprite
@@ -209,7 +217,10 @@ namespace NHN.TraceStrike.Patterns
             if (phases == null || phases.Count == 0) errors.Add("Boss requires at least one phase.");
             bossVisual?.Validate(errors, arena);
             if (arena != null && arena.size >= 5 && arena.size <= TrailFieldModel.MaxSize)
+            {
                 EncounterRegionRules.ValidateDefinitions(this, errors);
+                SpecialTileValidation.Validate(this, errors);
+            }
             var inspected = new HashSet<IPatternTimeline>();
             foreach (var pattern in AllPatterns()) ValidateBossEvents(pattern, inspected, errors);
 

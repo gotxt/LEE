@@ -19,7 +19,7 @@ namespace NHN.TraceStrike.Editor
         private Vector2 mapScroll, tilePreviewScroll;
         private Vector2Int strokeOrigin;
 
-        private void OnLostFocus() { mapStroke.Cancel(); eventStroke.Cancel(); mechanicTrailStroke.Cancel(); regionStroke.Cancel(); }
+        private void OnLostFocus() { mapStroke.Cancel(); eventStroke.Cancel(); mechanicTrailStroke.Cancel(); regionStroke.Cancel(); specialTileStroke.Cancel(); }
 
         private void BeginPaint(string label)
         {

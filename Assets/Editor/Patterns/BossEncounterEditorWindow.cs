@@ -11,7 +11,7 @@ namespace NHN.TraceStrike.Editor
 {
     public sealed partial class BossEncounterEditorWindow : EditorWindow
     {
-        private enum NodeKind { Encounter, Arena, Phase, Pattern, Background, LibraryPattern, Mechanic, Regions }
+        private enum NodeKind { Encounter, Arena, Phase, Pattern, Background, LibraryPattern, Mechanic, Regions, SpecialTiles }
 
         [SerializeField] private BossEncounterDefinition encounter;
         [SerializeField] private NodeKind node = NodeKind.Encounter;
@@ -65,6 +65,7 @@ namespace NHN.TraceStrike.Editor
 
         private void OnDisable()
         {
+            specialTileStroke.Cancel();
             regionStroke.Cancel();
             mechanicTrailStroke.Cancel();
             mapStroke.Cancel();
@@ -84,6 +85,7 @@ namespace NHN.TraceStrike.Editor
 
         private void SelectEncounter(BossEncounterDefinition value)
         {
+            specialTileStroke.Cancel();
             regionStroke.Cancel();
             selectedRegion = 0;
             mechanicTrailStroke.Cancel();
@@ -124,9 +126,11 @@ namespace NHN.TraceStrike.Editor
                         DrawArenaPainter();
                     }
                     else if (node == NodeKind.Regions) DrawRegionPainter();
+                    else if (node == NodeKind.SpecialTiles) DrawSpecialTilePainter();
                     else if (node == NodeKind.Mechanic) DrawMechanicEditor();
                     else
                     {
+                        if (pattern != null) DrawCombatCondition(pattern);
                         if (pattern != null)
                             attackEditorMode = GUILayout.Toolbar(attackEditorMode,
                                 new[] { "간편 공격 설계", "고급 이벤트 편집" });
@@ -193,6 +197,7 @@ namespace NHN.TraceStrike.Editor
                 TreeButton("● " + encounter.displayName, NodeKind.Encounter, -1, -1);
                 TreeButton("  ▣ 전장 (Arena)", NodeKind.Arena, -1, -1);
                 TreeButton("  ▧ 보스 공통 영역", NodeKind.Regions, -1, -1);
+                TreeButton("  ▨ 특수 타일 배치", NodeKind.SpecialTiles, -1, -1);
 
                 EditorGUILayout.Space(5f);
                 using (new EditorGUILayout.HorizontalScope())
@@ -804,6 +809,7 @@ namespace NHN.TraceStrike.Editor
                 id = source.id,
                 name = source.name,
                 enabled = source.enabled,
+                combatCondition = source.combatCondition,
                 minimumDuration = source.minimumDuration,
                 locationGroups = source.locationGroups?.Where(group => group != null)
                     .Select(group => JsonUtility.FromJson<PatternLocationGroup>(JsonUtility.ToJson(group))).ToList()
@@ -876,6 +882,7 @@ namespace NHN.TraceStrike.Editor
         private void RebuildPreview()
         {
             DisposePreview();
+            if (node == NodeKind.SpecialTiles) { ResetSpecialTilePreview(); return; }
             if (node == NodeKind.Mechanic) { RebuildMechanicPreview(); return; }
             EncounterPattern pattern = CurrentPattern();
             if (encounter == null || pattern == null) return;
@@ -914,6 +921,7 @@ namespace NHN.TraceStrike.Editor
 
         private void DisposePreview()
         {
+            tileTestField?.Dispose(); tileTestField = null; tileTestModel = null; tileTestState.Reset();
             previewContext = null;
             previewLocations.Clear();
             if (previewHost != null) previewHost.RequiredCellsProvider = null;
@@ -939,6 +947,7 @@ namespace NHN.TraceStrike.Editor
 
         private void UpdatePreview()
         {
+            if (node == NodeKind.SpecialTiles) { UpdateSpecialTilePreview(); return; }
             if (node == NodeKind.Mechanic) { UpdateMechanicPreview(); return; }
             EncounterPattern pattern = CurrentPattern();
             if (!playing || pattern == null) return;

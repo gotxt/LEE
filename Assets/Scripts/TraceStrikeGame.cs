@@ -335,6 +335,7 @@ namespace NHN.TraceStrike
         {
             CancelTimeline();
             StopMechanics();
+            StopSpecialTiles();
             DisposeBossVisual();
             if (titleBlindMaterial != null)
             {
@@ -346,6 +347,7 @@ namespace NHN.TraceStrike
         {
             RefreshFixedAspect();
             AnimateVisuals();
+            TickSpecialTiles(Time.deltaTime);
             TickTimeline();
             if (titleActive)
             {
@@ -365,7 +367,7 @@ namespace NHN.TraceStrike
             {
                 return;
             }
-            if (inputLocked || movementFrozen)
+            if (inputLocked || IsMovementFrozen)
             {
                 return;
             }
@@ -516,6 +518,8 @@ namespace NHN.TraceStrike
 
         private void Move(Vector2Int direction)
         {
+            if (!titleActive && !hubActive && !tutorialActive &&
+                (inputLocked || IsMovementFrozen || playerDead || gameCleared)) return;
             if (direction != Vector2Int.zero)
             {
                 playerFacing = direction;
@@ -531,7 +535,10 @@ namespace NHN.TraceStrike
                 return;
             }
             bool blockedByCrystal = model.IsBlocked(model.Player + direction);
+            Vector2Int previousCell = model.Player;
             MoveResult result = model.TryMove(direction);
+            if (result != MoveResult.Blocked && !titleActive && !playerDead &&
+                !EnterSpecialTile(previousCell, model.Player)) return;
             switch (result)
             {
                 case MoveResult.Blocked:
@@ -622,6 +629,7 @@ namespace NHN.TraceStrike
         {
             CancelTimeline();
             StopMechanics();
+            StopSpecialTiles();
             hubActive = true;
             tutorialActive = false;
             tutorialTransitioning = false;
@@ -1044,6 +1052,7 @@ namespace NHN.TraceStrike
         {
             CancelTimeline();
             StopMechanics();
+            StopSpecialTiles();
             titleActive = false;
             if (titleScreen != null)
             {
@@ -1328,6 +1337,7 @@ namespace NHN.TraceStrike
             bossHealthText.text = "0 / " + bossMaxHealth;
             gameCleared = true;
             bossPhaseSkipped = true;
+            StopSpecialTiles();
             stageTimerRunning = false;
             crystalLayoutVersion++;
             crystalCells.Clear();
@@ -1649,6 +1659,7 @@ namespace NHN.TraceStrike
                 crystalTelegraphProgress.Clear();
                 CancelTimeline();
                 StopMechanics();
+                StopSpecialTiles();
                 statusText.text = "STAGE CLEAR — " + ActiveBossName + " 격파!" + CompleteStageTimer();
                 PlaySfx(victorySfx);
                 RefreshBoard();
@@ -1719,6 +1730,7 @@ namespace NHN.TraceStrike
             ApplyFloorTileLayout();
             model.SetBlockedCells(CombinedWalls());
             model.BeginRound(round, true, activeBoss.arena.overridePlayerStart ? (Vector2Int?)activeBoss.arena.playerStart : null);
+            StartSpecialTiles();
             BuildEncounterBossVisual();
             GenerateSpecialTiles();
             RefreshCrystalVisuals();
@@ -2241,6 +2253,7 @@ namespace NHN.TraceStrike
         {
             CancelTimeline();
             StopMechanics();
+            StopSpecialTiles();
             playerDead = true;
             inputLocked = true;
             movementFrozen = false;
@@ -2973,6 +2986,10 @@ namespace NHN.TraceStrike
                 }
             }
 
+            mechanicVisualRoot = CreateRect("Mechanic Devices", mainGrid);
+            mechanicVisualRoot.anchorMin = mechanicVisualRoot.anchorMax = new Vector2(.5f, .5f);
+            mechanicVisualRoot.sizeDelta = Vector2.zero;
+            mechanicVisualRoot.anchoredPosition = Vector2.zero;
             mainPlayer = CreatePlayer("Player", mainGrid, mainCellSize * ActiveBattlePlayerSizeRatio, false);
             objectiveArrow = CreateRect("Objective Direction Arrow", mainGrid);
             objectiveArrow.anchorMin = objectiveArrow.anchorMax = new Vector2(0.5f, 0.5f);
@@ -3355,7 +3372,7 @@ namespace NHN.TraceStrike
 
         private void MoveFromDirectionButton(Vector2Int direction)
         {
-            if (titleActive || inputLocked || movementFrozen || playerDead || gameCleared)
+            if (titleActive || inputLocked || IsMovementFrozen || playerDead || gameCleared)
             {
                 return;
             }
@@ -3429,6 +3446,7 @@ namespace NHN.TraceStrike
                     mainTiles[x, y].color = color;
                     SetTileDepthColor(x, y, color);
                     SetSpecialItemVisual(x, y, hasSpecialTile && !isCrystal, specialType, mainCellSize * 0.48f);
+                    DrawPlacedSpecialTile(x, y);
                     bool lightMarker = warnedCells.Contains(cell) || targetedCells.Contains(cell) ||
                         crystalWarned || crystalFiring;
                     SetEndpointMarkerVisual(x, y,

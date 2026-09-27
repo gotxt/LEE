@@ -58,6 +58,7 @@ namespace NHN.TraceStrike.Editor
                         .FindPropertyRelative("mechanics").GetArrayElementAtIndex(patternIndex);
                     EditorGUI.BeginChangeCheck();
                     if (mechanic is CrystalSealMechanic seal) DrawCrystalSettings(property, seal);
+                    else if (mechanic is RegionGrowthMechanic growth) DrawGrowthSettings(property, growth);
                     else EditorGUILayout.PropertyField(property, true); // New types can supply a PropertyDrawer.
                     if (EditorGUI.EndChangeCheck()) { serialized.ApplyModifiedProperties(); Changed(); }
                     var errors = new List<string>(); mechanic.Validate(encounter, errors);
@@ -69,7 +70,11 @@ namespace NHN.TraceStrike.Editor
                     }
                     EditorGUILayout.EndScrollView();
                 }
-                using (new EditorGUILayout.VerticalScope()) DrawMechanicBoard(mechanic as CrystalSealMechanic);
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    if (mechanic is RegionGrowthMechanic) DrawGrowthBoard();
+                    else DrawMechanicBoard(mechanic as CrystalSealMechanic);
+                }
             }
         }
 
@@ -260,6 +265,8 @@ namespace NHN.TraceStrike.Editor
                 if (errors.Count > 0) { previewError = string.Join("\n", errors); return; }
                 previewHost = new PatternPreviewHost(encounter)
                 { player = previewPlayer, RequiredCellsProvider = () => mechanicPreview?.RequiredCells };
+                if (!previewHost.Traversable.Contains(previewPlayer))
+                    previewPlayer = previewHost.player = encounter.arena.overridePlayerStart ? encounter.arena.playerStart : previewHost.Traversable.First();
                 if (encounter.bossVisual?.prefab != null)
                 { bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true); previewHost.boss = bossPreview.Presentation; }
                 mechanicPreview = new BossMechanicSession(new[] { CurrentMechanic }, new MechanicContext(previewHost, encounter.FindPattern));
@@ -271,7 +278,7 @@ namespace NHN.TraceStrike.Editor
         {
             if (!playing || mechanicPreview == null) return;
             double now = EditorApplication.timeSinceStartup; float delta = (float)(now - lastPreviewTime); lastPreviewTime = now;
-            try { bossPreview?.Presentation.Advance(delta); mechanicPreview.Advance(delta); playhead += delta; }
+            try { AdvanceMechanicPreview(delta); }
             catch (Exception error) { FailPreview(error); }
             Repaint();
         }

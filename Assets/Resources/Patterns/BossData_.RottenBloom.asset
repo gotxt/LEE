@@ -1037,10 +1037,136 @@ MonoBehaviour:
     playerStart: {x: 15, y: 1}
     restrictStartCells: 1
     startCells:
-    - {x: 13, y: 10}
+    - {x: 12, y: 19}
+    - {x: 13, y: 19}
+    - {x: 14, y: 19}
+    - {x: 15, y: 19}
+    - {x: 16, y: 19}
+    - {x: 17, y: 19}
+    - {x: 18, y: 19}
+    - {x: 19, y: 19}
+    - {x: 19, y: 18}
+    - {x: 18, y: 18}
+    - {x: 17, y: 18}
+    - {x: 16, y: 18}
+    - {x: 15, y: 18}
+    - {x: 14, y: 18}
+    - {x: 13, y: 18}
+    - {x: 12, y: 18}
+    - {x: 15, y: 20}
+    - {x: 14, y: 20}
+    - {x: 16, y: 20}
+    - {x: 17, y: 20}
+    - {x: 18, y: 17}
+    - {x: 18, y: 16}
+    - {x: 19, y: 17}
+    - {x: 19, y: 16}
+    - {x: 20, y: 17}
+    - {x: 20, y: 16}
+    - {x: 20, y: 15}
+    - {x: 20, y: 14}
+    - {x: 19, y: 14}
+    - {x: 19, y: 15}
+    - {x: 18, y: 14}
+    - {x: 18, y: 15}
+    - {x: 18, y: 13}
+    - {x: 19, y: 13}
+    - {x: 19, y: 12}
+    - {x: 18, y: 12}
+    - {x: 17, y: 12}
+    - {x: 16, y: 12}
+    - {x: 15, y: 12}
+    - {x: 14, y: 12}
+    - {x: 13, y: 12}
+    - {x: 12, y: 12}
+    - {x: 12, y: 13}
+    - {x: 13, y: 13}
+    - {x: 14, y: 13}
+    - {x: 15, y: 13}
+    - {x: 16, y: 13}
+    - {x: 17, y: 13}
+    - {x: 16, y: 11}
+    - {x: 17, y: 11}
+    - {x: 15, y: 11}
+    - {x: 14, y: 11}
+    - {x: 13, y: 14}
+    - {x: 13, y: 15}
+    - {x: 13, y: 16}
+    - {x: 13, y: 17}
+    - {x: 12, y: 17}
+    - {x: 12, y: 16}
+    - {x: 12, y: 15}
+    - {x: 12, y: 14}
+    - {x: 11, y: 14}
+    - {x: 11, y: 15}
+    - {x: 11, y: 16}
+    - {x: 11, y: 17}
     restrictEndCells: 1
     endCells:
-    - {x: 18, y: 10}
+    - {x: 17, y: 11}
+    - {x: 17, y: 12}
+    - {x: 17, y: 13}
+    - {x: 16, y: 13}
+    - {x: 16, y: 12}
+    - {x: 16, y: 11}
+    - {x: 15, y: 11}
+    - {x: 14, y: 11}
+    - {x: 14, y: 12}
+    - {x: 15, y: 12}
+    - {x: 15, y: 13}
+    - {x: 14, y: 13}
+    - {x: 13, y: 13}
+    - {x: 12, y: 12}
+    - {x: 13, y: 12}
+    - {x: 12, y: 13}
+    - {x: 13, y: 14}
+    - {x: 13, y: 15}
+    - {x: 12, y: 15}
+    - {x: 12, y: 14}
+    - {x: 11, y: 14}
+    - {x: 11, y: 15}
+    - {x: 11, y: 16}
+    - {x: 11, y: 17}
+    - {x: 12, y: 17}
+    - {x: 12, y: 16}
+    - {x: 13, y: 16}
+    - {x: 13, y: 17}
+    - {x: 13, y: 18}
+    - {x: 12, y: 18}
+    - {x: 12, y: 19}
+    - {x: 13, y: 19}
+    - {x: 14, y: 19}
+    - {x: 15, y: 19}
+    - {x: 16, y: 19}
+    - {x: 17, y: 19}
+    - {x: 18, y: 19}
+    - {x: 19, y: 19}
+    - {x: 18, y: 18}
+    - {x: 17, y: 18}
+    - {x: 16, y: 18}
+    - {x: 15, y: 18}
+    - {x: 14, y: 18}
+    - {x: 14, y: 20}
+    - {x: 15, y: 20}
+    - {x: 16, y: 20}
+    - {x: 17, y: 20}
+    - {x: 18, y: 17}
+    - {x: 19, y: 17}
+    - {x: 19, y: 18}
+    - {x: 18, y: 16}
+    - {x: 19, y: 16}
+    - {x: 20, y: 17}
+    - {x: 20, y: 16}
+    - {x: 20, y: 15}
+    - {x: 19, y: 15}
+    - {x: 19, y: 14}
+    - {x: 18, y: 14}
+    - {x: 20, y: 14}
+    - {x: 18, y: 15}
+    - {x: 18, y: 13}
+    - {x: 19, y: 13}
+    - {x: 19, y: 12}
+    - {x: 18, y: 12}
   tileRegions:
   - id: petal-top
     name: "\uC704 \uAF43\uC78E"
@@ -1748,6 +1874,74 @@ MonoBehaviour:
     - {x: 6, y: 26}
     - {x: 5, y: 27}
     - {x: 6, y: 27}
+  - id: 97821fa0658f4977bf2903e110a25f20
+    name: "\uC911\uC559"
+    color: {r: 0.8452785, g: 0.9433962, b: 0.17354932, a: 0.4}
+    cells:
+    - {x: 12, y: 16}
+    - {x: 12, y: 15}
+    - {x: 12, y: 14}
+    - {x: 13, y: 14}
+    - {x: 13, y: 16}
+    - {x: 13, y: 15}
+    - {x: 13, y: 17}
+    - {x: 14, y: 18}
+    - {x: 13, y: 18}
+    - {x: 12, y: 18}
+    - {x: 12, y: 17}
+    - {x: 11, y: 17}
+    - {x: 11, y: 16}
+    - {x: 11, y: 15}
+    - {x: 11, y: 14}
+    - {x: 12, y: 13}
+    - {x: 13, y: 13}
+    - {x: 13, y: 12}
+    - {x: 12, y: 12}
+    - {x: 14, y: 12}
+    - {x: 14, y: 13}
+    - {x: 15, y: 12}
+    - {x: 16, y: 12}
+    - {x: 15, y: 13}
+    - {x: 16, y: 13}
+    - {x: 17, y: 13}
+    - {x: 17, y: 12}
+    - {x: 18, y: 13}
+    - {x: 19, y: 13}
+    - {x: 19, y: 12}
+    - {x: 18, y: 12}
+    - {x: 17, y: 11}
+    - {x: 16, y: 11}
+    - {x: 15, y: 11}
+    - {x: 14, y: 11}
+    - {x: 18, y: 14}
+    - {x: 19, y: 14}
+    - {x: 20, y: 14}
+    - {x: 20, y: 15}
+    - {x: 19, y: 15}
+    - {x: 18, y: 15}
+    - {x: 18, y: 16}
+    - {x: 19, y: 16}
+    - {x: 20, y: 16}
+    - {x: 20, y: 17}
+    - {x: 19, y: 17}
+    - {x: 18, y: 17}
+    - {x: 18, y: 18}
+    - {x: 19, y: 18}
+    - {x: 19, y: 19}
+    - {x: 18, y: 19}
+    - {x: 17, y: 18}
+    - {x: 17, y: 19}
+    - {x: 17, y: 20}
+    - {x: 16, y: 20}
+    - {x: 16, y: 19}
+    - {x: 16, y: 18}
+    - {x: 15, y: 18}
+    - {x: 15, y: 19}
+    - {x: 15, y: 20}
+    - {x: 14, y: 20}
+    - {x: 14, y: 19}
+    - {x: 13, y: 19}
+    - {x: 12, y: 19}
   libraryPatterns: []
   phases:
   - name: Phase
@@ -1767,7 +1961,7 @@ MonoBehaviour:
       - enabled: 1
         label: "\uAF43\uC78E \uACBD\uACE0"
         start: 0
-        duration: 3
+        duration: 2.5
         action:
           rid: 900001
         attackGroupKey: petal_collapse_01
@@ -1775,7 +1969,7 @@ MonoBehaviour:
         attackName: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC788\uB294 \uAF43\uC78E"
       - enabled: 1
         label: "\uAF43\uC78E \uD0C0\uACA9"
-        start: 3
+        start: 2.5
         duration: 0.3
         action:
           rid: 900002
@@ -1784,7 +1978,7 @@ MonoBehaviour:
         attackName: 
       - enabled: 1
         label: "\uAF43\uC78E \uD0C0\uACA9 VFX"
-        start: 3
+        start: 2.5
         duration: 0.3
         action:
           rid: 900003
@@ -1799,11 +1993,46 @@ MonoBehaviour:
       minimumDuration: 1
       locationGroups: []
       clips: []
-    mechanics: []
+    mechanics:
+    - rid: 900004
     legacyCrystals: 0
   references:
     version: 2
     RefIds:
+    - rid: 900004
+      type: {class: RegionGrowthMechanic, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        name: "구역 씨앗 성장"
+        enabled: 1
+        regionIds:
+        - petal-top
+        - petal-upper-right
+        - petal-lower-right
+        - petal-bottom
+        - petal-lower-left
+        - petal-upper-left
+        - 97821fa0658f4977bf2903e110a25f20
+        initialDelay: 5
+        interval: 5
+        seedsPerSpawn: 5
+        growthSeconds: 20
+        coverage: 0.3
+        overgrownTile: {fileID: 11400000, guid: 92ee49b0e65d4e218236fe399841c772, type: 2}
+        enrageWhenAll:
+        - petal-top
+        - petal-upper-right
+        - petal-lower-right
+        - petal-bottom
+        - petal-lower-left
+        - petal-upper-left
+        enrageWhenAny:
+        - 97821fa0658f4977bf2903e110a25f20
+        seedPrefab: {fileID: 0}
+        maturePrefab: {fileID: 0}
+        seedSprite: {fileID: 0}
+        matureSprite: {fileID: 0}
+        seedTint: {r: 0.95, g: 0.72, b: 0.25, a: 0.9}
+        matureTint: {r: 0.32, g: 0.2, b: 0.48, a: 0.95}
     - rid: 900001
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:

@@ -44,12 +44,17 @@ namespace NHN.TraceStrike.Patterns
         [HideInInspector] public List<Vector2Int> randomCells = new List<Vector2Int>();
     }
 
+    public enum PatternCombatCondition { Always, BeforeEnrage, Enraged }
+
     [Serializable]
     public sealed class EncounterPattern : IPatternTimeline
     {
         public string id = Guid.NewGuid().ToString("N");
         public string name = "New Pattern";
         public bool enabled = true;
+        public PatternCombatCondition combatCondition;
+        public bool CanSchedule(bool enraged) => enabled && (combatCondition == PatternCombatCondition.Always ||
+            combatCondition == (enraged ? PatternCombatCondition.Enraged : PatternCombatCondition.BeforeEnrage));
         [Min(0)] public float minimumDuration = 1f;
         public List<PatternLocationGroup> locationGroups = new List<PatternLocationGroup>();
         public List<PatternClip> clips = new List<PatternClip>();
@@ -236,6 +241,8 @@ namespace NHN.TraceStrike.Patterns
             HashSet<string> path, List<string> errors, int depth)
         {
             if (pattern == null) { errors.Add("Missing encounter pattern."); return; }
+            if (!Enum.IsDefined(typeof(PatternCombatCondition), pattern.combatCondition))
+                errors.Add(pattern.name + ": invalid combat condition.");
             string key = string.IsNullOrEmpty(pattern.id) ? pattern.name : pattern.id;
             if (depth > 16 || !path.Add(key))
             { errors.Add(pattern.name + ": recursive pattern call or depth > 16."); return; }
