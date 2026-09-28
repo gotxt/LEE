@@ -2407,7 +2407,6 @@ MonoBehaviour:
         attackGroupKey: attack_1a84dae9e4ae4989b7ab9cadab660425
         attackAtImpact: 1
         attackName: 
-<<<<<<< Updated upstream
     - id: p1-diagonal-1
       name: P1_Diagonal_1
       enabled: 0
@@ -2468,13 +2467,10 @@ MonoBehaviour:
         attackGroupKey: glyph
         attackAtImpact: 1
         attackName: 
-=======
->>>>>>> Stashed changes
     - id: p1-diamond-0
       name: P1_Diamond_0
       enabled: 0
       minimumDuration: 2.3
-<<<<<<< Updated upstream
       locationGroups: []
       clips:
       - enabled: 1
@@ -2531,14 +2527,6 @@ MonoBehaviour:
         attackGroupKey: glyph
         attackAtImpact: 1
         attackName: 
-=======
-      clips: []
-    - id: p1-diagonal-1
-      name: P1_Diagonal_1
-      enabled: 0
-      minimumDuration: 2.3
-      clips: []
->>>>>>> Stashed changes
     - id: p1-diamond-1
       name: "\uC5EC\uC9C4 (\uD50C\uB808\uC774\uC5B4\uAC00 \uAC00\uAE4C\uC774\uC624\uBA74
         \uC2E4\uD589)"
@@ -8363,7 +8351,6 @@ MonoBehaviour:
       data:
         offset: {x: 0, y: 0}
         shake: 12
-<<<<<<< Updated upstream
     - rid: 28
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
@@ -8484,8 +8471,6 @@ MonoBehaviour:
       data:
         offset: {x: 0, y: 0}
         shake: 12
-=======
->>>>>>> Stashed changes
     - rid: 40
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
@@ -8689,12 +8674,8 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
-<<<<<<< Updated upstream
           locationGroupId: 
-          ensureEscape: 1
-=======
           ensureEscape: 0
->>>>>>> Stashed changes
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 61
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8712,12 +8693,8 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
-<<<<<<< Updated upstream
           locationGroupId: 
-          ensureEscape: 1
-=======
           ensureEscape: 0
->>>>>>> Stashed changes
         escapeGrace: 0.18
         reason: Cross
     - rid: 63
@@ -8739,12 +8716,8 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
-<<<<<<< Updated upstream
           locationGroupId: 
-          ensureEscape: 1
-=======
           ensureEscape: 0
->>>>>>> Stashed changes
     - rid: 65
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
