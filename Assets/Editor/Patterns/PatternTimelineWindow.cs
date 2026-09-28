@@ -70,7 +70,7 @@ namespace NHN.TraceStrike.Editor
             var menu = new GenericMenu();
             foreach (var type in TypeCache.GetTypesDerivedFrom<PatternEvent>()
                          .Where(t => !t.IsAbstract && t.IsSerializable &&
-                             t != typeof(CallEncounterPatternEvent)).OrderBy(t => t.Name))
+                             !typeof(IEncounterPatternCall).IsAssignableFrom(t)).OrderBy(t => t.Name))
             {
                 var captured = type;
                 menu.AddItem(new GUIContent(ObjectNames.NicifyVariableName(type.Name)), false, () => {

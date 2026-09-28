@@ -222,6 +222,7 @@ namespace NHN.TraceStrike.Patterns
                 SpecialTileValidation.Validate(this, errors);
             }
             var inspected = new HashSet<IPatternTimeline>();
+            MechanicOutputValidation.Validate(this, errors);
             foreach (var pattern in AllPatterns()) ValidateBossEvents(pattern, inspected, errors);
 
             var ids = new HashSet<string>();
@@ -289,7 +290,7 @@ namespace NHN.TraceStrike.Patterns
                 if (clip == null || !clip.enabled) continue;
                 if (clip.action is BossEvent action) action.ValidateBoss(bossVisual, errors);
                 if (clip.action is CallPatternEvent shared) ValidateBossEvents(shared.pattern, inspected, errors);
-                if (clip.action is CallEncounterPatternEvent local) ValidateBossEvents(FindPattern(local.patternId), inspected, errors);
+                if (clip.action is IEncounterPatternCall local) ValidateBossEvents(FindPattern(local.PatternId), inspected, errors);
             }
         }
 

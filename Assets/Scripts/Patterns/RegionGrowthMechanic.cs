@@ -23,6 +23,10 @@ namespace NHN.TraceStrike.Patterns
         public Color seedTint = new Color(.95f, .72f, .25f, .9f);
         public Color matureTint = new Color(.32f, .2f, .48f, .95f);
         public RegionGrowthMechanic() { name = "구역 씨앗 성장"; }
+        public const string MaturePositions = "mature-positions";
+        private static readonly MechanicPositionOutput[] OutputPorts =
+            { new MechanicPositionOutput(MaturePositions, "완전 성장체 위치") };
+        public override IReadOnlyList<MechanicPositionOutput> PositionOutputs => OutputPorts;
         public override BossMechanicRuntime Create(MechanicContext context) => new RegionGrowthRuntime(this, context);
         public static int Threshold(int cells, float ratio) => !Finite(ratio) || ratio <= 0 || ratio > 1 ? 0 :
             Math.Max(1, (int)Math.Ceiling(cells * (decimal)ratio));
@@ -100,6 +104,8 @@ namespace NHN.TraceStrike.Patterns
         private bool disposed, enraged;
         public IReadOnlyList<RegionState> Regions => regions;
         public IReadOnlyCollection<SeedState> Seeds => seeds.Values;
+        public override IEnumerable<Vector2Int> ReadPositions(string outputKey) =>
+            outputKey == RegionGrowthMechanic.MaturePositions ? seeds.Values.Where(s => s.Mature).Select(s => s.Cell) : base.ReadPositions(outputKey);
         public double Elapsed => clock;
         public override bool IsEnraged => !disposed && enraged;
         public override string Status => disposed ? "" : $"덩굴 {regions.Count(r => r.Overgrown)}/{regions.Count}";

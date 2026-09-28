@@ -8,8 +8,11 @@ using UnityEngine;
 namespace NHN.TraceStrike.Editor
 {
     // A sandbox model: editor scrubbing never changes the scene or plays prefabs/audio.
-    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost, IEncounterRegionHost, ISpecialTileHost, IDisposable
+    public sealed class PatternPreviewHost : IPatternHost, IBossPatternHost, IMechanicPresentationHost, IEncounterRegionHost, ISpecialTileHost, IMechanicOutputHost, IDisposable
     {
+        public IMechanicOutputHost MechanicOutputs { get; set; }
+        public IReadOnlyCollection<Vector2Int> CaptureMechanicPositions(string mechanicId, string outputKey) =>
+            (MechanicOutputs ?? throw new InvalidOperationException("기믹 합동 미리보기에서 페이즈를 선택하세요.")).CaptureMechanicPositions(mechanicId, outputKey);
         public IReadOnlyList<EncounterTileRegion> TileRegions { get; private set; }
         // Back to front. Dictionary slot reuse must never determine visual stacking.
         public enum PreviewLayer { SpecialTile = -1, Obstacle, Hazard, Warning, Damage, Effect }
@@ -133,6 +136,7 @@ namespace NHN.TraceStrike.Editor
             disposed = true;
             specialTileField.Dispose(); TileState.Reset();
             RequiredCellsProvider = null;
+            MechanicOutputs = null;
             marks.Clear(); walls.Clear(); RebuildWalls();
             boss = null;
         }

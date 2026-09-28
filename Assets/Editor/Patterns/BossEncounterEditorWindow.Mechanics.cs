@@ -27,7 +27,7 @@ namespace NHN.TraceStrike.Editor
         private void ShowMechanicMenu(int phase)
         {
             var menu = new GenericMenu();
-            foreach (var type in TypeCache.GetTypesDerivedFrom<BossMechanicDefinition>().Where(t => !t.IsAbstract && t.IsSerializable))
+            foreach (var type in TypeCache.GetTypesDerivedFrom<BossMechanicDefinition>().Where(t => !t.IsAbstract && t.IsSerializable && t.IsPublic))
             {
                 Type captured = type;
                 var sample = (BossMechanicDefinition)Activator.CreateInstance(type);
@@ -61,6 +61,7 @@ namespace NHN.TraceStrike.Editor
                     else if (mechanic is RegionGrowthMechanic growth) DrawGrowthSettings(property, growth);
                     else EditorGUILayout.PropertyField(property, true); // New types can supply a PropertyDrawer.
                     if (EditorGUI.EndChangeCheck()) { serialized.ApplyModifiedProperties(); Changed(); }
+                    DrawMechanicOutputInfo(mechanic);
                     var errors = new List<string>(); mechanic.Validate(encounter, errors);
                     foreach (string error in errors) EditorGUILayout.HelpBox(error, MessageType.Error);
                     if (GUILayout.Button("이 기믹 삭제") && EditorUtility.DisplayDialog("기믹 삭제", "배치와 기믹 설정을 삭제할까요? 연결된 공격 패턴은 유지됩니다.", "삭제", "취소"))
@@ -270,6 +271,7 @@ namespace NHN.TraceStrike.Editor
                 if (encounter.bossVisual?.prefab != null)
                 { bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true); previewHost.boss = bossPreview.Presentation; }
                 mechanicPreview = new BossMechanicSession(new[] { CurrentMechanic }, new MechanicContext(previewHost, encounter.FindPattern));
+                previewHost.MechanicOutputs = mechanicPreview;
                 mechanicPreview.Advance(0);
             }
             catch (Exception error) { FailPreview(error); }

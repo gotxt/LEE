@@ -23,6 +23,7 @@ namespace NHN.TraceStrike
         private float timelineWait;
         private string pendingTimelineDamage;
         public bool IsPatternPreview { get; private set; }
+        private bool previewWithMechanics, warmingMechanicPreview;
         public bool IsEnraged { get; private set; }
         private readonly Dictionary<int, HashSet<Vector2Int>> timelineWalls = new Dictionary<int, HashSet<Vector2Int>>();
         private readonly Dictionary<int, HashSet<Vector2Int>> timelineDanger = new Dictionary<int, HashSet<Vector2Int>>();
@@ -46,6 +47,7 @@ namespace NHN.TraceStrike
         {
             StopMechanics();
             IsPatternPreview = false;
+            previewWithMechanics = warmingMechanicPreview = false;
             var catalog = Resources.Load<BossCatalog>("Patterns/BossCatalog_Main");
             if (catalog == null || index < 0 || index >= catalog.bosses.Count || catalog.bosses[index] == null)
                 throw new InvalidOperationException("Missing boss catalog entry. Use Trace Strike/Patterns/Create Crimson Golem Encounter.");
@@ -94,7 +96,7 @@ namespace NHN.TraceStrike
             try
             {
                 float dt = Time.deltaTime;
-                if (!IsPatternPreview) AdvanceMechanics(dt);
+                if (!IsPatternPreview || previewWithMechanics) AdvanceMechanics(dt);
                 if (!IsPatternPreview && ActivePhase.backgroundEnabled &&
                     ActivePhase.background != null && (ActivePhase.background.CanSchedule(IsEnraged) ||
                     (backgroundTimeline != null && !backgroundTimeline.IsComplete)))
@@ -199,12 +201,31 @@ namespace NHN.TraceStrike
 
         public void StopPatternPreview() => StartStage(stage);
 
+        public void PreviewPatternWithMechanics(BossEncounterDefinition encounter, EncounterPattern pattern, int phase, float warmup)
+        {
+            if (encounter == null || pattern == null || phase < 0 || phase >= encounter.phases.Count ||
+                float.IsNaN(warmup) || float.IsInfinity(warmup) || warmup < 0 || warmup > 600)
+                throw new ArgumentException("Invalid mechanic preview phase/time.");
+            PreviewPattern(encounter, pattern);
+            activePhaseIndex = phase;
+            bossHealth = bossMaxHealth = ActivePhase.health;
+            try
+            {
+                StartMechanics();
+                warmingMechanicPreview = true;
+                AdvanceMechanics(warmup);
+                previewWithMechanics = true;
+            }
+            catch { CancelTimeline(); StopMechanics(); inputLocked = true; throw; }
+            finally { warmingMechanicPreview = false; }
+        }
+
         Vector2Int IPatternHost.PlayerCell => model.Player;
         Vector2Int IPatternHost.CenterCell => model.CenterCell;
         IReadOnlyCollection<Vector2Int> IPatternHost.Walkable => model.Walkable;
         IReadOnlyCollection<Vector2Int> IPatternHost.Traversable => model.Traversable;
         bool IPatternHost.IsAlive => !playerDead && !gameCleared && pendingTimelineDamage == null;
-        void IPatternHost.Damage(string reason) { pendingTimelineDamage = reason; }
+        void IPatternHost.Damage(string reason) { if (!warmingMechanicPreview) pendingTimelineDamage = reason; }
         void IPatternHost.Signal(string name, string argument) => PatternSignal?.Invoke(name, argument);
 
         IPatternLease IPatternHost.Mark(IReadOnlyCollection<Vector2Int> cells, Color color, bool warning)
@@ -246,7 +267,7 @@ namespace NHN.TraceStrike
             timelineHazards.Add(id, new KeyValuePair<HashSet<Vector2Int>, string>(copy, reason));
             var visual = ((IPatternHost)this).Mark(copy, new Color(0.9f, 0.15f, 0.6f, 0.65f), false);
             // Includes immediate contact even if the entire clip fits within one frame.
-            if (copy.Contains(model.Player)) pendingTimelineDamage = reason;
+            if (!warmingMechanicPreview && copy.Contains(model.Player)) pendingTimelineDamage = reason;
             return new Lease(() => { timelineHazards.Remove(id); visual.Dispose(); });
         }
 

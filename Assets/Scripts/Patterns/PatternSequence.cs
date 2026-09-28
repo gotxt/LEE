@@ -275,10 +275,10 @@ namespace NHN.TraceStrike.Patterns
                 if (tiles != null && !string.IsNullOrEmpty(tiles.locationGroupId) &&
                     !groupIds.Contains(tiles.locationGroupId))
                     errors.Add(pattern.name + "/" + clip.label + ": missing location group " + tiles.locationGroupId + ".");
-                if (clip.action is CallEncounterPatternEvent local)
+                if (clip.action is IEncounterPatternCall local)
                 {
-                    EncounterPattern child = resolver?.Invoke(local.patternId);
-                    if (child == null) errors.Add(pattern.name + ": missing local pattern " + local.patternId + ".");
+                    EncounterPattern child = resolver?.Invoke(local.PatternId);
+                    if (child == null) errors.Add(pattern.name + ": missing local pattern " + local.PatternId + ".");
                     else if (clip.duration < child.Duration)
                         errors.Add(pattern.name + ": local pattern clip is shorter than " + child.name + ".");
                     else Visit(child, resolver, path, errors, depth + 1);
@@ -308,7 +308,7 @@ namespace NHN.TraceStrike.Patterns
                 if (tiles != null && !string.IsNullOrEmpty(tiles.locationGroupId))
                     errors.Add(sequence.name + "/" + clip.label + ": location groups require a boss encounter pattern.");
                 if (clip.action is CallPatternEvent call) Visit(call.pattern, path, errors, depth + 1);
-                else if (clip.action is CallEncounterPatternEvent)
+                else if (clip.action is IEncounterPatternCall)
                     errors.Add(sequence.name + ": encounter-local calls are only valid inside a Boss Encounter Definition.");
             }
             path.Remove(sequence);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NHN.TraceStrike.Patterns
@@ -27,6 +28,12 @@ namespace NHN.TraceStrike.Patterns
         public Color inactiveTint = new Color(0.35f, 0.35f, 0.4f, 0.55f);
 
         public CrystalSealMechanic() { name = "수정 봉인"; }
+        public const string ActivePositions = "active-positions";
+        private static readonly MechanicPositionOutput[] OutputPorts =
+            { new MechanicPositionOutput(ActivePositions, "활성 수정 위치") };
+        public override IReadOnlyList<MechanicPositionOutput> PositionOutputs => OutputPorts;
+        public override IEnumerable<string> ReferencedPatternIds =>
+            (crystals ?? new List<CrystalPlacement>()).Where(c => c != null).Select(PatternId).Distinct();
         public override IEnumerable<Vector2Int> PlacementCells
         { get { if (crystals != null) foreach (var crystal in crystals) if (crystal != null) yield return crystal.cell; } }
         public override BossMechanicRuntime Create(MechanicContext context) => new CrystalSealRuntime(this, context);
@@ -70,6 +77,8 @@ namespace NHN.TraceStrike.Patterns
         private readonly List<Device> devices = new List<Device>();
         private bool disposed;
         public IReadOnlyList<Device> Devices => devices;
+        public override IEnumerable<Vector2Int> ReadPositions(string outputKey) =>
+            outputKey == CrystalSealMechanic.ActivePositions ? devices.Where(d => d.Active).Select(d => d.Cell) : base.ReadPositions(outputKey);
         public int ActiveCount { get { int count = 0; foreach (var d in devices) if (d.Active) count++; return count; } }
         public override int MinimumBossHealth => !disposed && ActiveCount < devices.Count ? 1 : 0;
         public override string Status => disposed ? "" : definition.name + " 활성화 " + ActiveCount + "/" + devices.Count;

@@ -218,9 +218,10 @@ namespace NHN.TraceStrike.Patterns
     }
 
     [Serializable]
-    public sealed class CallEncounterPatternEvent : PatternEvent
+    public sealed class CallEncounterPatternEvent : PatternEvent, IEncounterPatternCall
     {
         public string patternId;
+        public string PatternId => patternId;
         public Vector2Int originOffset;
         public bool anchorToPlayer;
 

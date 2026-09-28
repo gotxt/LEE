@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 namespace NHN.TraceStrike
 {
-    public sealed partial class TraceStrikeGame : IMechanicPresentationHost
+    public sealed partial class TraceStrikeGame : IMechanicPresentationHost, IMechanicOutputHost
     {
+        public System.Collections.Generic.IReadOnlyCollection<Vector2Int> CaptureMechanicPositions(string mechanicId, string outputKey) =>
+            (mechanicSession ?? throw new InvalidOperationException("기믹 세션이 없습니다. 기믹 합동 미리보기 또는 일반 전투에서 실행하세요.")).CaptureMechanicPositions(mechanicId, outputKey);
         private BossMechanicSession mechanicSession;
         private RectTransform mechanicVisualRoot;
 

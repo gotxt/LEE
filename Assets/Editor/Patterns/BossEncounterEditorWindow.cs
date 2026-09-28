@@ -468,6 +468,7 @@ namespace NHN.TraceStrike.Editor
                             EditorGUILayout.LabelField("이 이벤트의 위치 기준은 공유 위치 그룹이 우선합니다.", EditorStyles.wordWrappedMiniLabel);
                     }
                     DrawEncounterCallPicker(pattern, selectedProperty);
+                    if (pattern.clips[selectedClip].action is CallAtMechanicPositionsEvent) DrawMechanicOutputPicker(selectedProperty);
                     using (new EditorGUILayout.HorizontalScope())
                     {
                         if (GUILayout.Button("Duplicate Event")) DuplicateEvent(pattern);
@@ -491,14 +492,14 @@ namespace NHN.TraceStrike.Editor
 
         private void DrawEncounterCallPicker(EncounterPattern owner, SerializedProperty clipProperty)
         {
-            if (!(owner.clips[selectedClip].action is CallEncounterPatternEvent call)) return;
+            if (!(owner.clips[selectedClip].action is IEncounterPatternCall call)) return;
             List<EncounterPattern> candidates = encounter.AllPatterns()
                 .Where(candidate => candidate != null && candidate != owner).ToList();
             string[] labels = new string[candidates.Count + 1];
             labels[0] = "<Select encounter pattern>";
             for (int i = 0; i < candidates.Count; i++)
                 labels[i + 1] = candidates[i].name + "  [" + candidates[i].id + "]";
-            int current = candidates.FindIndex(candidate => candidate.id == call.patternId) + 1;
+            int current = candidates.FindIndex(candidate => candidate.id == call.PatternId) + 1;
             int next = EditorGUILayout.Popup("Encounter Pattern", current, labels);
             if (next == current) return;
 
@@ -520,6 +521,7 @@ namespace NHN.TraceStrike.Editor
                     EditorStyles.wordWrappedLabel);
                 return;
             }
+            DrawMechanicOutputPreview(pattern);
             using (new EditorGUILayout.HorizontalScope())
             {
                 if (GUILayout.Button(playing ? "일시정지" : "미리보기 재생"))
@@ -533,7 +535,12 @@ namespace NHN.TraceStrike.Editor
                 if (GUILayout.Button("게임에서 실행"))
                 {
                     TraceStrikeGame game = FindAnyObjectByType<TraceStrikeGame>();
-                    if (game != null) game.PreviewPattern(encounter, pattern);
+                    if (game != null)
+                    {
+                        if (MechanicOutputValidation.UsesOutputs(pattern, encounter.FindPattern))
+                            game.PreviewPatternWithMechanics(encounter, pattern, OutputPhase, outputPreviewWarmup);
+                        else game.PreviewPattern(encounter, pattern);
+                    }
                 }
                 if (GUILayout.Button("게임 실행 중지"))
                 {
@@ -629,22 +636,24 @@ namespace NHN.TraceStrike.Editor
         {
             var menu = new GenericMenu();
             foreach (Type type in TypeCache.GetTypesDerivedFrom<PatternEvent>()
-                         .Where(t => !t.IsAbstract && t.IsSerializable).OrderBy(t => t.Name))
+                         .Where(t => !t.IsAbstract && t.IsSerializable && t.IsPublic).OrderBy(t => t.Name))
             {
                 Type captured = type;
                 string category = EventCategory(type) + "/" +
                     ObjectNames.NicifyVariableName(type.Name.Replace("Event", ""));
+                if (type == typeof(CallAtMechanicPositionsEvent)) category = "기믹/기믹 위치에서 패턴 호출";
                 menu.AddItem(new GUIContent(category), false, () =>
                 {
                     Record("Add pattern event");
                     PatternEvent action = (PatternEvent)Activator.CreateInstance(captured);
                     float duration = 1f;
-                    if (action is CallEncounterPatternEvent call)
+                    if (action is IEncounterPatternCall)
                     {
                         EncounterPattern first = encounter.AllPatterns().FirstOrDefault(p => p != pattern);
                         if (first != null)
                         {
-                            call.patternId = first.id;
+                            if (action is CallEncounterPatternEvent call) call.patternId = first.id;
+                            if (action is CallAtMechanicPositionsEvent positions) positions.patternId = first.id;
                             duration = first.Duration;
                         }
                     }
@@ -895,6 +904,7 @@ namespace NHN.TraceStrike.Editor
                     bossPreview = new BossRenderStage(encounter.bossVisual, encounter.arena.GridSize, true);
                     previewHost.boss = bossPreview.Presentation;
                 }
+                BuildPatternMechanicPreview(pattern);
                 var context = new PatternContext(previewHost,
                     PreviewOrigin, 0, encounter.FindPattern, previewLocationSeed);
                 previewContext = context;
@@ -909,6 +919,7 @@ namespace NHN.TraceStrike.Editor
                 {
                     float step = Mathf.Min(1f / 60f, remaining);
                     bossPreview?.Presentation.Advance(step);
+                    patternMechanicPreview?.Advance(step);
                     previewRunner.Advance(step);
                     remaining -= step;
                 }
@@ -930,6 +941,8 @@ namespace NHN.TraceStrike.Editor
             try { previewRunner?.Dispose(); }
             catch { }
             previewRunner = null;
+            try { patternMechanicPreview?.Dispose(); } catch { }
+            patternMechanicPreview = null;
             try { bossPreview?.Dispose(); } catch { }
             bossPreview = null;
             try { previewHost?.Dispose(); } catch { }
@@ -961,6 +974,7 @@ namespace NHN.TraceStrike.Editor
                 {
                     float step = Mathf.Min(delta, 1f / 60f);
                     bossPreview?.Presentation.Advance(step);
+                    patternMechanicPreview?.Advance(step);
                     previewRunner.Advance(step);
                     delta -= step;
                 }
