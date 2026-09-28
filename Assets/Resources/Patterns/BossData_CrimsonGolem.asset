@@ -2407,6 +2407,7 @@ MonoBehaviour:
         attackGroupKey: attack_1a84dae9e4ae4989b7ab9cadab660425
         attackAtImpact: 1
         attackName: 
+<<<<<<< Updated upstream
     - id: p1-diagonal-1
       name: P1_Diagonal_1
       enabled: 0
@@ -2467,10 +2468,13 @@ MonoBehaviour:
         attackGroupKey: glyph
         attackAtImpact: 1
         attackName: 
+=======
+>>>>>>> Stashed changes
     - id: p1-diamond-0
       name: P1_Diamond_0
       enabled: 0
       minimumDuration: 2.3
+<<<<<<< Updated upstream
       locationGroups: []
       clips:
       - enabled: 1
@@ -2527,6 +2531,14 @@ MonoBehaviour:
         attackGroupKey: glyph
         attackAtImpact: 1
         attackName: 
+=======
+      clips: []
+    - id: p1-diagonal-1
+      name: P1_Diagonal_1
+      enabled: 0
+      minimumDuration: 2.3
+      clips: []
+>>>>>>> Stashed changes
     - id: p1-diamond-1
       name: "\uC5EC\uC9C4 (\uD50C\uB808\uC774\uC5B4\uAC00 \uAC00\uAE4C\uC774\uC624\uBA74
         \uC2E4\uD589)"
@@ -3111,6 +3123,218 @@ MonoBehaviour:
         action:
           rid: 1017
         attackGroupKey: rockfall_b
+        attackAtImpact: 1
+        attackName: 
+    - id: p1-chasing-rockfall
+      name: "\uCD94\uC801 \uB099\uC11D \xB7 \uADE0\uC5F4 \uC5EC\uC9C4"
+      enabled: 1
+      minimumDuration: 3.9
+      clips:
+      - enabled: 1
+        label: "1 \xB7 \uC8FC\uBA39 \uC900\uBE44"
+        start: 0
+        duration: 1.2
+        action:
+          rid: 8000000000000010000
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uCD94\uC801 \uB099\uC11D \uACBD\uACE0"
+        start: 0
+        duration: 1.2
+        action:
+          rid: 8000000000000010001
+        attackGroupKey: chasing_rockfall_a
+        attackAtImpact: 0
+        attackName: "1 \xB7 \uCD94\uC801 \uB099\uC11D"
+      - enabled: 1
+        label: "1 \xB7 \uACBD\uACE0 \uC18C\uB9AC"
+        start: 0
+        duration: 1.2
+        action:
+          rid: 8000000000000010002
+        attackGroupKey: chasing_rockfall_a
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uB099\uC11D \uD558\uAC15 VFX"
+        start: 0.85
+        duration: 0.35
+        action:
+          rid: 8000000000000010003
+        attackGroupKey: chasing_rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uC8FC\uBA39 \uCC29\uC9C0"
+        start: 1.2
+        duration: 0.45
+        action:
+          rid: 8000000000000010004
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uB099\uC11D \uD0C0\uACA9"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 8000000000000010005
+        attackGroupKey: chasing_rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uB099\uC11D \uCDA9\uB3CC VFX"
+        start: 1.2
+        duration: 0.4
+        action:
+          rid: 8000000000000010006
+        attackGroupKey: chasing_rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uD0C0\uACA9 \uC18C\uB9AC"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 8000000000000010007
+        attackGroupKey: chasing_rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "1 \xB7 \uCE74\uBA54\uB77C"
+        start: 1.2
+        duration: 0.3
+        action:
+          rid: 8000000000000010008
+        attackGroupKey: chasing_rockfall_a
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uC8FC\uBA39 \uC900\uBE44"
+        start: 1.65
+        duration: 1.15
+        action:
+          rid: 8000000000000010009
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uCD94\uC801 \uB099\uC11D \uACBD\uACE0"
+        start: 1.65
+        duration: 1.15
+        action:
+          rid: 8000000000000010010
+        attackGroupKey: chasing_rockfall_b
+        attackAtImpact: 0
+        attackName: "2 \xB7 \uC7AC\uC870\uC900 \uB099\uC11D"
+      - enabled: 1
+        label: "2 \xB7 \uACBD\uACE0 \uC18C\uB9AC"
+        start: 1.65
+        duration: 1.15
+        action:
+          rid: 8000000000000010011
+        attackGroupKey: chasing_rockfall_b
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "3 \xB7 \uC5EC\uC9C4 \uACBD\uACE0"
+        start: 1.65
+        duration: 1.75
+        action:
+          rid: 8000000000000010012
+        attackGroupKey: chasing_rockfall_aftershock
+        attackAtImpact: 0
+        attackName: "3 \xB7 \uADE0\uC5F4 \uC5EC\uC9C4"
+      - enabled: 1
+        label: "2 \xB7 \uB099\uC11D \uD558\uAC15 VFX"
+        start: 2.45
+        duration: 0.35
+        action:
+          rid: 8000000000000010013
+        attackGroupKey: chasing_rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uC8FC\uBA39 \uCC29\uC9C0"
+        start: 2.8
+        duration: 0.5
+        action:
+          rid: 8000000000000010014
+        attackGroupKey: 
+        attackAtImpact: 0
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uB099\uC11D \uD0C0\uACA9"
+        start: 2.8
+        duration: 0.3
+        action:
+          rid: 8000000000000010015
+        attackGroupKey: chasing_rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uB099\uC11D \uCDA9\uB3CC VFX"
+        start: 2.8
+        duration: 0.4
+        action:
+          rid: 8000000000000010016
+        attackGroupKey: chasing_rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uD0C0\uACA9 \uC18C\uB9AC"
+        start: 2.8
+        duration: 0.3
+        action:
+          rid: 8000000000000010017
+        attackGroupKey: chasing_rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "2 \xB7 \uCE74\uBA54\uB77C"
+        start: 2.8
+        duration: 0.3
+        action:
+          rid: 8000000000000010018
+        attackGroupKey: chasing_rockfall_b
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "3 \xB7 \uC5EC\uC9C4 \uD0C0\uACA9"
+        start: 3.4
+        duration: 0.3
+        action:
+          rid: 8000000000000010019
+        attackGroupKey: chasing_rockfall_aftershock
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "3 \xB7 \uD30C\uB3D9 VFX"
+        start: 3.4
+        duration: 0.35
+        action:
+          rid: 8000000000000010020
+        attackGroupKey: chasing_rockfall_aftershock
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "3 \xB7 \uD0C0\uACA9 \uC18C\uB9AC"
+        start: 3.4
+        duration: 0.3
+        action:
+          rid: 8000000000000010021
+        attackGroupKey: chasing_rockfall_aftershock
+        attackAtImpact: 1
+        attackName: 
+      - enabled: 1
+        label: "3 \xB7 \uCE74\uBA54\uB77C"
+        start: 3.4
+        duration: 0.3
+        action:
+          rid: 8000000000000010022
+        attackGroupKey: chasing_rockfall_aftershock
         attackAtImpact: 1
         attackName: 
     backgroundEnabled: 0
@@ -3718,7 +3942,7 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 60
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -3727,7 +3951,7 @@ MonoBehaviour:
         duration: 1
         action:
           rid: 61
-        attackGroupKey: 
+        attackGroupKey: glyph
         attackAtImpact: 0
         attackName: 
       - enabled: 1
@@ -3736,8 +3960,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 62
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact SFX
@@ -3745,8 +3969,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 63
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Impact VFX
@@ -3754,8 +3978,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 64
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Camera
@@ -3763,8 +3987,8 @@ MonoBehaviour:
         duration: 0.3
         action:
           rid: 65
-        attackGroupKey: 
-        attackAtImpact: 0
+        attackGroupKey: glyph
+        attackAtImpact: 1
         attackName: 
       - enabled: 1
         label: Targeted subpattern
@@ -8139,6 +8363,7 @@ MonoBehaviour:
       data:
         offset: {x: 0, y: 0}
         shake: 12
+<<<<<<< Updated upstream
     - rid: 28
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
@@ -8259,6 +8484,8 @@ MonoBehaviour:
       data:
         offset: {x: 0, y: 0}
         shake: 12
+=======
+>>>>>>> Stashed changes
     - rid: 40
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
@@ -8462,8 +8689,12 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+<<<<<<< Updated upstream
           locationGroupId: 
           ensureEscape: 1
+=======
+          ensureEscape: 0
+>>>>>>> Stashed changes
         color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
     - rid: 61
       type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
@@ -8481,8 +8712,12 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+<<<<<<< Updated upstream
           locationGroupId: 
           ensureEscape: 1
+=======
+          ensureEscape: 0
+>>>>>>> Stashed changes
         escapeGrace: 0.18
         reason: Cross
     - rid: 63
@@ -8504,8 +8739,12 @@ MonoBehaviour:
           cells:
           - {x: 0, y: 0}
           snapshotKey: glyph
+<<<<<<< Updated upstream
           locationGroupId: 
           ensureEscape: 1
+=======
+          ensureEscape: 0
+>>>>>>> Stashed changes
     - rid: 65
       type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
@@ -19557,6 +19796,226 @@ MonoBehaviour:
       data:
         offset: {x: 0, y: 0}
         shake: 12
+    - rid: 8000000000000010000
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistWindup
+        transition: 0
+        speed: 1
+    - rid: 8000000000000010001
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_a
+          ensureEscape: 0
+        color: {r: 1, g: 0.18, b: 0.24, a: 0.75}
+    - rid: 8000000000000010002
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 8000000000000010003
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 5286838586219272981, guid: 9c5e92d094a41af44b4391668ec32517, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_a
+          ensureEscape: 0
+    - rid: 8000000000000010004
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistContact
+        transition: 0
+        speed: 1
+    - rid: 8000000000000010005
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_a
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: Chasing Rockfall 1
+    - rid: 8000000000000010006
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 255086516629100043, guid: 7653b6835667c4548a08f14653ada6e7, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_a
+          ensureEscape: 0
+    - rid: 8000000000000010007
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.6
+    - rid: 8000000000000010008
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 7
+    - rid: 8000000000000010009
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistWindup
+        transition: 0
+        speed: 1
+    - rid: 8000000000000010010
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_b
+          ensureEscape: 0
+        color: {r: 1, g: 0.46, b: 0.14, a: 0.75}
+    - rid: 8000000000000010011
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001e, type: 3}
+        volume: 0.35
+    - rid: 8000000000000010012
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_aftershock
+          ensureEscape: 0
+        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.85}
+    - rid: 8000000000000010013
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 5286838586219272981, guid: 9c5e92d094a41af44b4391668ec32517, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_b
+          ensureEscape: 0
+    - rid: 8000000000000010014
+      type: {class: BossAnimationEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        state: Base Layer.FistContact
+        transition: 0
+        speed: 1
+    - rid: 8000000000000010015
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_b
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: Chasing Rockfall 2
+    - rid: 8000000000000010016
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 255086516629100043, guid: 7653b6835667c4548a08f14653ada6e7, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 1, g: 0.6, b: 0.2, a: 0.8}
+        tiles:
+          shape: 8
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 1
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_b
+          ensureEscape: 0
+    - rid: 8000000000000010017
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.6
+    - rid: 8000000000000010018
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 7
+    - rid: 8000000000000010019
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 3
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_aftershock
+          ensureEscape: 0
+        escapeGrace: 0.18
+        reason: Chasing Rockfall Aftershock
+    - rid: 8000000000000010020
+      type: {class: VfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 5920576768218912452, guid: 3af803520efc8984f90bcd2fe56f44f4, type: 3}
+        sprite: {fileID: 0}
+        color: {r: 0.85, g: 0.12, b: 0.62, a: 0.85}
+        tiles:
+          shape: 3
+          anchor: 1
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells:
+          - {x: 0, y: 0}
+          snapshotKey: chasing_rockfall_aftershock
+          ensureEscape: 0
+    - rid: 8000000000000010021
+      type: {class: SfxEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        clip: {fileID: 8300000, guid: a96e060000004acaa50000000000001f, type: 3}
+        volume: 0.45
+    - rid: 8000000000000010022
+      type: {class: CameraEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        offset: {x: 0, y: 0}
+        shake: 4
     - rid: 9000000000000000101
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
