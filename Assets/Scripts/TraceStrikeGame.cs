@@ -1646,23 +1646,7 @@ namespace NHN.TraceStrike
 
             if (bossHealth <= 0)
             {
-                gameCleared = true;
-                patternVersion++;
-                warnedCells.Clear();
-                targetedCells.Clear();
-                hazardFiring = false;
-                targetedFiring = false;
-                hazardTelegraphProgress = 0f;
-                targetedTelegraphProgress = 0f;
-                crystalWarningCounts.Clear();
-                crystalFiringCounts.Clear();
-                crystalTelegraphProgress.Clear();
-                CancelTimeline();
-                StopMechanics();
-                StopSpecialTiles();
-                statusText.text = "STAGE CLEAR — " + ActiveBossName + " 격파!" + CompleteStageTimer();
-                PlaySfx(victorySfx);
-                RefreshBoard();
+                CompleteBossDefeat();
             }
             else
             {
@@ -1674,6 +1658,37 @@ namespace NHN.TraceStrike
             }
 
             inputLocked = gameCleared;
+        }
+
+        private void CompleteBossDefeat()
+        {
+            if (gameCleared || playerDead) return;
+            gameCleared = true;
+            inputLocked = true;
+            patternVersion++;
+            warnedCells.Clear(); targetedCells.Clear();
+            hazardFiring = targetedFiring = false;
+            hazardTelegraphProgress = targetedTelegraphProgress = 0f;
+            crystalWarningCounts.Clear(); crystalFiringCounts.Clear(); crystalTelegraphProgress.Clear();
+            CancelTimeline(); StopMechanics(); StopSpecialTiles();
+            RefreshMechanicHealthLabel();
+            statusText.text = "STAGE CLEAR — " + ActiveBossName + " 격파!" + CompleteStageTimer();
+            PlaySfx(victorySfx);
+            RefreshBoard();
+        }
+
+        private IEnumerator FinishTimedBossPhase()
+        {
+            inputLocked = true;
+            if (HasNextBossPhase) yield return StartCoroutine(EnterPhaseTwo());
+            if (bossHealth <= 0) CompleteBossDefeat();
+            else
+            {
+                round++;
+                model.BeginRound(round, false);
+                GenerateSpecialTiles(); RefreshBoard();
+                inputLocked = false;
+            }
         }
 
         private void StartStage(int nextStage, bool preservePlayer = false)

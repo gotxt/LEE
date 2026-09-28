@@ -34,6 +34,8 @@ namespace NHN.TraceStrike.Tests
                 Time.timeScale = 0;
                 game.PreviewPattern(saved, new EncounterPattern { minimumDuration = 999 });
                 Set(game, "activeBoss", copy);
+                // This test isolates growth/enrage scheduling; the optional HP policy has its own integration test.
+                copy.phases[0].mechanics.RemoveAll(m => m is EnrageSurvivalMechanic);
                 var growth = copy.phases[0].mechanics.OfType<RegionGrowthMechanic>().Single();
                 growth.seedsPerSpawn = 2500; // Test-only saturation: exercise every tile/cleanup in the real host.
                 var fire = Resources.Load<SpecialTileDefinition>("SpecialTiles/TileData_Fire");

@@ -151,6 +151,7 @@ namespace NHN.TraceStrike.Patterns
                     seed.Mature = true; seed.region.MatureCount++;
                     seed.visual?.Dispose(); seed.visual = null;
                     seed.visual = context.ShowDevice(seed.Cell, maturePrefab, matureSprite, matureTint);
+                    seed.visual?.SetProgress(1);
                 }
                 foreach (var region in regions)
                     if (!region.Overgrown && region.MatureCount >= region.Threshold)
@@ -160,6 +161,12 @@ namespace NHN.TraceStrike.Patterns
                 if (nextSpawn <= clock) { SpawnBatch(); nextSpawn += interval; }
             }
             clock = end;
+            foreach (var seed in seeds.Values.Where(s => !s.Mature))
+            {
+                // Keep the final frame exclusive to the maturity transition, even after float rounding.
+                float progress = Mathf.Clamp((float)(1 - (seed.MaturesAt - clock) / growthSeconds), 0, .9999999f);
+                seed.visual?.SetProgress(progress);
+            }
         }
         private void SpawnBatch()
         {
@@ -172,6 +179,7 @@ namespace NHN.TraceStrike.Patterns
                 int cellIndex = random.Next(candidate.cells.Count); var cell = candidate.cells[cellIndex];
                 var seed = new SeedState { Cell = cell, region = candidate.region, MaturesAt = clock + growthSeconds };
                 seeds.Add(cell, seed); seed.visual = context.ShowDevice(cell, seedPrefab, seedSprite, seedTint);
+                seed.visual?.SetProgress(0);
                 candidate.cells.RemoveAt(cellIndex); if (candidate.cells.Count == 0) candidates.RemoveAt(regionIndex);
             }
         }

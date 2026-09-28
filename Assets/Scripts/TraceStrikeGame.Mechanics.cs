@@ -27,15 +27,20 @@ namespace NHN.TraceStrike
         }
         private void AdvanceMechanics(float delta)
         {
-            if (inputLocked) return;
+            if (inputLocked || playerDead || gameCleared) return;
             mechanicSession?.Advance(delta);
             if (!IsEnraged && mechanicSession != null && mechanicSession.IsEnraged)
             {
                 IsEnraged = true;
+                int previousHealth = bossHealth;
+                bossHealth = mechanicSession.EnterEnrage(bossHealth);
+                bossMaxHealth = (int)Math.Min(int.MaxValue, (long)bossMaxHealth + bossHealth - previousHealth);
                 patternCursor = 0;
                 statusText.text = "광폭화";
                 PatternSignal?.Invoke("combat.enraged", "");
             }
+            if (mechanicSession != null) bossHealth = mechanicSession.ApplyTimedHealthChanges(bossHealth);
+            if (bossHealthFill != null) bossHealthFill.fillAmount = bossMaxHealth > 0 ? (float)bossHealth / bossMaxHealth : 0;
             RefreshMechanicHealthLabel();
         }
         private void RefreshMechanicHealthLabel()
@@ -85,6 +90,13 @@ namespace NHN.TraceStrike
                     { graphic.color *= tint; graphic.raycastTarget = false; }
                 }
                 mainPlayer?.SetAsLastSibling();
+                var progressVisual = instance.GetComponent<MechanicProgressVisual>();
+                if (progressVisual != null)
+                    return new Lease(lease.Dispose, progress =>
+                    {
+                        lease.SetProgress(progress);
+                        if (progressVisual != null) progressVisual.SetProgress(progress);
+                    });
                 return lease;
             }
             catch { lease.Dispose(); throw; }

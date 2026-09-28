@@ -1031,6 +1031,7 @@ MonoBehaviour:
       sprite: {fileID: 21300000, guid: cfc6413531d1464492488bc68b8bf6bf, type: 3}
     - cell: {x: 17, y: 11}
       sprite: {fileID: 21300000, guid: cfc6413531d1464492488bc68b8bf6bf, type: 3}
+    specialTiles: []
     cameraZoom: 2.05
     playerSizeRatio: 0.78
     overridePlayerStart: 1
@@ -1955,6 +1956,7 @@ MonoBehaviour:
     - id: p1-petal-collapse
       name: "\uAF43\uC78E \uBD95\uAD34 / Petal Collapse"
       enabled: 1
+      combatCondition: 0
       minimumDuration: 5
       locationGroups: []
       clips:
@@ -1985,54 +1987,56 @@ MonoBehaviour:
         attackGroupKey: petal_collapse_01
         attackAtImpact: 1
         attackName: 
+    - id: 1683a58fc04b4a938aea11d2d95e1a6f
+      name: New Pattern
+      enabled: 1
+      combatCondition: 0
+      minimumDuration: 1
+      locationGroups: []
+      clips:
+      - enabled: 1
+        label: "\uACBD\uACE0"
+        start: 0
+        duration: 1
+        action:
+          rid: 5560175973072896000
+        attackGroupKey: attack_bca245a04cb6475e8a71d044b2b3fcc0
+        attackAtImpact: 0
+        attackName: "1\uCC28 \uACF5\uACA9"
+      - enabled: 1
+        label: "\uD0C0\uACA9"
+        start: 1
+        duration: 0.3
+        action:
+          rid: 5560175973072896001
+        attackGroupKey: attack_bca245a04cb6475e8a71d044b2b3fcc0
+        attackAtImpact: 1
+        attackName: 
     backgroundEnabled: 0
     background:
-      id: 8635e8c71a954397806ecb934619ad28
+      id: baeb4ff3c5e64d01b136b7224d8a9808
       name: Background
       enabled: 1
+      combatCondition: 0
       minimumDuration: 1
       locationGroups: []
       clips: []
     mechanics:
     - rid: 900004
+    - rid: 900005
     legacyCrystals: 0
   references:
     version: 2
     RefIds:
-    - rid: 900004
-      type: {class: RegionGrowthMechanic, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+    - rid: 900005
+      type: {class: EnrageSurvivalMechanic, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
-        name: "구역 씨앗 성장"
+        name: "광폭화 생존전"
         enabled: 1
-        regionIds:
-        - petal-top
-        - petal-upper-right
-        - petal-lower-right
-        - petal-bottom
-        - petal-lower-left
-        - petal-upper-left
-        - 97821fa0658f4977bf2903e110a25f20
-        initialDelay: 5
-        interval: 5
-        seedsPerSpawn: 5
-        growthSeconds: 20
-        coverage: 0.3
-        overgrownTile: {fileID: 11400000, guid: 92ee49b0e65d4e218236fe399841c772, type: 2}
-        enrageWhenAll:
-        - petal-top
-        - petal-upper-right
-        - petal-lower-right
-        - petal-bottom
-        - petal-lower-left
-        - petal-upper-left
-        enrageWhenAny:
-        - 97821fa0658f4977bf2903e110a25f20
-        seedPrefab: {fileID: 0}
-        maturePrefab: {fileID: 0}
-        seedSprite: {fileID: 0}
-        matureSprite: {fileID: 0}
-        seedTint: {r: 0.95, g: 0.72, b: 0.25, a: 0.9}
-        matureTint: {r: 0.32, g: 0.2, b: 0.48, a: 0.95}
+        connectionId:
+        bonusHealth: 60
+        tickInterval: 1
+        healthPerTick: 1
     - rid: 900001
       type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
       data:
@@ -2096,3 +2100,67 @@ MonoBehaviour:
           - petal-lower-left
           - petal-upper-left
           - petal-top
+    - rid: 900004
+      type: {class: RegionGrowthMechanic, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        name: "\uAD6C\uC5ED \uC528\uC557 \uC131\uC7A5"
+        enabled: 1
+        connectionId: 
+        regionIds:
+        - petal-top
+        - petal-upper-right
+        - petal-lower-right
+        - petal-bottom
+        - petal-lower-left
+        - petal-upper-left
+        - 97821fa0658f4977bf2903e110a25f20
+        initialDelay: 5
+        interval: 5
+        seedsPerSpawn: 5
+        growthSeconds: 20
+        coverage: 0.3
+        overgrownTile: {fileID: 11400000, guid: 92ee49b0e65d4e218236fe399841c772, type: 2}
+        enrageWhenAll:
+        - petal-top
+        - petal-upper-right
+        - petal-lower-right
+        - petal-bottom
+        - petal-lower-left
+        - petal-upper-left
+        enrageWhenAny:
+        - 97821fa0658f4977bf2903e110a25f20
+        seedPrefab: {fileID: 1000, guid: 28ab4479e3c143bfa35e63ea215da540, type: 3}
+        maturePrefab: {fileID: 1000, guid: 28ab4479e3c143bfa35e63ea215da540, type: 3}
+        seedSprite: {fileID: 0}
+        matureSprite: {fileID: 0}
+        seedTint: {r: 1, g: 1, b: 1, a: 1}
+        matureTint: {r: 1, g: 1, b: 1, a: 1}
+    - rid: 5560175973072896000
+      type: {class: WarningEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells: []
+          snapshotKey: attack_bca245a04cb6475e8a71d044b2b3fcc0
+          locationGroupId: 
+          ensureEscape: 0
+          regionIds: []
+        color: {r: 1, g: 0.25, b: 0.35, a: 0.65}
+    - rid: 5560175973072896001
+      type: {class: DamageEvent, ns: NHN.TraceStrike.Patterns, asm: Assembly-CSharp}
+      data:
+        tiles:
+          shape: 0
+          anchor: 3
+          offset: {x: 0, y: 0}
+          radius: 2
+          cells: []
+          snapshotKey: attack_bca245a04cb6475e8a71d044b2b3fcc0
+          locationGroupId: 
+          ensureEscape: 0
+          regionIds: []
+        escapeGrace: 0.18
+        reason: "\uACF5\uACA9"

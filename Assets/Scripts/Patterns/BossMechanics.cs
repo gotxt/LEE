@@ -66,6 +66,7 @@ namespace NHN.TraceStrike.Patterns
         }
         public IReadOnlyList<BossMechanicRuntime> Runtimes => runtimes;
         public bool IsEnraged => runtimes.Exists(runtime => runtime.IsEnraged);
+        public bool BlocksPlayerDamage => runtimes.OfType<IBossHealthMechanic>().Any(rule => rule.BlocksPlayerDamage);
         public int MinimumBossHealth
         {
             get { int floor = 0; foreach (var runtime in runtimes) floor = Math.Max(floor, runtime.MinimumBossHealth); return floor; }
@@ -83,6 +84,8 @@ namespace NHN.TraceStrike.Patterns
                     if (definition != null && definition.enabled)
                     {
                         var runtime = definition.Create(context); runtimes.Add(runtime);
+                        if (runtime is IBossHealthMechanic && runtimes.OfType<IBossHealthMechanic>().Count() > 1)
+                            throw new InvalidOperationException("한 페이즈에 체력을 제어하는 기믹을 여러 개 사용할 수 없습니다.");
                         if (!string.IsNullOrEmpty(definition.connectionId))
                         {
                             if (outputs.ContainsKey(definition.connectionId)) throw new InvalidOperationException("Duplicate mechanic connection ID: " + definition.connectionId);
@@ -105,7 +108,18 @@ namespace NHN.TraceStrike.Patterns
             int floor = MinimumBossHealth;
             try { foreach (var runtime in runtimes) runtime.OnPlayerAttack(completedTrail); }
             catch (Exception error) { DisposeAfterFailure(error); throw; }
+            if (BlocksPlayerDamage) return health;
             return Math.Max(floor, Math.Max(0, health - Math.Max(0, damage)));
+        }
+        public int EnterEnrage(int health)
+        {
+            try { foreach (var rule in runtimes.OfType<IBossHealthMechanic>()) health = rule.EnterEnrage(health); return health; }
+            catch (Exception error) { DisposeAfterFailure(error); throw; }
+        }
+        public int ApplyTimedHealthChanges(int health)
+        {
+            try { foreach (var rule in runtimes.OfType<IBossHealthMechanic>()) health = rule.ApplyTimedHealthChange(health); return health; }
+            catch (Exception error) { DisposeAfterFailure(error); throw; }
         }
         public void OnPlayerStep(PlayerTileStep step)
         {

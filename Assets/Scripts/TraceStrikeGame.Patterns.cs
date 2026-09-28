@@ -134,6 +134,11 @@ namespace NHN.TraceStrike
                     string reason = pendingTimelineDamage;
                     StartCoroutine(KillPlayer(reason));
                 }
+                else if (bossHealth <= 0 && !playerDead && !gameCleared)
+                {
+                    // A hit in this same simulation frame takes priority over surviving the timer.
+                    StartCoroutine(FinishTimedBossPhase());
+                }
             }
             catch (Exception error)
             {
