@@ -93,7 +93,10 @@ namespace NHN.TraceStrike.Tests
             Assert.IsTrue(host.TryStep(Vector2Int.up, out var step)); Assert.IsFalse(step.HasFireOnArrival);
             Assert.AreEqual(1, host.TileState.StunRemaining); Assert.AreEqual(0, host.FireMovesRemaining);
             runtime.Dispose(); host.TileState.Reset(); host.player = central - Vector2Int.up;
-            Assert.IsTrue(host.TryStep(Vector2Int.up, out step)); Assert.AreEqual(20, host.FireMovesRemaining);
+            Assert.IsTrue(host.TryStep(Vector2Int.up, out step));
+            // The restored shared fire now starts inactive; the unchanged editor has no attack ignition simulation.
+            Assert.AreEqual(0, host.FireMovesRemaining); Assert.IsFalse(step.HasFireOnArrival);
+            Assert.AreEqual(fire.color, host.GetOrderedMarks().First().Color);
             Assert.IsEmpty(host.marks.Where(m => m.Value.Layer == PatternPreviewHost.PreviewLayer.Obstacle && m.Value.Color == definition.matureTint));
         }
         [Test] public void FivePetalsDoNotEnrageSixDoWithoutCentral()

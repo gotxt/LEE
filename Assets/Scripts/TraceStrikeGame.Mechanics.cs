@@ -56,9 +56,12 @@ namespace NHN.TraceStrike
             health = bossHealth;
             try
             {
+                var completedTrail = new System.Collections.Generic.HashSet<Vector2Int>(model.Trail);
                 health = mechanicSession != null
-                    ? mechanicSession.ResolvePlayerAttack(new System.Collections.Generic.HashSet<Vector2Int>(model.Trail), bossHealth, damage)
+                    ? mechanicSession.ResolvePlayerAttack(completedTrail, bossHealth, damage)
                     : Mathf.Max(0, bossHealth - damage);
+                // A valid attack still ignites tiles when a mechanic prevents HP damage (e.g. enrage).
+                if (placedSpecialTiles?.OnCompletedAttack(completedTrail) == true) RefreshBoard();
                 return true;
             }
             catch (Exception error)

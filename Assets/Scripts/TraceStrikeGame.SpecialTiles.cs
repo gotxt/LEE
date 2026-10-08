@@ -27,7 +27,11 @@ namespace NHN.TraceStrike
         {
             if (titleActive || tutorialActive || hubActive || playerDead || gameCleared) return;
             // Same gameplay clock as attacks/growth: inputLocked pauses it; stun does not.
-            if (!inputLocked) tilePlayerState.Advance(delta);
+            if (!inputLocked)
+            {
+                tilePlayerState.Advance(delta);
+                if (placedSpecialTiles?.Advance(delta) == true) RefreshBoard();
+            }
             if (tilePlayerState.IsStunned) mainPlayerImage.color = new Color(.45f, .9f, .3f);
             else if (FireMovesRemaining > 0) mainPlayerImage.color = new Color(1, .55f, .18f);
             playerHealthText.text = "♥  HP 1" + (FireMovesRemaining > 0 ? "  · 불 " + FireMovesRemaining + "칸" : "") +
@@ -37,7 +41,7 @@ namespace NHN.TraceStrike
         {
             try
             {
-                var step = tilePlayerState.Enter(from, to, placedSpecialTiles?.At(to));
+                var step = tilePlayerState.Enter(from, to, placedSpecialTiles?.At(to), placedSpecialTiles?.IsActive(to) ?? false);
                 mechanicSession?.OnPlayerStep(step);
                 return true;
             }
@@ -58,24 +62,31 @@ namespace NHN.TraceStrike
         }
         private void DrawPlacedSpecialTile(int x, int y)
         {
-            var tile = placedSpecialTiles?.At(new Vector2Int(x, y));
+            var cell = new Vector2Int(x, y);
+            var tile = placedSpecialTiles?.At(cell);
             if (tile == null) return;
             var root = specialItemVisuals[x, y];
             root.gameObject.SetActive(true);
-            float size = mainCellSize * .55f;
+            // Painted sprites are floor overlays, not corner pickup badges.
+            // Use the visible tile face so adjacent artwork stays inside its own cell.
+            var sprite = placedSpecialTiles.SpriteAt(cell);
+            bool hasSprite = sprite != null;
+            float size = hasSprite ? mainTiles[x, y].rectTransform.rect.width : mainCellSize * .55f;
             root.sizeDelta = Vector2.one * size;
-            root.anchoredPosition = new Vector2(-.2f, -.2f) * mainCellSize;
-            specialItemImages[x, y].color = tile.color;
+            root.anchoredPosition = hasSprite ? Vector2.zero : new Vector2(-.2f, -.2f) * mainCellSize;
+            if (hasSprite) root.localScale = Vector3.one;
+            specialItemImages[x, y].color = hasSprite ? Color.clear : placedSpecialTiles.IsActive(cell) ? tile.color : Color.gray;
             var icon = specialItemIconImages[x, y];
-            icon.gameObject.SetActive(tile.sprite != null);
-            if (tile.sprite != null)
+            icon.preserveAspect = !hasSprite; // Tile artwork fills the square face, as in the tile painter.
+            icon.gameObject.SetActive(hasSprite);
+            if (hasSprite)
             {
-                icon.sprite = tile.sprite; icon.color = Color.white;
+                icon.sprite = sprite; icon.color = Color.white;
                 icon.rectTransform.sizeDelta = Vector2.one * size;
                 icon.rectTransform.anchoredPosition = Vector2.zero;
             }
             var label = specialItemLabels[x, y];
-            label.gameObject.SetActive(tile.sprite == null);
+            label.gameObject.SetActive(!hasSprite);
             label.text = tile.marker; label.color = Color.white;
             label.fontSize = Mathf.Max(12, Mathf.RoundToInt(size * .65f));
             label.rectTransform.anchoredPosition = Vector2.zero;

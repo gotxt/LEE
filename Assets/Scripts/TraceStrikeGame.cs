@@ -3733,6 +3733,7 @@ namespace NHN.TraceStrike
                 if (showIcon)
                 {
                     itemIcon.sprite = iconSprite;
+                    itemIcon.preserveAspect = true;
                     itemIcon.color = White;
                     itemIcon.rectTransform.sizeDelta = Vector2.one * (size * 0.72f);
                     itemIcon.rectTransform.anchoredPosition = Vector2.zero;
@@ -4234,7 +4235,9 @@ namespace NHN.TraceStrike
                     RectTransform item = specialItemVisuals[x, y];
                     if (item != null && item.gameObject.activeInHierarchy)
                     {
-                        item.localScale = Vector3.one * scale;
+                        // Floor artwork must stay registered to the tile; only pickup badges pulse.
+                        bool floorArtwork = placedSpecialTiles?.SpriteAt(new Vector2Int(x, y)) != null;
+                        item.localScale = floorArtwork ? Vector3.one : Vector3.one * scale;
                         item.anchoredPosition = Vector2.zero;
                     }
                 }

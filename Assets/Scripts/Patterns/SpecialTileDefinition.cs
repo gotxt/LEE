@@ -14,6 +14,11 @@ namespace NHN.TraceStrike.Patterns
         public string marker = "*";
         [Min(0)] public float stunSeconds;
         [Min(0)] public int fireMoveCount;
+        [Tooltip("처음에는 비활성. 성공한 경로 공격에 포함되면 접촉 효과를 잠시 활성화합니다.")]
+        public bool requiresCompletedAttack;
+        [Min(.01f), Tooltip("성공한 경로 공격마다 이 시간으로 갱신. 공격 연출/일시정지 중에는 멈춥니다.")]
+        public float activationSeconds = 30f;
+        public Sprite inactiveSprite;
 
         public void Validate(List<string> errors)
         {
@@ -21,6 +26,8 @@ namespace NHN.TraceStrike.Patterns
             if (float.IsNaN(stunSeconds) || float.IsInfinity(stunSeconds) || stunSeconds < 0 || fireMoveCount < 0)
                 errors.Add(displayName + ": 효과 수치는 유한한 0 이상의 값이어야 합니다.");
             if (stunSeconds == 0 && fireMoveCount == 0) errors.Add(displayName + ": 접촉 효과를 하나 이상 지정하세요.");
+            if (requiresCompletedAttack && (float.IsNaN(activationSeconds) || float.IsInfinity(activationSeconds) || activationSeconds <= 0))
+                errors.Add(displayName + ": 공격 활성 시간은 유한한 0보다 큰 값이어야 합니다.");
         }
     }
 

@@ -42,6 +42,8 @@ namespace NHN.TraceStrike.Tests
                 copy.arena.SetSpecialTile(new Vector2Int(15, 2), fire);
                 copy.arena.SetSpecialTile(new Vector2Int(15, 12), fire);
                 Call(game, "StartSpecialTiles"); Call(game, "StartMechanics");
+                // Growth-only fixture: pre-ignite its fire. Actual attack ignition has a separate integration test.
+                Get<SpecialTileField>(game, "placedSpecialTiles").OnCompletedAttack(new[] { new Vector2Int(15, 2) });
                 Set(game, "bossHealth", 73);
                 var session = Get<BossMechanicSession>(game, "mechanicSession");
                 var runtime = session.Runtimes.OfType<RegionGrowthRuntime>().Single();

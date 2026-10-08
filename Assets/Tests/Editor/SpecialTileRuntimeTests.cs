@@ -56,6 +56,9 @@ namespace NHN.TraceStrike.Tests
                 copy.arena.SetSpecialTile(new Vector2Int(15, 3), vine);
                 copy.arena.SetSpecialTile(new Vector2Int(15, 4), vine);
                 Call(game, "StartSpecialTiles");
+                // This fixture tests contact/END ordering with an already-ignited tile.
+                // FireTileRuntimeTests exercises the real completed-attack ignition hook.
+                Get<SpecialTileField>(game, "placedSpecialTiles").OnCompletedAttack(new[] { new Vector2Int(15, 2) });
                 var model = Get<TrailFieldModel>(game, "model");
                 model.SetEndpointRegions(new[] { new Vector2Int(15, 2) }, new[] { new Vector2Int(15, 4) });
                 model.BeginRound(0, true, new Vector2Int(15, 1));
